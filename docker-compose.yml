@@ -14,7 +14,7 @@ services:
     #     USERNAME: # echo $USER
     ports:
       - 5001:4000
-      - 5002:8080
+      - 8080:8080
       - 35729:35729
     volumes:
       - .:/srv/jekyll
