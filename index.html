@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tanay Nagar — तनय नगर</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --background: #ffffff;
+            --foreground: oklch(0.145 0 0);
+            --muted-foreground: #717182;
+            --border: rgba(0, 0, 0, 0.1);
+            --secondary: oklch(0.95 0.0058 264.53);
+            --secondary-foreground: #030213;
+            --card: #ffffff;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--background);
+            color: var(--foreground);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        a {
+            color: var(--foreground);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.75rem 1.5rem;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-name {
+            color: var(--foreground);
+            font-weight: 500;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .social-link {
+            color: var(--muted-foreground);
+            display: inline-flex;
+        }
+
+        .social-link:hover {
+            color: var(--foreground);
+        }
+
+        .icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        .intro-logo {
+            display: inline-block;
+            height: 1em;
+            width: auto;
+            vertical-align: -0.12em;
+            margin: 0 0.15em 0 0.08em;
+            line-height: 1;
+        }
+
+        /* Slightly smaller for wordmark-style logos so they don't overpower text */
+        .intro-logo.wordmark {
+            height: 0.9em;
+            vertical-align: -0.1em;
+        }
+
+        /* Slightly larger for crest-style marks */
+        .intro-logo.crest {
+            height: 1.15em;
+            vertical-align: -0.15em;
+        }
+
+        /* Delicate underline highlight for key phrase */
+        .highlight {
+            font-weight: 500;
+            text-decoration: underline;
+            text-decoration-thickness: 0.08em;
+            text-underline-offset: 0.18em;
+            text-decoration-color: rgba(0, 0, 0, 0.25);
+        }
+
+        /* Section */
+        section {
+            padding: 3rem 1.5rem;
+        }
+
+        .section-border {
+            border-top: 1px solid var(--border);
+        }
+
+        /* Hero */
+        .hero-content {
+            max-width: 1024px;
+            margin: 0 auto;
+        }
+
+        .hero-bio {
+            color: var(--muted-foreground);
+            max-width: calc(72ch + 320px);
+        }
+
+        /* Only float the top-level portrait image, not inline logos */
+        .hero-bio > img {
+            float: right;
+            margin-left: 1.25rem;
+            margin-bottom: 1rem;
+            width: 256px;
+            height: 256px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+        }
+
+        .hero-bio p {
+            margin-bottom: 0.75rem;
+        }
+
+        .hero-bio a {
+            color: var(--foreground);
+        }
+
+        .hero-bio a:hover {
+            text-decoration: underline;
+            text-decoration-thickness: 0.08em;
+            text-underline-offset: 0.18em;
+        }
+
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding-top: 0.5rem;
+            clear: both;
+            margin-bottom: 1rem; /* space before horizontal rule */
+        }
+
+        /* Subtle list for key interests */
+        .hero-list {
+            margin: 0.25rem 0 0.75rem 0.75rem;
+            padding-left: 0;
+            list-style: none;
+            color: var(--muted-foreground);
+        }
+        .hero-list li { margin: 0.15rem 0; }
+        .hero-list li::before {
+            content: "– ";
+            color: var(--muted-foreground);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background-color: var(--secondary);
+            color: var(--secondary-foreground);
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+
+        /* Contact */
+        .section-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .section-description {
+            color: var(--muted-foreground);
+            font-size: 0.875rem;
+        }
+
+        .contact-content {
+            color: var(--muted-foreground);
+            margin-bottom: 0.75rem;
+        }
+
+        .contact-content a {
+            color: var(--foreground);
+        }
+
+        .contact-content a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            margin-top: 1rem; /* pull horizontal rule away from badges */
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-text {
+            font-size: 0.75rem;
+            color: var(--muted-foreground);
+        }
+
+        @media (max-width: 640px) {
+            .hero-bio > img {
+                float: none;
+                display: block;
+                margin: 0 auto 1rem;
+                width: 200px;
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .hero-bio > img {
+                width: 180px;
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <nav>
+                <button class="nav-name" onclick="scrollToSection('hero')">Tanay Nagar</button>
+                <div class="nav-links">
+                    <div class="social-links">
+                        <a href="mailto:tanaynagar7@gmail.com" class="social-link" aria-label="Email Tanay" title="Email">
+                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <rect width="20" height="16" x="2" y="4" rx="2"/>
+                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                            </svg>
+                        </a>
+                        <a href="https://x.com/tnagar72" class="social-link" aria-label="X/Twitter" title="X/Twitter" target="_blank" rel="noopener noreferrer">
+                            <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                            </svg>
+                        </a>
+                        <a href="https://www.linkedin.com/in/tanaynagar/" class="social-link" aria-label="LinkedIn" title="LinkedIn" target="_blank" rel="noopener noreferrer">
+                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                                <rect width="4" height="12" x="2" y="9"/>
+                                <circle cx="4" cy="4" r="2"/>
+                            </svg>
+                        </a>
+                        <a href="https://github.com/tnagar72" class="social-link" aria-label="GitHub" title="GitHub" target="_blank" rel="noopener noreferrer">
+                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
+                                <path d="M9 18c-4.51 2-5-2-7-2"/>
+                            </svg>
+                        </a>
+                        <a href="https://scholar.google.com/citations?user=MEVH8HQAAAAJ&hl=en" class="social-link" aria-label="Google Scholar" title="Google Scholar" target="_blank" rel="noopener noreferrer">
+                            <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 9a8 8 0 0 1 7.162 4.44L24 9.5z"/>
+                            </svg>
+                        </a>
+                        <a href="https://bsky.app/profile/tnagar.bsky.social" class="social-link" aria-label="Bluesky" title="Bluesky" target="_blank" rel="noopener noreferrer">
+                            <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.206-.659-.298-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero">
+            <div class="hero-content">
+                <div style="margin-bottom: 1.5rem;">
+                    <h1>Tanay Nagar — तनय नगर</h1>
+                    <p style="color: oklch(0.3 0 0);">Independent researcher in NLP · Human-Centered AI · Computational Social Science</p>
+                </div>
+
+                <div class="hero-bio">
+                    <img src="Images/tanay-nd.jpeg" alt="Portrait of Tanay Nagar">
+                    
+                    <p>
+                        My work focuses on developing <span class="highlight">equitable, socially-aware language technologies</span> that prioritize <strong>language equity</strong> for low-resource languages, uphold the <strong>socio-cultural nuances</strong> of diverse linguistic communities, and ensure robust <strong>human–AI dynamics</strong>.
+                    </p>
+                    <p>I'm particularly interested in how we can:</p>
+                    <ul class="hero-list">
+                        <li>better evaluate/understand social subtleties across languages and cultures—both through and within language technologies;</li>
+                        <li>embed socio-ethical dynamics/intelligence within the creation of language technologies.</li>
+                    </ul>
+
+                    <p>
+                        I earned a B.S. in Computer Science (Honors), a B.S. in Philosophy, and a certificate in leadership from the University of Wisconsin–Madison, and I am currently preparing for graduate study.
+                    </p>
+
+                    <p>
+                        I'm grateful to have learned from and collaborated with <a href="https://www.surgery.wisc.edu/staff/sarah-sullivan/" target="_blank" rel="noopener noreferrer">Sarah Jung</a>, <a href="https://shamya.github.io/" target="_blank" rel="noopener noreferrer">Shamya Karumbaiah</a>, <a href="https://lucyinstitute.nd.edu/people/the-lucy-family-core-team/nitesh-chawla/" target="_blank" rel="noopener noreferrer">Nitesh V. Chawla</a>, <a href="https://jacob.thebault-spieker.com/" target="_blank" rel="noopener noreferrer">Jacob Thebault-Spieker</a>, and <a href="https://revista.ucom.edu.py/ucom/about/editorialTeam" target="_blank" rel="noopener noreferrer">Margarita Ruiz Olázar</a> across the <img class="intro-logo crest" src="Images/uw-crest-color-web-digital.svg" alt="UW–Madison crest" /> <a href="https://www.wisc.edu/" target="_blank" rel="noopener noreferrer">University of Wisconsin–Madison</a>, <img class="intro-logo wordmark" src="Images/uwhealth_icon.svg" alt="UW Health" /> <a href="https://www.uwhealth.org/" target="_blank" rel="noopener noreferrer">UW Health</a>, <img class="intro-logo" src="Images/Notre_Dame_Fighting_Irish_logo.svg" alt="Notre Dame" /> <a href="https://www.nd.edu/" target="_blank" rel="noopener noreferrer">University of Notre Dame</a>, and <img class="intro-logo" src="Images/UCOM_mark.svg" alt="UCOM mark" /> <a href="https://ucom.edu.py/" target="_blank" rel="noopener noreferrer">Universidad Comunera</a>.
+                    </p>
+
+                    <p>
+                        I'm always interested in thoughtful collaborations, conversations, and shared learning—feel free to reach out. You can reach me via email, and the other links on the top of the page.
+                    </p>
+                </div>
+
+                <div class="badges">
+                    <span class="badge">NLP</span>
+                    <span class="badge">Human-Centered AI</span>
+                    <span class="badge">Computational Social Science</span>
+                </div>
+
+                <div class="footer section-border">
+                    <div class="header-container">
+                        <p class="footer-text">© 2025 Tanay Nagar. Last updated November 2025.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    </script>
+</body>
+</html>
