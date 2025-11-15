@@ -135,13 +135,10 @@
             vertical-align: -0.15em;
         }
 
-        /* Delicate underline highlight for key phrase */
+        /* Subtle highlight for key phrase (non-link) */
         .highlight {
-            font-weight: 500;
-            text-decoration: underline;
-            text-decoration-thickness: 0.08em;
-            text-underline-offset: 0.18em;
-            text-decoration-color: rgba(0, 0, 0, 0.25);
+            font-weight: 600;
+            color: var(--foreground);
         }
 
         /* Section */
@@ -181,12 +178,14 @@
 
         .hero-bio a {
             color: var(--foreground);
-        }
-
-        .hero-bio a:hover {
             text-decoration: underline;
             text-decoration-thickness: 0.08em;
             text-underline-offset: 0.18em;
+            text-decoration-color: rgba(0, 0, 0, 0.25);
+        }
+
+        .hero-bio a:hover {
+            text-decoration-color: rgba(0, 0, 0, 0.5);
         }
 
         .badges {
