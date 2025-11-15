@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tanay Nagar — तनय नगर</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
     <style>
         * {
             margin: 0;
@@ -219,9 +220,135 @@
             font-size: 0.875rem;
         }
 
+        /* Publications */
+        .pub-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .pub-entry {
+            padding: 0.5rem 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .pub-entry:first-child {
+            border-top: none;
+        }
+
+        .pub-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.15rem;
+        }
+
+        .pub-authors {
+            font-size: 0.9rem;
+            margin-bottom: 0.1rem;
+            color: var(--foreground);
+        }
+
+        .pub-venue {
+            font-size: 0.9rem;
+            font-style: italic;
+            color: var(--muted-foreground);
+            margin-bottom: 0.35rem;
+        }
+
+        .pub-summary {
+            font-size: 0.9rem;
+            color: var(--muted-foreground);
+            max-width: 72ch;
+            margin-top: 0.4rem;
+        }
+
+        .pub-entry .badges {
+            padding-top: 0.35rem;
+            margin-bottom: 0.4rem;
+            gap: 0.4rem;
+        }
+
+        /* Monochrome pill buttons for publication links (Project, PDF, etc.) */
+        .pub-entry .badge {
+            background-color: rgba(0, 0, 0, 0.04);
+            color: var(--foreground);
+            font-size: 0.78rem;
+            font-weight: 500;
+            padding: 0.16rem 0.6rem;
+        }
+
+        .pub-entry .badge:hover {
+            background-color: rgba(0, 0, 0, 0.08);
+        }
+
+        /* Awards / distinctions under publications */
+        .cv-award {
+            color: #ffb700;
+            font-weight: 600;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin: 0.1rem 0;
+        }
+
+        .cv-award a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .cv-award a:hover {
+            text-decoration: underline;
+        }
+
+        .pub-advisors {
+            font-size: 0.85rem;
+            color: var(--muted-foreground);
+            margin-bottom: 0.25rem;
+        }
+
+        /* Row of small pill links, adapted from pub-misc */
+        .pub-misc {
+            font-size: 0.75rem;
+            margin-top: 0.3rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            align-items: center;
+        }
+
+        .pub-misc a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--muted-foreground);
+            white-space: nowrap;
+            background-color: rgba(0, 0, 0, 0.035);
+            padding: 0.15rem 0.6rem;
+            border-radius: 999px;
+            text-decoration: none;
+        }
+
+        .pub-misc a:hover {
+            color: var(--foreground);
+            background-color: rgba(0, 0, 0, 0.08);
+            text-decoration: none;
+        }
+
         /* Contact */
         .section-header {
             margin-bottom: 1.5rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        #publications .section-header {
+            margin-top: 0.75rem;
         }
 
         .section-description {
@@ -326,7 +453,7 @@
             <div class="hero-content">
                 <div style="margin-bottom: 1.5rem;">
                     <h1>Tanay Nagar — तनय नगर</h1>
-                    <p style="color: oklch(0.3 0 0);">Independent researcher in NLP · Human-Centered AI · Computational Social Science</p>
+                    <p style="color: oklch(0.3 0 0);">Independent researcher | NLP · Human-Centered AI · Computational Social Science · AI Safety</p>
                 </div>
 
                 <div class="hero-bio">
@@ -359,14 +486,149 @@
                     <span class="badge">Human-Centered AI</span>
                     <span class="badge">Computational Social Science</span>
                 </div>
+            </div>
+        </section>
 
-                <div class="footer section-border">
-                    <div class="header-container">
-                        <p class="footer-text">© 2025 Tanay Nagar. Last updated November 2025.</p>
-                    </div>
+        <!-- Featured Publications/Posters -->
+        <section id="publications" class="section-border">
+            <div class="hero-content">
+                <div class="section-header">
+                    <h2>Featured Publications/Posters</h2>
+                </div>
+
+                <div class="pub-list">
+                    <!-- Publication 1: Bias in letters of recommendation -->
+                    <article class="pub-entry">
+                        <h3 class="pub-title">
+                            Exploring Bias in Letters of Recommendation using NLP Techniques
+                        </h3>
+                        <p class="pub-authors">
+                            <a href="#hero">Tanay Nagar</a>,
+                            <a href="https://www.surgery.wisc.edu/staff/sarah-sullivan/" target="_blank" rel="noopener noreferrer">Sarah Jung</a>,
+                            <a href="https://www.surgery.wisc.edu/staff/peter-wirth/" target="_blank" rel="noopener noreferrer">Peter Wirth</a>,
+                            <a href="https://www.linkedin.com/in/alyssa-schappe/" target="_blank" rel="noopener noreferrer">Alyssa Schappe</a>,
+                            <a href="https://www.uwhealth.org/providers/a-neil-salyapongse-md" target="_blank" rel="noopener noreferrer">Amorn N. Salyapongse</a>
+                        </p>
+                        <p class="pub-venue">
+                            Poster: UW Research Symposium 2023; UW SMPH Research Summit 2025 · Oral presentation: ACEPS 2025 · Published in PRS Global Open, 2025.
+                        </p>
+
+                        <span class="cv-award">
+                            <i class="fas fa-trophy" aria-hidden="true"></i> Hina and Faisal Mushtaq Scholarship
+                        </span>
+
+                        <div class="pub-misc">
+                            <a href="PRS_Global/wisc-surgery-ppt-template.pptx (2).pdf">
+                                <i class="fas fa-window-maximize" aria-hidden="true"></i> Talk Slides
+                            </a>
+                            <a href="https://journals.lww.com/prsgo/fulltext/2025/06004/7__detecting_bias_in_plastic_surgery_residency.7.aspx?context=latestarticles">
+                                <i class="fas fa-file-pdf" aria-hidden="true"></i> PRS Global Article
+                            </a>
+                            <a href="PRS_Global/Tanay UW Research Symposium Poster.pdf">
+                                <i class="fas fa-image" aria-hidden="true"></i> Symposium Poster
+                            </a>
+                            <a href="https://scholar.google.com/citations?view_op=view_citation&hl=en&user=MEVH8HQAAAAJ&citation_for_view=MEVH8HQAAAAJ:u5HHmVD_uO8C">
+                                <i class="fas fa-graduation-cap" aria-hidden="true"></i> Google Scholar
+                            </a>
+                            <a href="https://doi.org/10.1097/01.GOX.0001123584.49942.fe">
+                                <i class="fas fa-anchor" aria-hidden="true"></i> DOI
+                            </a>
+                        </div>
+
+                        <p class="pub-summary">
+                            We use natural language processing to analyze plastic surgery residency letters of recommendation, surfacing systematic patterns in wording that may reflect bias and influence selection decisions. The work highlights how computational text analysis can support fairer, more transparent evaluation of applicants.
+                        </p>
+                    </article>
+
+                    <!-- Publication 2: Bridging language gaps -->
+                    <article class="pub-entry">
+                        <h3 class="pub-title">
+                            Bridging Language Gaps: Code-Switched Fine-Tuning for Multilingual LLMs
+                        </h3>
+                        <p class="pub-authors">
+                            <a href="#hero">Tanay Nagar</a>,
+                            <a href="https://scholar.google.com/citations?user=Zr5ilBoAAAAJ&hl=en" target="_blank" rel="noopener noreferrer">Grigorii Khvatskii</a>,
+                            <a href="https://scholar.google.com/citations?user=wrEaQEQAAAAJ&hl=ru" target="_blank" rel="noopener noreferrer">Anna Sokol</a>,
+                            <a href="https://niteshchawla.nd.edu/" target="_blank" rel="noopener noreferrer">Nitesh V. Chawla</a>
+                        </p>
+                        <p class="pub-venue">
+                            Poster: NAACL 2025 Student Research Workshop (SRW); ND Summer Research Symposium 2024 · Research on arXiv, 2025.
+                        </p>
+
+                        <span class="cv-award">
+                            <i class="fas fa-trophy" aria-hidden="true"></i> Bromley Conference Travel Award
+                        </span>
+                        <span class="cv-award">
+                            <i class="fas fa-trophy" aria-hidden="true"></i> CDIS Student Travel Award
+                        </span>
+
+                        <div class="pub-misc">
+                            <a href="Bridging_Language_Gaps_CS/NAACL 2025 Presentation.pdf">
+                                <i class="fas fa-image" aria-hidden="true"></i> NAACL SRW Poster
+                            </a>
+                            <a href="https://arxiv.org/abs/2508.12662">
+                                <i class="fas fa-file-alt" aria-hidden="true"></i> arXiv
+                            </a>
+                            <a href="Bridging_Language_Gaps_CS/Tanay ND Summer Symposium.pdf">
+                                <i class="fas fa-image" aria-hidden="true"></i> ND Symposium Poster
+                            </a>
+                        </div>
+
+                        <p class="pub-summary">
+                            We study code-switched fine-tuning strategies for multilingual language models, focusing on how mixing languages in realistic ways affects performance. The work explores how these techniques can narrow performance gaps for low-resource and multilingual communities.
+                        </p>
+                    </article>
+
+                    <!-- Publication 3: Senior honors thesis -->
+                    <article class="pub-entry">
+                        <h3 class="pub-title">
+                            Decoding Bias in Letters of Recommendation: A Word Embeddings Approach
+                        </h3>
+                        <p class="pub-authors">
+                            <a href="#hero">Tanay Nagar</a>
+                        </p>
+                        <p class="pub-venue">
+                            Senior Honors Thesis, University of Wisconsin–Madison, 2025 · Oral presentation: UW Honors Research Symposium 2025.
+                        </p>
+
+                        <p class="pub-advisors">
+                            Advisors:
+                            <a href="https://pages.cs.wisc.edu/~fredsala/" target="_blank" rel="noopener noreferrer">Dr. Fred Sala</a>,
+                            <a href="https://www.surgery.wisc.edu/staff/sarah-sullivan/" target="_blank" rel="noopener noreferrer">Dr. Sarah Jung</a>,
+                            <a href="https://shamya.github.io/" target="_blank" rel="noopener noreferrer">Dr. Shamya Karumbaiah</a>
+                        </p>
+
+                        <span class="cv-award">
+                            <i class="fas fa-trophy" aria-hidden="true"></i>
+                            <a href="https://awards.advising.wisc.edu/campus-wide-award-recipients/test-hilldale-fellows/#:~:text=Tanay%20Nagar%2C%20Computer%20Sciences%2C%20Philosophy%2C%20Sarah%20Jung" target="_blank" rel="noopener noreferrer">Hilldale Undergraduate/Faculty Research Fellowship</a>
+                        </span>
+                        <span class="cv-award">
+                            <i class="fas fa-trophy" aria-hidden="true"></i>
+                            <a href="https://ls.wisc.edu/news/tanay-nagar-awarded-richard-ralph-winter-phoenix-rising-humanitarian-scholarship" target="_blank" rel="noopener noreferrer">Richard Ralph Phoenix Rising Humanitarian Scholarship</a>
+                        </span>
+
+                        <div class="pub-misc">
+                            <a href="Senior_Honors_Thesis/NAGAR_SYMPOSIUM2025.pptx (2).pdf">
+                                <i class="fas fa-window-maximize" aria-hidden="true"></i> Honors Symposium Talk
+                            </a>
+                            <a href="Senior_Honors_Thesis/Nagar Senior Honors Thesis Grant Proposal.pdf">
+                                <i class="fas fa-file-alt" aria-hidden="true"></i> Grant Proposal
+                            </a>
+                        </div>
+
+                        <p class="pub-summary">
+                            Using 1,585 de-identified letters of recommendation (~919k tokens), my thesis combines Word2Vec and fine-tuned Mistral-7B embeddings to measure gender-directional framing via bias axes, WEAT-style tests, and analogy probes. It turns long-standing concerns about biased LoR language into quantitative metrics that can be used for reviewer calibration, dashboards, and faculty workshops to support fairer admissions and evaluations.
+                        </p>
+                    </article>
                 </div>
             </div>
         </section>
+
+        <div class="footer section-border">
+            <div class="header-container">
+                <p class="footer-text">© 2025 Tanay Nagar. Last updated November 2025.</p>
+            </div>
+        </div>
     </main>
 
     <script>
