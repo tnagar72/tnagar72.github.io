@@ -161,6 +161,19 @@
             max-width: calc(72ch + 320px);
         }
 
+        .hero-tagline {
+            color: oklch(0.3 0 0);
+        }
+
+        .hero-tagline-mobile {
+            display: none;
+        }
+
+        .hero-tagline-role,
+        .hero-tagline-areas {
+            display: block;
+        }
+
         /* Only float the top-level portrait image, not inline logos */
         .hero-bio > img {
             float: right;
@@ -381,6 +394,18 @@
         }
 
         @media (max-width: 640px) {
+            .hero-heading {
+                text-align: center;
+            }
+
+            .hero-tagline-desktop {
+                display: none;
+            }
+
+            .hero-tagline-mobile {
+                display: block;
+            }
+
             .hero-bio > img {
                 float: none;
                 display: block;
@@ -450,9 +475,17 @@
         <!-- Hero Section -->
         <section id="hero">
             <div class="hero-content">
-                <div style="margin-bottom: 1.5rem;">
+                <div class="hero-heading" style="margin-bottom: 1.5rem;">
                     <h1>Tanay Nagar - तनय नगर</h1>
-                    <p style="color: oklch(0.3 0 0);">Independent researcher | NLP · Human-Centered AI · Computational Social Science · AI Safety</p>
+                    <!-- Desktop: single-line tagline with pipe + dots -->
+                    <p class="hero-tagline hero-tagline-desktop">
+                        Independent researcher | NLP · Human-Centered AI · Computational Social Science · AI Safety
+                    </p>
+                    <!-- Mobile: role on one line, areas on line below (dots only) -->
+                    <p class="hero-tagline hero-tagline-mobile">
+                        <span class="hero-tagline-role">Independent researcher</span>
+                        <span class="hero-tagline-areas">NLP · Human-Centered AI · Computational Social Science · AI Safety</span>
+                    </p>
                 </div>
 
                 <div class="hero-bio">
