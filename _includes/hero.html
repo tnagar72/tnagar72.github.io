@@ -1,0 +1,48 @@
+<section id="hero">
+    <div class="hero-content">
+        <div class="hero-heading" style="margin-bottom: 1.5rem;">
+            <h1>{{ site.data.profile.name }} - {{ site.data.profile.name_hindi }}</h1>
+            <!-- Desktop: single-line tagline with pipe + dots -->
+            <p class="hero-tagline hero-tagline-desktop">
+                {{ site.data.profile.role }} | {{ site.data.profile.areas }}
+            </p>
+            <!-- Mobile: role on one line, areas on line below (dots only) -->
+            <p class="hero-tagline hero-tagline-mobile">
+                <span class="hero-tagline-role">{{ site.data.profile.role }}</span>
+                <span class="hero-tagline-areas">{{ site.data.profile.areas }}</span>
+            </p>
+        </div>
+
+        <div class="hero-bio">
+            <img src="{{ site.data.profile.portrait | relative_url }}" alt="{{ site.data.profile.portrait_alt }}">
+
+            {%- for paragraph in site.data.profile.bio_paragraphs -%}
+            <p>{{ paragraph }}</p>
+            {%- endfor -%}
+
+            <ul class="hero-list">
+                {%- for item in site.data.profile.bio_list -%}
+                <li>{{ item }}</li>
+                {%- endfor -%}
+            </ul>
+
+            <p>{{ site.data.profile.education_html }}</p>
+
+            <p>
+                I'm grateful to have learned from and collaborated with {% for person in site.data.collaborators.people -%}
+                    <a href="{{ person.url }}" target="_blank" rel="noopener noreferrer">{{ person.name }}</a>{% unless forloop.last %}{% if forloop.rindex == 2 %}, and {% else %}, {% endif %}{% endunless -%}
+                {%- endfor %} across the {% for inst in site.data.collaborators.institutions -%}
+                    <img class="intro-logo{% if inst.logo_class != '' %} {{ inst.logo_class }}{% endif %}" src="{{ inst.logo | relative_url }}" alt="{{ inst.logo_alt }}" /> <a href="{{ inst.url }}" target="_blank" rel="noopener noreferrer">{{ inst.name }}</a>{% unless forloop.last %}{% if forloop.rindex == 2 %}, and {% else %}, {% endif %}{% endunless %}
+                {%- endfor %}.
+            </p>
+
+            <p>{{ site.data.profile.connect_html }}</p>
+        </div>
+
+        <div class="badges">
+            {%- for area in site.data.research_areas -%}
+                {% include badge.html text=area %}
+            {%- endfor -%}
+        </div>
+    </div>
+</section>

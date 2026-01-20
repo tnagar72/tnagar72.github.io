@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breaking Language Barriers | Nagar et al.</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #111;
+            --sub: #555;
+            
+            /* Semantic Colors */
+            --eng-blue: #2563eb;  /* English Success */
+            --gap-red: #ef4444;   /* The Problem Area */
+            --success-green: #10b981; /* The Solution */
+            --mix-purple: #9333ea; /* CoCoa Processing */
+            --neutral: #f3f4f6;
+            
+            --font-display: 'Newsreader', serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+        }
+
+        a { color: var(--eng-blue); text-decoration: none; border-bottom: 1px solid transparent; transition: border 0.2s; }
+        a:hover { border-bottom-color: var(--eng-blue); }
+
+        /* --- LAYOUT --- */
+        .layout-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr; /* Text | Visual */
+        }
+
+        .text-column {
+            padding: 5rem 4rem;
+            z-index: 10;
+            background: rgba(255,255,255,0.96);
+            border-right: 1px solid #eee;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.02);
+        }
+
+        .visual-column {
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            background: #fafafa;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- TYPOGRAPHY --- */
+        .sub-header {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--sub);
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            line-height: 1.6;
+        }
+        
+        .paper-link {
+            display: inline-block;
+            margin-top: 0.5rem;
+            font-weight: 600;
+            font-size: 0.7rem;
+            background: #f0f9ff;
+            color: var(--eng-blue);
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        h1 {
+            font-family: var(--font-display);
+            font-size: 2.8rem;
+            line-height: 1.1;
+            font-weight: 600;
+            margin: 0 0 1.5rem 0;
+            letter-spacing: -0.02em;
+        }
+
+        .step {
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0.25;
+            transition: opacity 0.6s ease;
+            border-left: 3px solid transparent;
+            padding-left: 2rem;
+        }
+        .step.active {
+            opacity: 1;
+            border-left: 3px solid var(--text);
+        }
+
+        h2 {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--sub);
+            margin-bottom: 0.8rem;
+        }
+
+        h3 {
+            font-family: var(--font-display);
+            font-size: 1.75rem;
+            margin: 0 0 1rem 0;
+            font-weight: 600;
+            font-style: italic;
+        }
+
+        p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #333;
+            margin-bottom: 1.5rem;
+            max-width: 520px;
+        }
+
+        /* --- WIDGETS --- */
+        .stat-block {
+            display: flex;
+            gap: 3rem;
+            margin-top: 1rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+        .stat-val { font-size: 1.6rem; font-weight: 700; font-family: var(--font-mono); display: block; }
+        .stat-lbl { font-size: 0.7rem; text-transform: uppercase; color: var(--sub); font-weight: 600; letter-spacing: 0.05em; }
+
+        .lab-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+        }
+        .btn-group { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+        button {
+            flex: 1; padding: 0.6rem; border: 1px solid #cbd5e1; background: white; 
+            cursor: pointer; font-family: var(--font-mono); font-size: 0.7rem;
+            border-radius: 4px; transition: all 0.2s; font-weight: 600;
+        }
+        button:hover { border-color: var(--text); }
+        button.active { background: var(--text); color: white; border-color: var(--text); }
+        
+        .code-output {
+            font-family: var(--font-mono); font-size: 0.85rem; line-height: 2;
+            background: white; padding: 1rem; border: 1px solid #e2e8f0; border-radius: 4px;
+        }
+        .w { padding: 2px 5px; border-radius: 3px; margin: 0 1px; border-bottom: 2px solid transparent; }
+        .en { color: var(--eng-blue); background: #eff6ff; border-color: #bfdbfe; }
+        .hi { color: var(--gap-red); background: #fef2f2; border-color: #fecaca; }
+
+        /* --- VISUAL OVERLAYS --- */
+        #canvas-container { width: 100%; height: 100%; position: relative; }
+        
+        .annotation {
+            position: absolute;
+            right: 3rem;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--sub);
+            border-left: 2px solid var(--sub);
+            padding-left: 0.8rem;
+            transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            opacity: 0;
+            transform: translateX(20px);
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(4px);
+            padding: 0.5rem 0.8rem;
+            border-radius: 0 4px 4px 0;
+        }
+        .annotation.visible { opacity: 1; transform: translateX(0); }
+        .annotation strong { display: block; font-size: 0.9rem; margin-bottom: 0.2rem; color: var(--text); }
+
+    </style>
+</head>
+<body>
+
+<div class="layout-grid">
+    
+    <!-- TEXT COLUMN -->
+    <div class="text-column">
+        
+        <div class="sub-header">
+            A VISUALIZATION OF<br>
+            <strong>Breaking Language Barriers: Equitable Performance in Multilingual Language Models</strong><br>
+            <span style="font-size: 0.7rem; color: #888">Nagar, Khvatskii, Sokol, Chawla (NAACL 2025)</span><br>
+            <a href="https://arxiv.org/abs/2508.12662" class="paper-link" target="_blank" rel="noopener noreferrer">Read Paper on arXiv</a>
+        </div>
+
+        <div>
+            <h1>We propose a novel fine-tuning approach using synthetic code-switching as a solution to the multilingual performance gap.</h1>
+        </div>
+
+        <!-- STEP 0: ENGLISH BASELINE -->
+        <div class="step active" data-index="0">
+            <h2>Phase I</h2>
+            <h3>The English Baseline</h3>
+            <p>
+                This visualization represents the <strong>CommonSenseQA</strong> dataset. 
+            </p>
+            <p>
+                To clarify the performance disparity, we have grouped the questions based on model outcomes. The <span style="color: var(--eng-blue); font-weight: 700;">Blue Blocks</span> represent the questions LLaMA-3 answers correctly in English.
+            </p>
+            <p>
+                It establishes a strong baseline, solving <strong>78.0%</strong> of the tasks.
+            </p>
+        </div>
+
+        <!-- STEP 1: THE GAP -->
+        <div class="step" data-index="1">
+            <h2>Phase II</h2>
+            <h3>The Performance Gap</h3>
+            <p>
+                When prompted in Hindi, the model struggles. It fails on a significant portion of questions it previously solved in English.
+            </p>
+            <p>
+                <span style="color: var(--gap-red); font-weight: 700;">The Red Band</span> represents this "Performance Gap." These are not necessarily "harder" questions; they are simply questions where the model lacks the multilingual representation to map the concept from English to Hindi.
+            </p>
+            <div class="stat-block">
+                <div><span class="stat-val" style="color:var(--eng-blue)">78.0%</span><span class="stat-lbl">English</span></div>
+                <div><span class="stat-val" style="color:var(--gap-red)">54.0%</span><span class="stat-lbl">Hindi</span></div>
+            </div>
+        </div>
+
+        <!-- STEP 2: THE METHOD -->
+        <div class="step" data-index="2">
+            <h2>Phase III</h2>
+            <h3>Synthetic Augmentation</h3>
+            <p>
+                We generate synthetic "Hinglish" data using the <strong>CoCoa Model</strong> <a href="https://aclanthology.org/2022.emnlp-main.158/" target="_blank" style="font-size:0.7rem;">(Mondal et al., 2022)</a>.
+            </p>
+            <p>
+                Unlike standard translation, CoCoa allows us to enforce specific <strong>Code-Mixing Indexes (CMI)</strong>, ensuring a precise ratio of English grammar to Hindi vocabulary. This acts as a semantic bridge during fine-tuning.
+            </p>
+            
+            <div class="lab-box">
+                <div class="btn-group">
+                    <button onclick="setCMI(1)">CMI 1 (Low)</button>
+                    <button class="active" onclick="setCMI(2)">CMI 2 (Med)</button>
+                    <button onclick="setCMI(3)">CMI 3 (High)</button>
+                </div>
+                <div class="code-output" id="cmi-text">
+                    <!-- Text injected -->
+                </div>
+                <p style="font-size:0.75rem; margin-top:0.8rem; color:#666; line-height: 1.5;">
+                    *We found <strong>CMI 2</strong> optimal. It maintains the English sentence structure (Blue) while injecting dense Hindi tokens (Red).
+                </p>
+            </div>
+        </div>
+
+        <!-- STEP 3: THE RESULT -->
+        <div class="step" data-index="3">
+            <h2>Phase IV</h2>
+            <h3>Closing the Divide</h3>
+            <p>
+                Fine-tuning on this synthetic data forces the model to align its internal manifolds. 
+            </p>
+            <p>
+                The results are visualized in <span style="color: var(--success-green); font-weight: 700;">Green</span>. We recover the vast majority of the performance gap. Hindi accuracy jumps significantly, proving that we don't need massive native datasets to achieve equity—we just need better geometric alignment.
+            </p>
+            <div class="stat-block">
+                <div><span class="stat-val" style="color:var(--success-green)">+31.6%</span><span class="stat-lbl">Gain</span></div>
+                <div><span class="stat-val">85.6%</span><span class="stat-lbl">Final Acc</span></div>
+            </div>
+        </div>
+        
+        <div style="height: 15vh;"></div>
+    </div>
+
+    <!-- VISUAL COLUMN -->
+    <div class="visual-column">
+        <div id="canvas-container">
+            <!-- Dynamic Annotations -->
+            <div id="anno-base" class="annotation" style="border-color: #e5e5e5; color: #999;">
+                <strong>Unsolved</strong>
+                Failed in both languages.
+            </div>
+            <div id="anno-gap" class="annotation" style="border-color: var(--gap-red); color: var(--gap-red);">
+                <strong>The Gap</strong>
+                Questions English solves, but Hindi fails.
+            </div>
+            <div id="anno-easy" class="annotation" style="border-color: var(--eng-blue); color: var(--eng-blue);">
+                <strong>Shared Knowledge</strong>
+                Solved in both languages.
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="module">
+    import * as THREE from 'three';
+
+    // --- CONFIGURATION ---
+    const config = {
+        rows: 60,
+        cols: 25, 
+        // Accurate Percentages from Paper
+        gapStart: 0.54, // 54%
+        gapEnd: 0.78,   // 78%
+        final: 0.856,   // 85.6%
+        
+        colors: {
+            bg: 0xfafafa,
+            base: 0xe5e7eb,   // Neutral
+            eng: 0x2563eb,    // Blue
+            gap: 0xef4444,    // Red
+            mix: 0x9333ea,    // Purple
+            fix: 0x10b981,    // Green
+        }
+    };
+
+    const totalParticles = config.rows * config.cols;
+
+    // --- THREE.JS SETUP ---
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(config.colors.bg);
+
+    const aspect = container.clientWidth / container.clientHeight;
+    const viewSize = 32; 
+    const camera = new THREE.OrthographicCamera(
+        -viewSize * aspect, viewSize * aspect,
+        viewSize, -viewSize,
+        1, 100
+    );
+    camera.position.set(0, 0, 10);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    // --- GEOMETRY ---
+    const geometry = new THREE.PlaneGeometry(0.85, 0.85);
+    const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const mesh = new THREE.InstancedMesh(geometry, material, totalParticles);
+    scene.add(mesh);
+
+    // --- DATA GENERATION ---
+    const particleData = [];
+    const dummy = new THREE.Object3D();
+    
+    // Layout: Fill Bottom-Left to Top-Right
+    const spacing = 1.0;
+    const offsetX = (config.cols * spacing) / -2 + 0.5;
+    const offsetY = (config.rows * spacing) / -2 + 0.5;
+
+    for (let i = 0; i < totalParticles; i++) {
+        const row = Math.floor(i / config.cols);
+        const col = i % config.cols;
+        
+        const x = offsetX + col * spacing;
+        const y = offsetY + row * spacing;
+        const z = 0;
+
+        dummy.position.set(x, y, z);
+        dummy.updateMatrix();
+        mesh.setMatrixAt(i, dummy.matrix);
+
+        // Calculate percentile
+        const percentile = i / totalParticles;
+
+        // Assign Role
+        let role = 'base'; // Unsolved
+        if (percentile < config.gapStart) role = 'easy';
+        else if (percentile < config.gapEnd) role = 'gap';
+        else if (percentile < config.final) role = 'recovered';
+
+        particleData.push({
+            id: i,
+            percentile,
+            role,
+            yPos: y, 
+            currentColor: new THREE.Color(config.colors.base),
+            targetColor: new THREE.Color(config.colors.base)
+        });
+    }
+
+    // --- STATE LOGIC ---
+    let currentState = 0;
+
+    function updateState(index) {
+        currentState = index;
+
+        particleData.forEach(p => {
+            if (index === 0) {
+                // Phase I: English Baseline
+                if (p.percentile < config.gapEnd) p.targetColor.setHex(config.colors.eng);
+                else p.targetColor.setHex(config.colors.base);
+            } 
+            else if (index === 1) {
+                // Phase II: The Gap
+                if (p.percentile < config.gapStart) p.targetColor.setHex(config.colors.eng);
+                else if (p.percentile < config.gapEnd) p.targetColor.setHex(config.colors.gap);
+                else p.targetColor.setHex(config.colors.base);
+            }
+            else if (index === 2) {
+                // Phase III: Training (CoCoa)
+                if (p.role === 'gap') p.targetColor.setHex(config.colors.mix);
+                else if (p.percentile < config.gapStart) p.targetColor.setHex(config.colors.eng);
+                else p.targetColor.setHex(config.colors.base);
+            }
+            else if (index === 3) {
+                // Phase IV: Result
+                if (p.percentile < config.gapStart) p.targetColor.setHex(config.colors.eng);
+                else if (p.percentile < config.final) p.targetColor.setHex(config.colors.fix);
+                else p.targetColor.setHex(config.colors.base);
+            }
+        });
+
+        updateAnnotations(index);
+    }
+
+    function updateAnnotations(index) {
+        const annoEasy = document.getElementById('anno-easy');
+        const annoGap = document.getElementById('anno-gap');
+        const annoBase = document.getElementById('anno-base');
+
+        const annos = [annoEasy, annoGap, annoBase];
+        annos.forEach(a => a.classList.remove('visible'));
+
+        // Calculate positions
+        const y54 = offsetY + (config.rows * config.gapStart) * spacing;
+        const y78 = offsetY + (config.rows * config.gapEnd) * spacing;
+        const y100 = offsetY + (config.rows) * spacing;
+
+        const projectY = (y) => {
+            const v = new THREE.Vector3(0, y, 0);
+            v.project(camera);
+            return (-(v.y * 0.5) + 0.5) * container.clientHeight;
+        };
+
+        annoEasy.style.top = `${projectY(y54/2)}px`;
+        annoGap.style.top = `${projectY((y54+y78)/2)}px`;
+        annoBase.style.top = `${projectY((y78+y100)/2)}px`;
+
+        // Logic
+        if (index >= 0) annoEasy.classList.add('visible');
+        if (index >= 1) annoGap.classList.add('visible');
+        if (index >= 0) annoBase.classList.add('visible');
+
+        if (index === 3) {
+            annoGap.innerHTML = `<strong style="color:${'#10b981'}">Recovered</strong>Formerly failed questions.`;
+            annoGap.style.borderColor = '#10b981';
+            annoGap.style.color = '#111';
+        } else if (index === 2) {
+             annoGap.innerHTML = `<strong style="color:${'#9333ea'}">Training...</strong>Injecting CoCoa data.`;
+             annoGap.style.borderColor = '#9333ea';
+             annoGap.style.color = '#111';
+        } else {
+            annoGap.innerHTML = `<strong>The Gap</strong>Questions English solves, but Hindi fails.`;
+            annoGap.style.borderColor = '#ef4444';
+            annoGap.style.color = '#ef4444';
+        }
+    }
+
+    // --- ANIMATION LOOP ---
+    function animate() {
+        requestAnimationFrame(animate);
+
+        for (let i = 0; i < totalParticles; i++) {
+            const p = particleData[i];
+            p.currentColor.lerp(p.targetColor, 0.1);
+            
+            // Flicker Effect for Phase III (Training)
+            if(currentState === 2 && p.role === 'gap') {
+                if(Math.random() > 0.95) {
+                     // Add random noise to show activity
+                     p.currentColor.setHex(0xffffff); 
+                }
+            }
+            
+            mesh.setColorAt(i, p.currentColor);
+        }
+        mesh.instanceColor.needsUpdate = true;
+        renderer.render(scene, camera);
+    }
+    animate();
+
+    // --- SCROLL LISTENER ---
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const idx = parseInt(entry.target.dataset.index);
+                document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+                entry.target.classList.add('active');
+                updateState(idx);
+            }
+        });
+    }, { threshold: 0.6 });
+
+    document.querySelectorAll('.step').forEach(step => observer.observe(step));
+
+    // --- CMI LOGIC ---
+    const cmiTexts = {
+        1: `<span class="w en">Shopping</span> <span class="w hi">karte</span> <span class="w hi">samay</span> <span class="w hi">aap</span> <span class="w en">pizzeria</span> <span class="w hi">kahan</span> <span class="w hi">milne</span> <span class="w hi">ki</span> <span class="w hi">ummeed</span> <span class="w hi">karenge?</span>`,
+        2: `<span class="w en">Shopping</span> <span class="w hi">karte</span> <span class="w hi">samay</span> <span class="w hi">aap</span> <span class="w en">pizza</span> <span class="w hi">kahan</span> <span class="w hi">milne</span> <span class="w hi">ki</span> <span class="w en">hope</span> <span class="w hi">karenge?</span>`,
+        3: `<span class="w en">Shopping</span> <span class="w hi">karte</span> <span class="w en">time</span> <span class="w hi">aap</span> <span class="w en">pizza</span> <span class="w hi">kahan</span> <span class="w hi">milne</span> <span class="w hi">ki</span> <span class="w en">hope</span> <span class="w hi">karenge?</span>`
+    };
+
+    window.setCMI = (val) => {
+        document.getElementById('cmi-text').innerHTML = cmiTexts[val];
+        document.querySelectorAll('button').forEach((b, i) => {
+            b.classList.toggle('active', i === val - 1);
+        });
+    };
+
+    // Init
+    setCMI(2);
+    updateState(0);
+
+    window.addEventListener('resize', () => {
+        const aspect = container.clientWidth / container.clientHeight;
+        camera.left = -viewSize * aspect;
+        camera.right = viewSize * aspect;
+        camera.top = viewSize;
+        camera.bottom = -viewSize;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        updateAnnotations(currentState);
+    });
+
+</script>
+</body>
+</html>

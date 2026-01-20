@@ -1,0 +1,41 @@
+- name: email
+  url: "mailto:tanaynagar7@gmail.com"
+  label: "Email Tanay"
+  title: "Email"
+  icon: email
+  external: false
+
+- name: twitter
+  url: "https://x.com/tnagar72"
+  label: "X/Twitter"
+  title: "X/Twitter"
+  icon: twitter
+  external: true
+
+- name: linkedin
+  url: "https://www.linkedin.com/in/tanaynagar/"
+  label: "LinkedIn"
+  title: "LinkedIn"
+  icon: linkedin
+  external: true
+
+- name: github
+  url: "https://github.com/tnagar72"
+  label: "GitHub"
+  title: "GitHub"
+  icon: github
+  external: true
+
+- name: scholar
+  url: "https://scholar.google.com/citations?user=MEVH8HQAAAAJ&hl=en"
+  label: "Google Scholar"
+  title: "Google Scholar"
+  icon: scholar
+  external: true
+
+- name: bluesky
+  url: "https://bsky.app/profile/tnagar.bsky.social"
+  label: "Bluesky"
+  title: "Bluesky"
+  icon: bluesky
+  external: true

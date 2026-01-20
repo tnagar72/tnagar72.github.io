@@ -1,0 +1,3 @@
+<a href="{{ include.link.url }}"{% if include.link.url contains 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}>
+    <i class="fas {{ include.link.icon }}" aria-hidden="true"></i> {{ include.link.label }}
+</a>

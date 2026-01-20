@@ -1,0 +1,10 @@
+title: "Tanay Nagar"
+url: "https://tnagar72.github.io"
+baseurl: ""
+markdown: kramdown
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - _original

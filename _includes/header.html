@@ -1,0 +1,14 @@
+<header>
+    <div class="header-container">
+        <nav>
+            <button class="nav-name" onclick="scrollToSection('hero')">{{ site.data.profile.name }}</button>
+            <div class="nav-links">
+                <div class="social-links">
+                    {%- for link in site.data.social -%}
+                        {% include social-link.html link=link %}
+                    {%- endfor -%}
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>

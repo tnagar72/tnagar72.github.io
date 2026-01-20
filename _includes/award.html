@@ -1,0 +1,7 @@
+<span class="cv-award">
+    <i class="fas fa-trophy" aria-hidden="true"></i> {% if include.award.url -%}
+        <a href="{{ include.award.url }}" target="_blank" rel="noopener noreferrer">{{ include.award.text }}</a>
+    {%- else -%}
+        {{ include.award.text }}
+    {%- endif %}
+</span>

@@ -1,0 +1,3 @@
+<a href="{{ include.link.url }}" class="social-link" aria-label="{{ include.link.label }}" title="{{ include.link.title }}"{% if include.link.external %} target="_blank" rel="noopener noreferrer"{% endif %}>
+    {% include icons/{{ include.link.icon }}.svg %}
+</a>

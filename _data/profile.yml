@@ -1,0 +1,25 @@
+name: "Tanay Nagar"
+name_hindi: "तनय नगर"
+role: "Independent researcher"
+portrait: "Images/tanay-nd.jpeg"
+portrait_alt: "Portrait of Tanay Nagar"
+
+areas: "NLP · Human-Centered AI · Computational Social Science · AI Safety"
+
+# Raw HTML paragraphs to preserve <span class="highlight"> and exact spacing
+bio_paragraphs:
+  - 'My work focuses on developing <span class="highlight">equitable, socially-aware language technologies</span> that prioritize <strong>language equity</strong> for low-resource languages, uphold the <strong>socio-cultural nuances</strong> of diverse linguistic communities, and ensure robust <strong>human-AI dynamics</strong>.'
+  - "I'm particularly interested in how we can:"
+
+# Separate list items for the hero-list
+bio_list:
+  - "better evaluate/understand social subtleties across languages and cultures, both through and within language technologies;"
+  - "embed socio-ethical dynamics/intelligence within the creation of language technologies."
+
+education_html: "I earned a B.S. in Computer Science (Honors), a B.S. in Philosophy, and a certificate in leadership from the University of Wisconsin-Madison, and I am currently preparing for graduate study."
+
+connect_html: "I'm always happy to connect; feel free to reach out via email or the links at the top of the page."
+
+footer:
+  copyright_year: 2025
+  last_updated: "November 2025"

@@ -1,0 +1,13 @@
+<section id="publications" class="section-border">
+    <div class="hero-content">
+        <div class="section-header">
+            <h2>Featured publications and presentation</h2>
+        </div>
+
+        <div class="pub-list">
+            {%- for pub in site.data.publications -%}
+                {% include publication.html pub=pub %}
+            {%- endfor -%}
+        </div>
+    </div>
+</section>
