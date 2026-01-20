@@ -1,0 +1,49 @@
+# Field Notes Gallery - Animal Photography Catalog
+# Images are randomized for variety on each visit
+
+images:
+  - filename: IMG_7171.jpg
+    alt: "Animal photograph from field notes"
+  - filename: IMG_2399.jpg
+    alt: "Animal photograph from field notes"
+  - filename: "IMG_6449 2.jpg"
+    alt: "Animal photograph from field notes"
+  - filename: IMG_2442.jpg
+    alt: "Animal photograph from field notes"
+  - filename: IMG_6924.jpg
+    alt: "Animal photograph from field notes"
+  - filename: IMG_2378.jpg
+    alt: "Animal photograph from field notes"
+  - filename: IMG_7177.jpg
+    alt: "Animal photograph from field notes"
+  - filename: "IMG_6834 2.jpg"
+    alt: "Animal photograph from field notes"
+  - filename: IMG_2394.JPG
+    alt: "Animal photograph from field notes"
+  - filename: "IMG_6016 2.jpg"
+    alt: "Animal photograph from field notes"
+  - filename: IMG_7174.jpg
+    alt: "Animal photograph from field notes"
+  - filename: IMG_2446.jpg
+    alt: "Animal photograph from field notes"
+  - filename: "IMG_6450 2.jpg"
+    alt: "Animal photograph from field notes"
+  - filename: IMG_7168.jpg
+    alt: "Animal photograph from field notes"
+  - filename: IMG_2405.JPG
+    alt: "Animal photograph from field notes"
+  - filename: "IMG_6851 2.jpg"
+    alt: "Animal photograph from field notes"
+  - filename: IMG_2396.JPG
+    alt: "Animal photograph from field notes"
+  - filename: "IMG_6448 2.jpg"
+    alt: "Animal photograph from field notes"
+  - filename: "IMG_6849 2.jpg"
+    alt: "Animal photograph from field notes"
+
+metadata:
+  title: "Field Notes"
+  subtitle: "Animals I've met along the way"
+  back_link_text: "Tanay Nagar"
+  back_link_url: "https://tnagar72.github.io"
+  copyright: "© 2026 Tanay Nagar"

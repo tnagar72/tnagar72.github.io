@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include field-notes-head.html %}
+<body>
+    {% include field-notes-nav.html %}
+
+    <header>
+        <h1>{{ site.data.field-notes.metadata.title }}</h1>
+        <p class="subtitle">{{ site.data.field-notes.metadata.subtitle }}</p>
+    </header>
+
+    <main class="gallery">
+        {%- for image in site.data.field-notes.images -%}
+            {% include field-notes-postcard.html image=image %}
+        {%- endfor -%}
+    </main>
+
+    <footer>
+        <p>{{ site.data.field-notes.metadata.copyright }}</p>
+    </footer>
+</body>
+</html>
