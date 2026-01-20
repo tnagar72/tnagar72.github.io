@@ -16,15 +16,7 @@
         <div class="hero-bio">
             <img src="{{ site.data.profile.portrait | relative_url }}" alt="{{ site.data.profile.portrait_alt }}">
 
-            {%- for paragraph in site.data.profile.bio_paragraphs -%}
-            <p>{{ paragraph }}</p>
-            {%- endfor -%}
-
-            <ul class="hero-list">
-                {%- for item in site.data.profile.bio_list -%}
-                <li>{{ item }}</li>
-                {%- endfor -%}
-            </ul>
+            {{ site.data.profile.bio_html }}
 
             <p>{{ site.data.profile.education_html }}</p>
 

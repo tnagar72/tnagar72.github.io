@@ -1,0 +1,62 @@
+# People registry - single source of truth for all collaborators and authors
+# on-homepage: true = show in hero section collaborators paragraph
+
+Tanay Nagar:
+  url: "#hero"
+  me: true
+  on-homepage: false  # Don't list yourself in collaborators paragraph
+
+# Homepage collaborators (currently displayed in hero)
+Dr. Nitesh V. Chawla:
+  url: https://lucyinstitute.nd.edu/people/the-lucy-family-core-team/nitesh-chawla/
+  on-homepage: true
+
+Dr. Sarah Jung:
+  url: https://www.surgery.wisc.edu/staff/sarah-sullivan/
+  on-homepage: true
+
+Dr. Shamya Karumbaiah:
+  url: https://shamya.github.io/
+  on-homepage: true
+
+Dr. Jacob Thebault-Spieker:
+  url: https://jacob.thebault-spieker.com/
+  on-homepage: true
+
+Dr. Margarita Ruiz Olázar:
+  url: https://revista.ucom.edu.py/ucom/about/editorialTeam
+  on-homepage: true
+
+# Publication co-authors (not on homepage, but linked in publications)
+Sarah Jung:
+  url: https://www.surgery.wisc.edu/staff/sarah-sullivan/
+  on-homepage: false
+
+Peter Wirth:
+  url: https://www.surgery.wisc.edu/staff/peter-wirth/
+  on-homepage: false
+
+Alyssa Schappe:
+  url: https://www.linkedin.com/in/alyssa-schappe/
+  on-homepage: false
+
+Amorn N. Salyapongse:
+  url: https://www.uwhealth.org/providers/a-neil-salyapongse-md
+  on-homepage: false
+
+Grigorii Khvatskii:
+  url: https://scholar.google.com/citations?user=Zr5ilBoAAAAJ&hl=en
+  on-homepage: false
+
+Anna Sokol:
+  url: https://scholar.google.com/citations?user=wrEaQEQAAAAJ&hl=ru
+  on-homepage: false
+
+Nitesh V. Chawla:
+  url: https://niteshchawla.nd.edu/
+  on-homepage: false
+
+# Thesis advisors (not on homepage, but linked in publications)
+Dr. Fred Sala:
+  url: https://pages.cs.wisc.edu/~fredsala/
+  on-homepage: false

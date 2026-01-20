@@ -4,7 +4,7 @@
     </h3>
     <p class="pub-authors">
         {%- for author in include.pub.authors -%}
-            <a href="{{ author.url }}"{% unless author.self %} target="_blank" rel="noopener noreferrer"{% endunless %}>{{ author.name }}</a>
+            {% include person.html person=author %}
             {%- unless forloop.last -%}, {% endunless -%}
         {%- endfor -%}
     </p>
@@ -20,7 +20,7 @@
     <p class="pub-advisors">
         Advisors:
         {% for advisor in include.pub.advisors -%}
-            <a href="{{ advisor.url }}" target="_blank" rel="noopener noreferrer">{{ advisor.name }}</a>
+            {% include person.html person=advisor %}
             {%- unless forloop.last -%}, {% endunless -%}
         {%- endfor %}
     </p>

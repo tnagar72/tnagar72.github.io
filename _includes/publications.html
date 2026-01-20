@@ -5,7 +5,8 @@
         </div>
 
         <div class="pub-list">
-            {%- for pub in site.data.publications -%}
+            {%- assign featured_pubs = site.data.publications | where: "featured", true | sort: "feature-order" -%}
+            {%- for pub in featured_pubs -%}
                 {% include publication.html pub=pub %}
             {%- endfor -%}
         </div>

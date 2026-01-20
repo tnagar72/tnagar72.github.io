@@ -1,23 +1,25 @@
 - id: bias-lor
   title: "Exploring Bias in Letters of Recommendation using NLP Techniques"
   authors:
-    - name: "Tanay Nagar"
-      url: "#hero"
-      self: true
-    - name: "Sarah Jung"
-      url: "https://www.surgery.wisc.edu/staff/sarah-sullivan/"
-    - name: "Peter Wirth"
-      url: "https://www.surgery.wisc.edu/staff/peter-wirth/"
-    - name: "Alyssa Schappe"
-      url: "https://www.linkedin.com/in/alyssa-schappe/"
-    - name: "Amorn N. Salyapongse"
-      url: "https://www.uwhealth.org/providers/a-neil-salyapongse-md"
+    - Tanay Nagar
+    - Sarah Jung
+    - Peter Wirth
+    - Alyssa Schappe
+    - Amorn N. Salyapongse
   venue: "Oral presentation: ACEPS 2025 · Extended abstract published in PRS Global Open 2025."
+  venue-shorthand: ACEPS
+  year: 2025
+  type: conference
+  featured: true
+  feature-order: 1
+  selected: true
+  # bibtex: |-
+  #   @inproceedings{...}
   awards:
     - text: "Hina and Faisal Mushtaq Scholarship"
   links:
     - label: "Talk Slides"
-      url: "PRS_Global/wisc-surgery-ppt-template.pptx (2).pdf"
+      url: "/PRS_Global/wisc-surgery-ppt-template.pptx (2).pdf"
       icon: "fa-window-maximize"
     - label: "PRS Global Article"
       url: "https://journals.lww.com/prsgo/fulltext/2025/06004/7__detecting_bias_in_plastic_surgery_residency.7.aspx?context=latestarticles"
@@ -33,48 +35,54 @@
 - id: bridging-language-gaps
   title: "Bridging Language Gaps: Code-Switched Fine-Tuning for Multilingual LLMs"
   authors:
-    - name: "Tanay Nagar"
-      url: "#hero"
-      self: true
-    - name: "Grigorii Khvatskii"
-      url: "https://scholar.google.com/citations?user=Zr5ilBoAAAAJ&hl=en"
-    - name: "Anna Sokol"
-      url: "https://scholar.google.com/citations?user=wrEaQEQAAAAJ&hl=ru"
-    - name: "Nitesh V. Chawla"
-      url: "https://niteshchawla.nd.edu/"
+    - Tanay Nagar
+    - Grigorii Khvatskii
+    - Anna Sokol
+    - Nitesh V. Chawla
   venue_html: 'Poster: NAACL 2025 Student Research Workshop (SRW); ND Summer Research Symposium 2024 · Full paper on <a href="https://arxiv.org/abs/2508.12662" target="_blank" rel="noopener noreferrer">arXiv</a> 2025.'
+  venue-shorthand: NAACL
+  year: 2025
+  type: conference
+  featured: true
+  feature-order: 2
+  selected: true
+  # bibtex: |-
+  #   @inproceedings{...}
   awards:
     - text: "Bromley Conference Travel Award"
     - text: "CDIS Student Travel Award"
   links:
     - label: "NAACL SRW Poster"
-      url: "Bridging_Language_Gaps_CS/NAACL 2025 Presentation.pdf"
+      url: "/Bridging_Language_Gaps_CS/NAACL 2025 Presentation.pdf"
       icon: "fa-image"
     - label: "Visualization"
-      url: "Bridging_Language_Gaps_CS/breaking_language_barriers_interactive_vis.html"
+      url: "/Bridging_Language_Gaps_CS/breaking_language_barriers_interactive_vis.html"
       icon: "fa-chart-line"
     - label: "arXiv"
       url: "https://arxiv.org/abs/2508.12662"
       icon: "fa-file-alt"
     - label: "ND Symposium Poster"
-      url: "Bridging_Language_Gaps_CS/Tanay ND Summer Symposium.pdf"
+      url: "/Bridging_Language_Gaps_CS/Tanay ND Summer Symposium.pdf"
       icon: "fa-image"
   summary: "We study code-switched fine-tuning strategies for multilingual language models, focusing on how mixing languages in realistic ways affects performance. The work explores how these techniques can narrow performance gaps for low-resource and multilingual communities."
 
 - id: honors-thesis
   title: "Decoding Bias in Letters of Recommendation: A Word Embeddings Approach"
   authors:
-    - name: "Tanay Nagar"
-      url: "#hero"
-      self: true
-  venue: "Senior Honors Thesis, University of Wisconsin-Madison, 2025 · Oral presentation: UW Honors Research Symposium 2025."
+    - Tanay Nagar
   advisors:
-    - name: "Dr. Fred Sala"
-      url: "https://pages.cs.wisc.edu/~fredsala/"
-    - name: "Dr. Sarah Jung"
-      url: "https://www.surgery.wisc.edu/staff/sarah-sullivan/"
-    - name: "Dr. Shamya Karumbaiah"
-      url: "https://shamya.github.io/"
+    - Dr. Fred Sala
+    - Dr. Sarah Jung
+    - Dr. Shamya Karumbaiah
+  venue: "Senior Honors Thesis, University of Wisconsin-Madison, 2025 · Oral presentation: UW Honors Research Symposium 2025."
+  venue-shorthand: "UW Honors"
+  year: 2025
+  type: thesis
+  featured: true
+  feature-order: 3
+  selected: true
+  # bibtex: |-
+  #   @mastersthesis{...}
   awards:
     - text: "Hilldale Undergraduate/Faculty Research Fellowship"
       url: "https://awards.advising.wisc.edu/campus-wide-award-recipients/test-hilldale-fellows/#:~:text=Tanay%20Nagar%2C%20Computer%20Sciences%2C%20Philosophy%2C%20Sarah%20Jung"
@@ -82,9 +90,9 @@
       url: "https://ls.wisc.edu/news/tanay-nagar-awarded-richard-ralph-winter-phoenix-rising-humanitarian-scholarship"
   links:
     - label: "Honors Symposium Talk"
-      url: "Senior_Honors_Thesis/NAGAR_SYMPOSIUM2025.pptx (2).pdf"
+      url: "/Senior_Honors_Thesis/NAGAR_SYMPOSIUM2025.pptx (2).pdf"
       icon: "fa-window-maximize"
     - label: "Fellowship Proposal"
-      url: "Senior_Honors_Thesis/Nagar Senior Honors Thesis Grant Proposal.pdf"
+      url: "/Senior_Honors_Thesis/Nagar Senior Honors Thesis Grant Proposal.pdf"
       icon: "fa-file-alt"
   summary: "Using 1,585 de-identified letters of recommendation (~919k tokens), my thesis combines Word2Vec and fine-tuned Mistral-7B embeddings to measure gender-directional framing via bias axes, WEAT-style tests, and analogy probes. It turns long-standing concerns about biased LoR language into quantitative metrics that can be used for reviewer calibration, dashboards, and faculty workshops to support fairer admissions and evaluations."

@@ -1,0 +1,10 @@
+{%- comment -%}
+Person lookup template - looks up person data from _data/people.yml
+Usage: {% include person.html person="Person Name" %}
+{%- endcomment -%}
+{%- assign data = site.data.people[include.person] -%}
+{%- if data.url -%}
+<a href="{{ data.url }}"{% unless data.me %} target="_blank" rel="noopener noreferrer"{% endunless %}>{{ include.person }}</a>
+{%- else -%}
+{{ include.person }}
+{%- endif -%}
