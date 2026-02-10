@@ -1,0 +1,12 @@
+<section id="etc" class="section-border">
+    <div class="hero-content">
+        <div class="section-header">
+            <h2>/etc</h2>
+        </div>
+
+        <div class="hero-bio">
+            {% capture etc_md %}{% include etc-content.md %}{% endcapture %}
+            {{ etc_md | markdownify }}
+        </div>
+    </div>
+</section>
