@@ -1,18 +1,23 @@
 people:
   - name: Dr. Nitesh V. Chawla
     url: https://lucyinstitute.nd.edu/people/the-lucy-family-core-team/nitesh-chawla/
+    frontPage: true
 
   - name: Dr. Sarah Jung
     url: https://www.surgery.wisc.edu/staff/sarah-sullivan/
+    frontPage: true
 
   - name: Dr. Shamya Karumbaiah
     url: https://shamya.github.io/
+    frontPage: true
 
   - name: Dr. Jacob Thebault-Spieker
     url: https://jacob.thebault-spieker.com/
+    frontPage: true
 
   - name: Dr. Margarita Ruiz Olázar
     url: https://revista.ucom.edu.py/ucom/about/editorialTeam
+    frontPage: false
 
 institutions:
   - name: University of Wisconsin-Madison
@@ -20,21 +25,25 @@ institutions:
     logo: /Images/uw-crest-color-web-digital.svg
     logo_alt: UW-Madison crest
     logo_class: crest
+    frontPage: true
 
   - name: UW Health
     url: https://www.uwhealth.org/
     logo: /Images/uwhealth_icon.svg
     logo_alt: UW Health
     logo_class: wordmark
+    frontPage: true
 
   - name: University of Notre Dame
     url: https://www.nd.edu/
     logo: /Images/Notre_Dame_Fighting_Irish_logo.svg
     logo_alt: Notre Dame
     logo_class: ""
+    frontPage: true
 
   - name: Universidad Comunera
     url: https://ucom.edu.py/
     logo: /Images/UCOM_mark.svg
     logo_alt: UCOM mark
     logo_class: ""
+    frontPage: false
