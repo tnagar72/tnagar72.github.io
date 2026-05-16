@@ -32,7 +32,7 @@ institutions:
     logo: /Images/uwhealth_icon.svg
     logo_alt: UW Health
     logo_class: wordmark
-    frontPage: true
+    frontPage: false
 
   - name: University of Notre Dame
     url: https://www.nd.edu/
@@ -47,3 +47,13 @@ institutions:
     logo_alt: UCOM mark
     logo_class: ""
     frontPage: false
+
+  - name: UW School of Medicine and Public Health
+    url: https://www.med.wisc.edu/
+    logo: /Images/uw-crest-1-color-web-digital.svg
+    logo_alt: UW crest
+    logo_class: crest
+    frontPage: true
+    subs:
+      - name: WiSOR
+        url: https://www.surgery.wisc.edu/research/wisor/
