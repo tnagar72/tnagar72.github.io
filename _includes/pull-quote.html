@@ -8,9 +8,6 @@
   Attribution is optional.
 {%- endcomment -%}
 
-<blockquote class="pull-quote">
-  {{ include.body | markdownify | remove: "<p>" | remove: "</p>" }}
-  {%- if include.attribution -%}
-    <footer class="pull-quote__attribution">{{ include.attribution }}</footer>
-  {%- endif -%}
-</blockquote>
+<blockquote class="pull-quote" markdown="0">
+{{ include.body | markdownify | remove: "<p>" | remove: "</p>" }}{% if include.attribution %}<footer class="pull-quote__attribution">{{ include.attribution }}</footer>
+{% endif %}</blockquote>

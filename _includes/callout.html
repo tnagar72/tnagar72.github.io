@@ -31,9 +31,7 @@
   {%- endcase -%}
 {%- endif -%}
 
-<aside class="callout callout--{{ type }}">
-  {%- if title and title != "" -%}
-    <div class="callout__title">{{ title }}</div>
-  {%- endif -%}
-  <div class="callout__body">{{ include.body | markdownify }}</div>
+<aside class="callout callout--{{ type }}" markdown="0">
+{% if title and title != "" %}<div class="callout__title">{{ title }}</div>
+{% endif %}<div class="callout__body">{{ include.body | markdownify }}</div>
 </aside>

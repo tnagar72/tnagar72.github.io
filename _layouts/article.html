@@ -19,18 +19,16 @@
         <div class="article-header__authors">
           {% for author in page.authors %}
             {% if author.name %}
-              {%- comment -%} Inline object: external author {%- endcomment -%}
+              {%- comment -%} Inline object: external author. Render as plain span (no link in header; links live in full-metadata card below). {%- endcomment -%}
               <div class="article-header__author">
-                {% if author.url %}<a href="{{ author.url }}" class="article-header__author-name">{{ author.name }}</a>
-                {% else %}<span class="article-header__author-name">{{ author.name }}</span>{% endif %}
+                <span class="article-header__author-name">{{ author.name }}</span>
                 {% if author.affiliation %}<span class="article-header__author-affil">{{ author.affiliation }}</span>{% endif %}
               </div>
             {% else %}
               {%- comment -%} String: lookup in _data/people.yaml by name key {%- endcomment -%}
               {% assign person = site.data.people[author] %}
               <div class="article-header__author">
-                {% if person.url %}<a href="{{ person.url }}" class="article-header__author-name">{{ author }}</a>
-                {% else %}<span class="article-header__author-name">{{ author }}</span>{% endif %}
+                <span class="article-header__author-name">{{ author }}</span>
                 {% if person.affiliation %}<span class="article-header__author-affil">{{ person.affiliation }}</span>{% endif %}
               </div>
             {% endif %}
@@ -119,10 +117,13 @@
         <div class="full-metadata__inline-list">
           {% for author in page.authors %}
             {% if author.name %}
-              {% if author.url %}<a href="{{ author.url }}">{{ author.name }}</a>{% else %}<span>{{ author.name }}</span>{% endif %}
+              {% if author.url %}<a href="{{ author.url }}"{% unless author.me %} target="_blank" rel="noopener noreferrer"{% endunless %}>{{ author.name }}</a>{% else %}<span>{{ author.name }}</span>{% endif %}
             {% else %}
-              {% assign person = site.data.people[author] %}
-              {% if person.url %}<a href="{{ person.url }}">{{ author }}</a>{% else %}<span>{{ author }}</span>{% endif %}
+              {%- assign person = site.data.people[author] -%}
+              {%- comment -%} If person.me (it's Tanay), link to the homepage; otherwise use their people.yaml URL (external link). {%- endcomment -%}
+              {% if person.me %}<a href="{{ '/' | relative_url }}">{{ author }}</a>
+              {% elsif person.url %}<a href="{{ person.url }}" target="_blank" rel="noopener noreferrer">{{ author }}</a>
+              {% else %}<span>{{ author }}</span>{% endif %}
             {% endif %}
             {% unless forloop.last %}<span class="sep">·</span>{% endunless %}
           {% endfor %}

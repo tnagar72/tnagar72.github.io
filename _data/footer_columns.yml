@@ -3,17 +3,17 @@
 # Three column shapes: single-link, link-group, social-list.
 
 home:
-  meta_title: "{{ version }}"     # the post-footer include interpolates {{ version }}
+  use_version: true                 # post-footer renders meta_title as site.data.site.version
   shape: single-link
   link: { text: "Home", url: "/" }
 
 writing:
-  meta_title: "Writing"
+  meta_title: "Sections"
   shape: link-group
   links:
-    - { text: "Essays", url: "/writing/essays/", description: "Long-form, taken time with" }
-    - { text: "Notes", url: "/writing/notes/", description: "Shorter musings, observations" }
-    - { text: "Projects", url: "/writing/projects/", description: "Builds, experiments, hackathons" }
+    - { text: "Writing", url: "/writing/", description: "Essays, notes, observations" }
+    - { text: "Research", url: "/research/", description: "Papers, talks, ongoing work" }
+    - { text: "Projects", url: "/projects/", description: "Builds and experiments" }
 
 about:
   meta_title: "About"

@@ -27,8 +27,13 @@
     {%- for col_alias in columns -%}
       {%- assign col = site.data.footer_columns[col_alias] -%}
       {%- if col.shape == "single-link" -%}
+        {%- if col.use_version -%}
+          {%- assign meta_title = site.data.site.version -%}
+        {%- else -%}
+          {%- assign meta_title = col.meta_title -%}
+        {%- endif -%}
         <section class="footer__section">
-          <div class="footer__meta-title">{{ col.meta_title | replace: "{{ version }}", site.data.site.version }}</div>
+          <div class="footer__meta-title">{{ meta_title }}</div>
           <a class="footer__link" href="{{ col.link.url }}">{{ col.link.text }}</a>
         </section>
       {%- elsif col.shape == "link-group" -%}
