@@ -1,0 +1,101 @@
+{%- comment -%}
+  Sidenote rendering — V1 desktop only.
+  Walks each `<sup id="fnref:N">` footnote ref, finds the corresponding
+  `<li id="fn:N">` body in the bottom footnotes block, and clones it
+  into an `<aside class="sidenote">` placed inside the prose grid so
+  CSS can pin it to cols 10-12 next to its anchor.
+
+  The bottom footnotes block remains in the DOM but is hidden by CSS
+  on desktop only — this preserves anchor links and avoids stealing
+  content from screen readers (the injected aside is aria-hidden so
+  AT users hear the bottom block, not the visual gutter copy).
+
+  Only runs when viewport is ≥1000px AND layout is `article`. Re-runs
+  on resize so DevTools/responsive testing flows work correctly.
+{%- endcomment -%}
+
+<script>
+(function() {
+  var injected = false;
+
+  function injectSidenotes() {
+    if (injected) return;
+    if (window.matchMedia('(max-width: 999px)').matches) return;
+    if (!document.body.classList.contains('layout-article')) return;
+
+    var article = document.querySelector('.post-root .article-content');
+    if (!article) return;
+
+    var refs = article.querySelectorAll('sup[role="doc-noteref"]');
+    if (refs.length === 0) return;
+
+    refs.forEach(function(ref) {
+      var anchor = ref.querySelector('a.footnote');
+      if (!anchor) return;
+      var href = anchor.getAttribute('href');
+      if (!href || href[0] !== '#') return;
+      var targetId = href.slice(1);
+      var li = document.getElementById(targetId);
+      if (!li) return;
+
+      // Walk up to the closest direct-child-of-article ancestor — that's
+      // the element CSS grid-positions in cols 10-12. If the ref is
+      // inside a callout/blockquote, we attach the sidenote AFTER the
+      // whole callout/blockquote, not inside it (which would break grid).
+      var paragraph = ref.closest('p, li, h2, h3, h4');
+      if (!paragraph) return;
+      var anchorBlock = paragraph;
+      while (anchorBlock.parentNode && anchorBlock.parentNode !== article) {
+        anchorBlock = anchorBlock.parentNode;
+      }
+      if (anchorBlock.parentNode !== article) return;
+
+      // Clone the footnote body and strip:
+      //   - the backref arrow (visually noisy in the gutter)
+      //   - any `id` attributes (the originals stay in the bottom
+      //     footnotes block; cloning would produce duplicate IDs which
+      //     breaks anchors and screen-reader navigation)
+      var clone = li.cloneNode(true);
+      var backref = clone.querySelector('a.reversefootnote, a.footnote-backref');
+      if (backref) backref.parentNode.removeChild(backref);
+      if (clone.id) clone.removeAttribute('id');
+      clone.querySelectorAll('[id]').forEach(function(el) {
+        el.removeAttribute('id');
+      });
+
+      var aside = document.createElement('aside');
+      aside.className = 'sidenote sidenote--injected';
+      // AT reads the bottom footnotes block; the visual sidenote is a
+      // duplicate, so hide it from accessibility tree.
+      aside.setAttribute('aria-hidden', 'true');
+
+      var num = document.createElement('span');
+      num.className = 'sidenote__num';
+      num.textContent = anchor.textContent + '.';
+      aside.appendChild(num);
+      aside.appendChild(document.createTextNode(' '));
+
+      Array.prototype.forEach.call(clone.childNodes, function(node) {
+        aside.appendChild(node.cloneNode(true));
+      });
+
+      anchorBlock.parentNode.insertBefore(aside, anchorBlock.nextSibling);
+    });
+
+    article.classList.add('sidenotes-active');
+    injected = true;
+  }
+
+  function run() {
+    // requestAnimationFrame defers to after layout, fixing parse-time
+    // matchMedia races (e.g., iframe contexts, DevTools open at narrow).
+    requestAnimationFrame(injectSidenotes);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+})();
+</script>

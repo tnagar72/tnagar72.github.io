@@ -1,0 +1,17 @@
+{%- comment -%}
+  Collapsible <details> block. Body is markdown.
+
+  Usage (block body via capture):
+    {% capture body %}
+    Body in markdown — multiline OK.
+    {% endcapture %}
+    {% include details.html summary="Click to expand" body=body %}
+
+  Avoids the Kramdown gotcha where raw <details> blocks need explicit
+  markdown="1" to keep markdown parsing alive inside them.
+{%- endcomment -%}
+
+<details markdown="0">
+<summary>{{ include.summary | default: "Expand" }}</summary>
+<div class="details__body">{{ include.body | markdownify }}</div>
+</details>

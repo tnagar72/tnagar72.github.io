@@ -1,0 +1,16 @@
+{%- comment -%}
+  Epigraph — small italic attributed quote, typically at the
+  start of a section. Distinct from blockquote (which is for
+  quoted material from the cited work) and pull-quote (which
+  emphasizes a single line from the author's own writing).
+
+  Usage:
+    {% capture eg %}
+    The medium is the message.
+    {% endcapture %}
+    {% include epigraph.html body=eg attribution="— Marshall McLuhan, 1964" %}
+{%- endcomment -%}
+
+<blockquote class="epigraph" markdown="0">
+{{ include.body | markdownify | remove: "<p>" | remove: "</p>" }}{% if include.attribution %}<footer class="epigraph__attribution">{{ include.attribution }}</footer>
+{% endif %}</blockquote>
