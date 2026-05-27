@@ -1,0 +1,25 @@
+---
+layout: default
+title: Writing
+permalink: /writing/
+---
+
+<section class="writing-index">
+  <div class="writing-index__inner">
+    <h1 class="writing-index__title">Writing</h1>
+
+    {% assign entries = site.writing | where: "published", true | sort: "date" | reverse %}
+
+    {% if entries.size == 0 %}
+      <p class="writing-index__empty">Nothing published yet.</p>
+    {% else %}
+      <ol class="writing-index__list">
+        {% for entry in entries %}
+          <li>
+            <a class="writing-index__link" href="{{ entry.url | relative_url }}">{{ entry.title }}</a>
+          </li>
+        {% endfor %}
+      </ol>
+    {% endif %}
+  </div>
+</section>
