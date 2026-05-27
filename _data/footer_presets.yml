@@ -1,0 +1,27 @@
+# Named footer configurations. A post's frontmatter picks one via
+# `footer_preset:`. Default is `entry` if unset.
+#
+# `show_byline`     — left half of the colophon row ("Tanay Nagar")
+# `show_colophon`   — right half ("Written from Madison & Mumbai")
+# Set either to false to hide that half. The bottom row disappears
+# entirely only if both are false.
+
+entry:
+  columns: [home, elsewhere]
+  show_byline: true
+  show_colophon: true
+
+writing_index:
+  columns: [home, writing, about, elsewhere, contact]
+  show_byline: true
+  show_colophon: true
+
+paper_companion:
+  columns: [home, elsewhere, contact]
+  show_byline: true
+  show_colophon: true
+
+minimal:
+  columns: [home, elsewhere]
+  show_byline: false
+  show_colophon: false

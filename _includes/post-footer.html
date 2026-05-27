@@ -1,0 +1,79 @@
+{%- comment -%}
+  Writing-only dark footer. Used by _layouts/article.html and _layouts/note.html.
+  Does NOT affect homepage or field-notes — those use _includes/footer.html.
+
+  Configuration: page frontmatter picks a preset name via `footer_preset:`.
+  Per-page overrides supported: footer_columns, footer_show_byline,
+  footer_show_colophon.
+{%- endcomment -%}
+
+{%- assign preset_name = page.footer_preset | default: "entry" -%}
+{%- assign preset = site.data.footer_presets[preset_name] -%}
+
+{%- assign columns = page.footer_columns | default: preset.columns -%}
+{%- if page.footer_show_byline != nil -%}
+  {%- assign show_byline = page.footer_show_byline -%}
+{%- else -%}
+  {%- assign show_byline = preset.show_byline -%}
+{%- endif -%}
+{%- if page.footer_show_colophon != nil -%}
+  {%- assign show_colophon = page.footer_show_colophon -%}
+{%- else -%}
+  {%- assign show_colophon = preset.show_colophon -%}
+{%- endif -%}
+
+<footer class="footer">
+  <nav class="footer__nav">
+    {%- for col_alias in columns -%}
+      {%- assign col = site.data.footer_columns[col_alias] -%}
+      {%- if col.shape == "single-link" -%}
+        <section class="footer__section">
+          <div class="footer__meta-title">{{ col.meta_title | replace: "{{ version }}", site.data.site.version }}</div>
+          <a class="footer__link" href="{{ col.link.url }}">{{ col.link.text }}</a>
+        </section>
+      {%- elsif col.shape == "link-group" -%}
+        <section class="footer__section footer__section--link-group">
+          <div class="footer__meta-title">{{ col.meta_title }}</div>
+          {%- for link in col.links -%}
+            <a class="footer__link" href="{{ link.url }}">
+              <span class="footer__link-text">{{ link.text }}</span>
+              {%- if link.description -%}
+                <span class="footer__link-desc">{{ link.description }}</span>
+              {%- endif -%}
+            </a>
+          {%- endfor -%}
+        </section>
+      {%- elsif col.shape == "social-list" -%}
+        <section class="footer__section footer__section--social">
+          <div class="footer__meta-title">{{ col.meta_title }}</div>
+          <ul class="social-list">
+            {%- for key in col.social_keys -%}
+              {%- assign social = site.data.social | where: "name", key | first -%}
+              {%- if social -%}
+                <li class="social-list__list-item">
+                  <span class="social-list__icon" aria-hidden="true">
+                    {%- include icons/{{ social.icon }}.svg -%}
+                  </span>
+                  <a class="social-list__link" href="{{ social.url }}"{% if social.external %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ social.title }}</a>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        </section>
+      {%- endif -%}
+    {%- endfor -%}
+  </nav>
+
+  {%- if show_byline or show_colophon -%}
+    <div class="footer__colophon">
+      {%- if show_byline -%}
+        <span class="footer__colophon-left">{{ site.data.site.byline_name }}</span>
+      {%- else -%}
+        <span class="footer__colophon-left"></span>
+      {%- endif -%}
+      {%- if show_colophon -%}
+        <span class="footer__colophon-right">Written from {{ site.data.site.written_from }}</span>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</footer>
