@@ -91,7 +91,7 @@
   {% if page.cover %}
   <div class="cover-band">
     <div class="cover-band__inner">
-      <img class="cover-band__img" src="{{ page.cover | relative_url }}" alt="{{ page.cover_alt }}" loading="lazy">
+      <img class="cover-band__img" src="{{ page.cover | relative_url }}" alt="{{ page.cover_alt | escape }}" loading="lazy">
     </div>
   </div>
   <hr class="cover-divider" aria-hidden="true" />
@@ -163,5 +163,6 @@
 {% include post-footer.html %}
 
 </div>
+{% include sidenotes.html %}
 </body>
 </html>

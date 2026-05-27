@@ -253,10 +253,11 @@
   .post-root .article-frame .tldr             { order: 4; }
 }
 @media (min-width: 1000px) {
-  /* Desktop: cover FIRST, then header. TL;DR + cover-divider hidden. */
+  /* Desktop: cover FIRST, then header, then TL;DR. cover-divider hidden
+     (the article-header bottom border already separates the prose). */
   .post-root .article-frame .cover-band       { order: 1; }
   .post-root .article-frame .article-header   { order: 2; }
-  .post-root .article-frame .tldr             { display: none; }
+  .post-root .article-frame .tldr             { order: 3; }
   .post-root .article-frame .cover-divider    { display: none; }
 }
 
@@ -337,7 +338,10 @@
 .post-root .cover-divider {
   border: 0;
   border-top: 1px solid var(--color-border-mid);
-  margin: 1rem 1rem 0;          /* horizontal margin = 1rem, no auto-center conflict */
+  margin: 1rem 0 0;
+  width: calc(100% - 2rem);
+  margin-inline: 1rem;
+  box-sizing: border-box;
 }
 @media (min-width: 1000px) {
   .post-root .cover-divider { display: none; }
@@ -982,7 +986,44 @@
   }
 }
 
-/* Footnotes block — V1 mobile only (desktop uses sidenotes) */
+/* Injected sidenotes (V1 desktop, rendered by sidenotes.html JS).
+   The script clones the bottom-footnote body into a sibling <aside>
+   right after the paragraph containing the anchor. On desktop, the
+   12-col grid pins it to cols 10-12 in the right gutter. */
+@media (min-width: 1000px) {
+  .post-root .article-content .sidenote--injected {
+    display: block;
+    grid-column: 10 / span 3;
+    align-self: start;
+    margin-top: 0;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--color-text-mid);
+    border-left: 2px solid var(--color-border-mid);
+    padding-left: 0.75rem;
+    margin-block-end: 0.5rem;
+  }
+  .post-root .article-content .sidenote--injected .sidenote__num {
+    color: var(--color-link);
+    font-weight: 600;
+    margin-right: 0.25ch;
+    font-variant-numeric: tabular-nums;
+  }
+  .post-root .article-content .sidenote--injected p {
+    display: inline;
+    margin: 0;
+  }
+  /* Hide the bottom footnotes block on desktop ONLY when sidenotes
+     have been injected (the JS adds .sidenotes-active to the article). */
+  .post-root .article-content.sidenotes-active ~ .footnotes,
+  .post-root .article-content.sidenotes-active .footnotes {
+    display: none;
+  }
+}
+
+/* Footnotes block — always visible at the bottom (V1 mobile, V2,
+   and V1 desktop when JS is disabled or sidenotes fail to render). */
 .post-root .footnotes {
   grid-column: 4 / span 6 !important;
   margin-block: 3rem 1.5rem;
@@ -995,9 +1036,29 @@
 }
 .post-root .footnotes ol { padding-left: 1.5rem; margin: 0; list-style: decimal; }
 .post-root .footnotes li { margin-block-end: 0.5rem; }
-.post-root .footnotes a.footnote-backref { margin-left: 0.25em; color: var(--color-text-faint); text-decoration: none; }
-@media (min-width: 1000px) {
-  .post-root .footnotes { display: none; }
+.post-root .footnotes li p { margin-block-end: 0.25rem; }
+.post-root .footnotes a.footnote-backref,
+.post-root .footnotes a.reversefootnote {
+  margin-left: 0.375em;
+  color: var(--color-link);
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 0.125rem 0.25rem;
+  border-radius: 3px;
+  transition: background 0.15s var(--ease-out);
+  display: inline-block;
+  vertical-align: -0.05em;
+}
+.post-root .footnotes a.footnote-backref:hover,
+.post-root .footnotes a.reversefootnote:hover {
+  background: rgba(0, 102, 204, 0.08);
+  text-decoration: none;
+}
+.post-root .article-content sup[role="doc-noteref"] a {
+  color: var(--color-link);
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0 0.1em;
 }
 
 /* ============================================================
@@ -1213,7 +1274,14 @@
   overflow-x: auto;
   overflow-y: hidden;
 }
-.post-root .article-content .katex { font-size: 1.05em; }
+.post-root .article-content .katex {
+  font-size: 1.05em;
+  max-width: 100%;
+  display: inline-block;
+  overflow-x: auto;
+  overflow-y: hidden;
+  vertical-align: middle;
+}
 
 /* ============================================================
    FOOTER
@@ -1428,18 +1496,326 @@
   transition: transform 0.2s var(--ease-out);
 }
 .post-root .article-content #markdown-toc li a:hover::after { transform: scaleX(1); }
-/* Nested ul (H3 children of H2s) — indent slightly */
+/* Hide nested levels — TOC shows H2s only.
+   Kramdown emits nested <ul> for H3/H4 children; we collapse them. */
 .post-root .article-content #markdown-toc ul {
-  list-style: none;
-  padding-left: 1.5rem;
-  margin-block-start: 0.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+  display: none;
 }
-.post-root .article-content #markdown-toc ul li::before {
-  content: "—";
+
+/* ============================================================
+   TABLES — Obsidian-style minimal: no header bg, no zebra,
+   bordered cells, hover row tint. Applies to both V1 and V2.
+   `display: block; overflow-x: auto;` keeps wide tables from
+   breaking the prose grid; they get a horizontal scrollbar
+   inside the prose column instead.
+   ============================================================ */
+.post-root .article-content table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  margin-block: 1.5rem;
+  font-size: 0.875rem;
+  font-family: var(--font-sans);
+  border: 1px solid var(--color-border-mid);
+}
+.post-root .article-content thead th {
+  background: transparent;
+  font-weight: 600;
+  color: var(--color-text);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  border: 1px solid var(--color-border-mid);
+}
+.post-root .article-content tbody td {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border-mid);
+  color: var(--color-text);
+  vertical-align: top;
+}
+.post-root .article-content tbody tr:hover { background: rgba(0, 0, 0, 0.02); }
+.post-root .article-content tbody td code { font-size: 0.8125rem; }
+
+/* ============================================================
+   TASK LISTS — Kramdown emits <input type="checkbox"> inside
+   the <li class="task-list-item">. Style the input directly.
+   ============================================================ */
+.post-root .article-content li.task-list-item {
+  list-style: none;
+  margin-left: -1.5rem;
+  padding-left: 0;
+}
+.post-root .article-content li.task-list-item input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 0.875rem;
+  height: 0.875rem;
+  border: 1.5px solid var(--color-border-mid);
+  border-radius: 3px;
+  margin-right: 0.5rem;
+  vertical-align: -0.1rem;
+  cursor: default;
+  background: transparent;
+  flex-shrink: 0;
+}
+.post-root .article-content li.task-list-item input[type="checkbox"]:checked {
+  background: var(--color-text);
+  border-color: var(--color-text);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fafafa'%3E%3Cpath d='M13.5 4.5L6 12L2.5 8.5L4 7L6 9L12 3Z'/%3E%3C/svg%3E");
+  background-size: 80%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* ============================================================
+   DEFINITION LISTS — <dl><dt><dd>
+   ============================================================ */
+.post-root .article-content dl {
+  margin-block: 1.25rem;
+  font-family: var(--font-sans);
+}
+.post-root .article-content dl dt {
+  font-weight: 600;
+  color: var(--color-text);
+  margin-block-start: 0.625rem;
+}
+.post-root .article-content dl dt:first-child { margin-block-start: 0; }
+.post-root .article-content dl dd {
+  margin-block-start: 0.25rem;
+  margin-inline-start: 1.5rem;
+  color: var(--color-text-mid);
+  line-height: 1.55;
+}
+
+/* ============================================================
+   DETAILS / SUMMARY — boxed, chevron arrow, indented body
+   ============================================================ */
+.post-root .article-content details {
+  margin-block: 1.25rem;
+  border: 1px solid var(--color-border-mid);
+  border-radius: var(--bdrs);
+  padding: 0.625rem 1.125rem;
+  background: #fbfaf7;
+  transition: padding-block-end 0.15s var(--ease-out);
+}
+.post-root .article-content details[open] { padding-bottom: 1.125rem; }
+.post-root .article-content summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  color: var(--color-text);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-block: 0.25rem;
+  user-select: none;
+}
+.post-root .article-content summary::-webkit-details-marker { display: none; }
+.post-root .article-content summary::before {
+  content: '';
+  display: inline-block;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-right: 1.5px solid var(--color-text-mid);
+  border-bottom: 1.5px solid var(--color-text-mid);
+  transform: rotate(-45deg);
+  transition: transform 0.15s var(--ease-out);
+  flex-shrink: 0;
+}
+.post-root .article-content details[open] summary::before {
+  transform: rotate(45deg) translate(-2px, -2px);
+}
+.post-root .article-content details > *:not(summary) {
+  margin-top: 0.625rem;
+  margin-inline-start: 1.125rem;
+}
+
+/* ============================================================
+   MATH — KaTeX display blocks get auto-numbered via CSS counter.
+   Inline math (just `$...$`) is left alone — only display ($$ or \[)
+   gets a number on the right edge.
+   ============================================================ */
+.post-root .article-content { counter-reset: eq-counter h2-counter; }
+.post-root .article-content .katex-display {
+  position: relative;
+  counter-increment: eq-counter;
+  margin-block: 1.25rem !important;
+  overflow-x: auto;
+}
+.post-root .article-content .katex-display::after {
+  content: "(" counter(eq-counter) ")";
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
   color: var(--color-text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   PAPER-LIST — grouped paper references aside.
+   Background panel, all-caps heading, arrow bullets.
+   .link-paper styles single inline paper references too.
+   ============================================================ */
+.post-root .article-content .paper-list {
+  background: #f5f5f5;
+  border-radius: var(--bdrs);
+  padding: 1rem 1.25rem;
+  margin-block: 1.5rem;
+}
+.post-root .article-content .paper-list > strong {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-text-mid);
+  margin-bottom: 0.625rem;
+  font-weight: 700;
+}
+.post-root .article-content .paper-list ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+.post-root .article-content .paper-list li {
+  margin: 0.25rem 0;
+  padding-left: 0;
+  font-size: 0.9375rem;
+}
+.post-root .article-content .paper-list li::before {
+  content: '→ ';
+  color: var(--color-text-faint);
+  margin-right: 0.25ch;
+}
+.post-root .article-content a.link-paper {
+  color: var(--color-link);
+  text-decoration: none;
+}
+.post-root .article-content a.link-paper:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+/* ============================================================
+   ASTERISM — manual three-star divider
+   ============================================================ */
+.post-root .article-content .asterism {
+  text-align: center;
+  font-size: 1.5rem;
+  color: var(--color-text-faint);
+  letter-spacing: 0.4em;
+  margin-block: 2.5rem;
+}
+
+/* ============================================================
+   PULL QUOTE — large emphatic display quote with decorative
+   open/close quote marks via pseudo-elements.
+   ============================================================ */
+.post-root .article-content blockquote.pull-quote {
+  border: 0;
+  padding: 0;
+  margin-block: 2.5rem;
+  font-size: 1.375rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  text-align: center;
+}
+.post-root .article-content blockquote.pull-quote::before { content: '"'; opacity: 0.4; }
+.post-root .article-content blockquote.pull-quote::after  { content: '"'; opacity: 0.4; }
+.post-root .article-content .pull-quote__attribution {
+  display: block;
+  margin-block-start: 0.625rem;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--color-text-mid);
+  letter-spacing: 0;
+}
+
+/* ============================================================
+   EPIGRAPH — small italic attributed quote at section openings
+   ============================================================ */
+.post-root .article-content .epigraph {
+  margin-block: 1.75rem;
+  padding-inline-start: 0;
+  border: 0;
+  font-family: var(--font-sans);
+  font-style: italic;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--color-text-mid);
+  text-align: left;
+}
+.post-root .article-content .epigraph__attribution {
+  display: block;
+  margin-block-start: 0.375rem;
+  font-style: normal;
+  font-size: 0.8125rem;
+  color: var(--color-text-faint);
+}
+
+/* ============================================================
+   FIGURE-GRID — force a 2-column layout (predictable wrapping).
+   3 panels → 2+1, 4 panels → 2+2, etc.
+   ============================================================ */
+.post-root .article-content .figure-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.625rem;
+  text-align: left;
+}
+.post-root .article-content .figure-grid > img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+.post-root .article-content .figure-grid > figcaption {
+  grid-column: 1 / -1;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+@media (max-width: 600px) {
+  .post-root .article-content .figure-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   ABBREVIATION — dotted underline + immediate CSS tooltip
+   (the browser's native tooltip on <abbr title> has a long
+   delay; this surfaces the expansion faster.)
+   ============================================================ */
+.post-root .article-content abbr[title] {
+  text-decoration: underline dotted;
+  text-underline-offset: 0.2em;
+  text-decoration-color: var(--color-text-faint);
+  cursor: help;
+  position: relative;
+}
+.post-root .article-content abbr[title]:hover::after,
+.post-root .article-content abbr[title]:focus::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--color-bg-on-dark);
+  color: var(--color-text-on-dark);
+  font-size: 0.75rem;
+  font-style: normal;
+  font-weight: 500;
+  white-space: nowrap;
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 100;
 }
 
 /* ============================================================
@@ -1619,107 +1995,35 @@
   }
 }
 
-/* V2 prose body — single column, no grid. Mirrors V1's .article-content
-   prose styles but targets `.article-body` so they don't collide.
-   (Markdown in `_writing/notes/*.md` lands inside .article-body via the
-   note layout.) */
-.layout-note .post-root .article-body { counter-reset: h2-counter; }
-.layout-note .post-root .article-body h2 {
-  font-family: var(--font-sans);
-  font-size: 1.5rem;
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.015em;
-  margin-block: 2.5rem 0.75rem;
-  color: var(--color-text);
+/* V2 uses the SAME `.article-content` wrapper as V1 so all shared
+   element styles (callouts, tables, code, footnotes, lists,
+   blockquote, figures, etc.) apply automatically.
+
+   V2 only needs to OVERRIDE the V1 12-col grid layout to a single
+   column. These rules win on specificity because they include
+   `.layout-note`. */
+.layout-note .post-root .article-content {
+  max-width: 720px;
+  padding-inline: 1.5rem;
+  padding-block: 0 4rem;
 }
-.layout-note .post-root .article-body h2:not([data-no-number]) { counter-increment: h2-counter; }
-.layout-note .post-root[data-section-numbers="on"] .article-body h2:not([data-no-number])::before {
-  content: counter(h2-counter, decimal-leading-zero);
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  color: var(--color-text-faint);
-  margin-block-end: 0.25rem;
-}
-.layout-note .post-root .article-body h3 {
-  font-family: var(--font-sans);
-  font-size: 1.125rem;
-  font-weight: 700;
-  line-height: 1.3;
-  margin-block: 1.75rem 0.5rem;
-  color: var(--color-text);
-}
-.layout-note .post-root .article-body p {
-  font-family: var(--font-sans);
-  font-size: 1rem;
-  line-height: 1.65;
-  margin-block-end: 1.125rem;
-  color: var(--color-text);
-  overflow-wrap: anywhere;
-  hyphens: auto;
-}
-.layout-note .post-root .article-body strong { font-weight: 600; }
-.layout-note .post-root .article-body em { font-style: italic; }
-.layout-note .post-root .article-body del { text-decoration: line-through; color: var(--color-text-mid); }
-.layout-note .post-root .article-body a { color: var(--color-link); }
-.layout-note .post-root .article-body a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
-.layout-note .post-root .article-body :not(pre) > code {
-  font-family: var(--font-mono);
-  font-size: 0.875em;
-  background: #f4f4f4;
-  padding: 0.2em 0.4em;
-  border-radius: 3px;
-  color: var(--color-text);
-}
-.layout-note .post-root .article-body ul,
-.layout-note .post-root .article-body ol {
-  font-size: 1rem;
-  line-height: 1.6;
-  padding-left: 1.5rem;
-  margin-block: 1.125rem;
-}
-.layout-note .post-root .article-body ul { list-style: disc; }
-.layout-note .post-root .article-body ol { list-style: decimal; }
-.layout-note .post-root .article-body li { margin-block-end: 0.3rem; padding-left: 0.25rem; }
-.layout-note .post-root .article-body blockquote {
-  border-inline-start: 4px solid var(--color-border-mid);
-  margin-block: 1.5rem;
-  padding-inline-start: 1.25rem;
-  color: var(--color-text-mid);
-  font-size: 1rem;
-  line-height: 1.55;
-}
-.layout-note .post-root .article-body pre {
-  background: #f6f8fa;
-  color: #24292f;
-  padding: 1rem 1.25rem;
-  border-radius: var(--bdrs);
-  border: 1px solid #d0d7de;
-  overflow-x: auto;
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  line-height: 1.5;
-  margin-block: 1.25rem;
-}
-.layout-note .post-root .article-body figure {
-  margin-block: 1.75rem;
-  text-align: center;
-}
-.layout-note .post-root .article-body figcaption {
-  font-family: var(--font-sans);
-  font-style: italic;
-  font-size: 0.8125rem;
-  color: var(--color-text-mid);
-  margin-top: 0.625rem;
-  line-height: 1.45;
-}
-.layout-note .post-root .article-body hr {
-  border: 0;
-  border-block-start: 1px solid var(--color-border-mid);
-  margin-block: 2.5rem;
-  max-width: 60%;
-  margin-inline: auto;
+@media (min-width: 1000px) {
+  .layout-note .post-root .article-content {
+    display: block;   /* unset grid */
+    grid-template-columns: none;
+  }
+  .layout-note .post-root .article-content > * {
+    grid-column: auto;
+    max-width: 100%;
+  }
+  .layout-note .post-root .article-content > .sidenote,
+  .layout-note .post-root .article-content > .cite-sidenote {
+    display: none;   /* V2 has no sidenotes */
+  }
+  .layout-note .post-root .footnotes {
+    display: block;   /* V2 always shows footnotes at bottom */
+    grid-column: auto !important;
+  }
 }
 
 /* ============================================================
