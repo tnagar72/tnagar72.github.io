@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Towards Trustworthy Explainable AI · Tanay Nagar</title><link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+
+  <link rel="stylesheet" href="/assets/css/post.css"></head>
+
+<body class="layout-article">
+<div class="post-root" data-section-numbers="on">
+
+<nav class="page-nav">
+  <a class="page-nav__back-arrow" href="/writing">
+    <span class="page-nav__back-arrow-symbol">&larr;</span>
+    <span class="page-nav__back-arrow-text">All Writing</span>
+  </a>
+
+  <a class="page-nav__brand" href="/" aria-label="Go home">
+    <span class="page-nav__brand-text">v0.1</span><span class="page-nav__brand-flag">&mdash; Go Home</span>
+  </a>
+
+  <span class="page-nav__tagline"></span>
+</nav>
+
+
+<div class="article-frame">
+
+  <header class="article-header">
+    <div class="article-header__inner">
+      <div class="article-header__mast">
+        <p class="article-header__category">Article</p>
+        <h1 class="article-header__title">Towards Trustworthy Explainable AI</h1>
+        <p class="article-header__subtitle">Why "explainability" keeps failing the test of practical ethics, and what a more honest research program might look like.</p>
+
+        
+        <div class="article-header__authors">
+          
+            <div class="article-header__author">
+                <span class="article-header__author-name">Tanay Nagar</span>
+                <span class="article-header__author-affil">Independent · Madison, WI</span>
+              </div>
+            
+          
+        </div>
+        
+      </div>
+
+      <dl class="article-header__meta">
+        <div class="article-header__meta-row article-header__meta-row--written">
+          <dt>Written</dt>
+          <dd>May 26, 2026</dd>
+        </div>
+        
+        <div class="article-header__meta-row article-header__meta-row--updated">
+          <dt>Last updated</dt>
+          <dd>May 27, 2026</dd>
+        </div>
+        
+        
+        <div class="article-header__meta-row article-header__meta-row--duration">
+          <dt>Duration</dt>
+          <dd>11 min</dd>
+        </div>
+        
+        
+        <div class="article-header__meta-row article-header__meta-row--status">
+          <dt>Status</dt>
+          <dd>Finished</dd>
+        </div>
+        
+        
+        <div class="article-header__meta-row article-header__topics">
+          <dt>Topics</dt>
+          <dd>
+            <ul class="article-header__topics-list">
+              <li>AI Ethics</li><li>Explainability</li><li>Philosophy</li><li>Accountability</li>
+            </ul>
+          </dd>
+        </div>
+        
+      </dl>
+    </div>
+  </header>
+
+  
+  <div class="tldr">
+    <span class="tldr__label">TL;DR</span>
+    <p>Explainable AI keeps failing the test of practical ethics not because of bad methods but because the concept itself smuggles in commitments it can’t pay for. The argument: justification is not a technical step; trust is a relational achievement between institutions and subjects, not a model property. We can help. We cannot deliver.</p>
+
+  </div>
+  
+
+  
+  <div class="cover-band">
+    <div class="cover-band__inner">
+      <img class="cover-band__img" src="/assets/images/writing/cover-test-1.png" alt="Dotted halftone illustration of two figures" loading="lazy">
+    </div>
+  </div>
+  <hr class="cover-divider" aria-hidden="true" />
+  
+
+</div>
+
+<article class="article-content">
+  <p>In November 2025, a working group at the OECD released what they called a “definitive” framework for explainable AI. It was 84 pages long and used the word <em>explanation</em> 612 times. By page 30, it had defined the term in seven incompatible ways. By page 60, it had quietly retreated to defining it by its absence.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#the-standard-story" id="markdown-toc-the-standard-story">The standard story</a></li>
+  <li><a href="#the-satisfactory-explanation-problem" id="markdown-toc-the-satisfactory-explanation-problem">The satisfactory explanation problem</a></li>
+  <li><a href="#where-the-field-disagrees" id="markdown-toc-where-the-field-disagrees">Where the field disagrees</a></li>
+  <li><a href="#what-id-propose" id="markdown-toc-what-id-propose">What I’d propose</a></li>
+</ul>
+
+<p>This is the state of the field. Not bad. Just stuck. The question I want to take seriously here is whether the stuckness is a passing technical problem — we just need better methods! — or whether the concept of “explainable AI” is itself doing something more philosophically suspect, smuggling in commitments it cannot pay for. I think it’s the latter, and I want to make the case carefully.<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup></p>
+
+<h2 id="the-standard-story">The standard story</h2>
+
+<p>The standard story goes like this. We have models. Models make decisions. Decisions affect people. People deserve to know why. Therefore: explainability. Easy.</p>
+
+<p>The trouble starts at the second sentence. Lazar argues that the move from “this is what the model did” to “this is why the model did it” is not a technical step; it’s an ethical one.<sup id="fnref:lazar2024" role="doc-noteref"><a href="#fn:lazar2024" class="footnote" rel="footnote">2</a></sup> A SHAP value tells you which features the model weighted. It does not tell you whether the weighting was <em>justified</em>. And justification, not weighting, is what subjects of automated decisions actually want to know.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">shap</span>
+
+<span class="c1"># Tree-based attribution for our XGBoost model
+</span><span class="n">explainer</span> <span class="o">=</span> <span class="n">shap</span><span class="p">.</span><span class="n">TreeExplainer</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">shap_values</span> <span class="o">=</span> <span class="n">explainer</span><span class="p">.</span><span class="n">shap_values</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">shap</span><span class="p">.</span><span class="n">summary_plot</span><span class="p">(</span><span class="n">shap_values</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">max_display</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The above code will run. It will produce a plot. The plot will be defensible in a regulatory hearing. None of that means the model’s decision was the right one, and none of it means the explanation explains anything to the person being denied a loan.</p>
+
+<aside class="callout callout--note">
+<div class="callout__title">Note</div>
+<div class="callout__body">
+<p>This isn’t an argument against SHAP, LIME, or any specific attribution method. The point is that these tools answer a question — “which features mattered most?” — that’s narrower than what the demand for an “explanation” actually asks.</p>
+</div>
+</aside>
+
+<h2 id="the-satisfactory-explanation-problem">The satisfactory explanation problem</h2>
+
+<blockquote>
+  <p>An explanation is satisfactory when the questioner stops asking. This is a sociological fact, not an epistemic one.</p>
+</blockquote>
+
+<p>Vredenburgh’s recent work<sup id="fnref:vredenburgh2023" role="doc-noteref"><a href="#fn:vredenburgh2023" class="footnote" rel="footnote">3</a></sup> makes a sharper version of this point. When a decision is contested, the question “why?” is not asking for a causal account. It’s asking for a justification that survives the questioner’s standards of reasonableness. Two people receiving the same SHAP plot will rationally have different residual questions, because their stake in the decision is different.</p>
+
+<p>This is uncomfortable for the field because it means <em>there is no model-level explanation that is right for everyone</em>. Which means the technical project of “produce one explanation per prediction” is, at best, half the work.</p>
+
+<figure class="figure">
+<img src="/assets/images/writing/cover-test-1.png" alt="Tiered explainability framework diagram" />
+<figcaption><strong>Figure 1:</strong> Tiered explainability framework. As contestability claims become finer-grained, the required form of explanation becomes more procedural — less “what the model did” and more “what the institution did to allow the model to do that”.
+</figcaption>
+</figure>
+
+<h2 id="where-the-field-disagrees">Where the field disagrees</h2>
+
+<p>Lazar thinks the answer is to lean harder into procedural legitimacy: build institutions where contestation is possible, and stop pretending technical artifacts can substitute for due process.</p>
+
+<p>Vredenburgh thinks the answer is finer-grained: a taxonomy of <em>kinds</em> of explanation, each appropriate to a different contestability context. I find myself drawn to Vredenburgh’s view but worried about its scalability. A taxonomy is only useful if it can be operationalized at the speed at which decisions are made.</p>
+
+<aside class="callout callout--question">
+<div class="callout__title">Open Question</div>
+<div class="callout__body">
+<p>Can a taxonomy-of-explanations be built that’s both operationalizable at machine speed AND defensible under philosophical scrutiny? My honest answer: I don’t know. But it’s where I’d put my research bets.</p>
+</div>
+</aside>
+
+<h2 id="what-id-propose">What I’d propose</h2>
+
+<p>If I had to write the research agenda for the next five years of XAI, it would not be technical. It would be:</p>
+
+<ol>
+  <li>Stop publishing methods papers that do not engage with a specific contestability use-case.</li>
+  <li>Build out the taxonomy of explanation-kinds, in collaboration with legal and STS scholars.</li>
+  <li>Treat institutional and technical research as co-equal — the latter is an input to the former, not a deliverable.</li>
+  <li>Be honest that some questions (“did the model make the morally right decision?”) are not technical questions and never will be.</li>
+</ol>
+
+<p>That last point is, I suspect, the hardest one to swallow. The field has spent a decade selling itself as the discipline that would make models <em>trustworthy</em>. The honest answer is that trust is not a model property; it is a relational achievement between an institution and its subjects.<sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">4</a></sup> We can help. We cannot deliver.</p>
+
+<p>That’s a less impressive pitch. It’s also a more honest one. I’d rather be in a field doing modest work well than in one promising trust as a technical deliverable.</p>
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>The argument that follows draws heavily on recent work by Lazar and Vredenburgh — see footnotes 3 and 4 below for the citations. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:lazar2024" role="doc-endnote">
+      <p>Lazar, S. (2024). <em>The Right to an Explanation.</em> AI &amp; Society, 39(3), 612–634. <a href="https://arxiv.org/abs/2401.xxxx">arXiv</a>. <a href="#fnref:lazar2024" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:vredenburgh2023" role="doc-endnote">
+      <p>Vredenburgh, K. (2023). <em>Contestability and the Procedural Theory of Explanation.</em> Philosophical Studies, 180, 1234–1256. <a href="#fnref:vredenburgh2023" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:2" role="doc-endnote">
+      <p>See also Mireshghallah et al.<sup id="fnref:mireshghallah2024" role="doc-noteref"><a href="#fn:mireshghallah2024" class="footnote" rel="footnote">5</a></sup> on a parallel point about privacy: trust is a property of how data flows, not of any single artifact. <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:mireshghallah2024" role="doc-endnote">
+      <p>Mireshghallah, N. et al. (2024). <em>Can LLMs Keep a Secret? Testing Privacy Implications of LLMs via Contextual Integrity Theory.</em> ICLR. <a href="https://arxiv.org/abs/2310.17884">arXiv</a>. <a href="#fnref:mireshghallah2024" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+</article>
+
+
+<section class="full-metadata">
+  <div class="full-metadata-card">
+    <div class="full-metadata__header">
+      <span class="full-metadata__label">Full metadata</span>
+    </div>
+    <div class="full-metadata__body">
+
+      
+      <div class="full-metadata__section">
+        <span class="full-metadata__section-label">Authors</span>
+        <div class="full-metadata__inline-list">
+          
+            
+              <span>Tanay Nagar</span>
+            
+            
+          
+        </div>
+      </div>
+      
+
+      
+      <div class="full-metadata__section">
+        <span class="full-metadata__section-label">Resources</span>
+        
+        
+        <dl class="full-metadata__resource-row">
+          <dt>Paper</dt>
+          <dd>
+            <a href="#" target="_blank" rel="noopener noreferrer">PDF</a><span class="sep">·</span><a href="#" target="_blank" rel="noopener noreferrer">arXiv</a><span class="sep">·</span><a href="#" target="_blank" rel="noopener noreferrer">DOI</a>
+          </dd>
+        </dl>
+        
+        <dl class="full-metadata__resource-row">
+          <dt>Code</dt>
+          <dd>
+            <a href="#" target="_blank" rel="noopener noreferrer">GitHub</a><span class="sep">·</span><a href="#" target="_blank" rel="noopener noreferrer">Notebook</a><span class="sep">·</span><a href="#" target="_blank" rel="noopener noreferrer">Dataset</a>
+          </dd>
+        </dl>
+        
+        <dl class="full-metadata__resource-row">
+          <dt>Talks</dt>
+          <dd>
+            <a href="#" target="_blank" rel="noopener noreferrer">YouTube</a><span class="sep">·</span><a href="#" target="_blank" rel="noopener noreferrer">Slides</a>
+          </dd>
+        </dl>
+        
+      </div>
+      
+
+      
+      <div class="full-metadata__section">
+        <span class="full-metadata__section-label">Discussion</span>
+        <div class="full-metadata__inline-list">
+          <a href="#" target="_blank" rel="noopener noreferrer">Hacker News</a><span class="sep">·</span><a href="#" target="_blank" rel="noopener noreferrer">Bluesky</a>
+        </div>
+      </div>
+      
+
+    </div>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <nav class="footer__nav"><section class="footer__section">
+          <div class="footer__meta-title">v0.1</div>
+          <a class="footer__link" href="/">Home</a>
+        </section><section class="footer__section footer__section--social">
+          <div class="footer__meta-title">Elsewhere</div>
+          <ul class="social-list"><li class="social-list__list-item">
+                  <span class="social-list__icon" aria-hidden="true"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
+    <path d="M9 18c-4.51 2-5-2-7-2"/>
+</svg>
+</span>
+                  <a class="social-list__link" href="https://github.com/tnagar72" target="_blank" rel="noopener noreferrer">GitHub</a>
+                </li><li class="social-list__list-item">
+                  <span class="social-list__icon" aria-hidden="true"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+    <rect width="4" height="12" x="2" y="9"/>
+    <circle cx="4" cy="4" r="2"/>
+</svg>
+</span>
+                  <a class="social-list__link" href="https://www.linkedin.com/in/tanaynagar/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                </li><li class="social-list__list-item">
+                  <span class="social-list__icon" aria-hidden="true"><svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 9a8 8 0 0 1 7.162 4.44L24 9.5z"/>
+</svg>
+</span>
+                  <a class="social-list__link" href="https://scholar.google.com/citations?user=MEVH8HQAAAAJ&hl=en" target="_blank" rel="noopener noreferrer">Google Scholar</a>
+                </li><li class="social-list__list-item">
+                  <span class="social-list__icon" aria-hidden="true"><svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.206-.659-.298-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8z"/>
+</svg>
+</span>
+                  <a class="social-list__link" href="https://bsky.app/profile/tnagar.bsky.social" target="_blank" rel="noopener noreferrer">Bluesky</a>
+                </li><li class="social-list__list-item">
+                  <span class="social-list__icon" aria-hidden="true"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <rect width="20" height="16" x="2" y="4" rx="2"/>
+    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+</svg>
+</span>
+                  <a class="social-list__link" href="mailto:tanaynagar7@gmail.com">Email</a>
+                </li><li class="social-list__list-item">
+                  <span class="social-list__icon" aria-hidden="true"><svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+</svg>
+</span>
+                  <a class="social-list__link" href="https://x.com/tnagar72" target="_blank" rel="noopener noreferrer">X/Twitter</a>
+                </li></ul>
+        </section></nav><div class="footer__colophon"><span class="footer__colophon-left">Tanay Nagar</span><span class="footer__colophon-right">Written from Madison & Mumbai</span></div></footer>
+
+
+</div>
+</body>
+</html>

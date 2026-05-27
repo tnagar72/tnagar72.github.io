@@ -1339,6 +1339,110 @@
 }
 
 /* ============================================================
+   KRAMDOWN TOC SHIM — author writes `* TOC\n{:toc}` in markdown,
+   Kramdown emits `<ul id="markdown-toc">`. This block skins that
+   plain ul into the V1 boxed `.toc-card` look without requiring
+   the author to write any HTML.
+
+   To opt out of TOC styling for a post: don't write the `* TOC`
+   marker. (Future: per-post `show_toc: false` could swap to a
+   plain ul, but the marker IS the toggle.)
+   ============================================================ */
+.post-root .article-content #markdown-toc {
+  background: #fafafa;
+  border: 1.5px solid rgba(42, 39, 34, 0.6);
+  border-radius: var(--bdrs);
+  padding: 1.125rem 1.5rem 0.875rem;
+  margin-block: 0 2.5rem;
+  list-style: none;
+  position: relative;
+  box-shadow: 0 1px 0 rgba(42, 39, 34, 0.04);
+  transition: border-color 0.15s var(--ease-out);
+  counter-reset: toc-counter;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.post-root .article-content #markdown-toc:hover { border-color: #2a2722; }
+/* Title row injected via ::before — "Table of Contents" with the hole-punch dot. */
+.post-root .article-content #markdown-toc::before {
+  content: "Table of Contents";
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--color-text-mid);
+  font-weight: 500;
+  display: block;
+  margin-block-end: 0.625rem;
+}
+.post-root .article-content #markdown-toc::after {
+  content: "";
+  position: absolute;
+  top: 1.125rem;
+  right: 1.5rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  border: 1.5px solid #2a2722;
+  border-radius: 999px;
+  background: var(--color-background);
+}
+.post-root .article-content #markdown-toc li {
+  counter-increment: toc-counter;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  display: flex;
+  gap: 0.5ch;
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+/* (01) — heading text */
+.post-root .article-content #markdown-toc li::before {
+  content: "(" counter(toc-counter, decimal-leading-zero) ") —";
+  color: var(--color-text-faint);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.post-root .article-content #markdown-toc li a,
+.post-root .article-content #markdown-toc li a:visited,
+.post-root .article-content #markdown-toc li a:hover {
+  position: relative;
+  z-index: 0;
+  color: var(--color-text);
+  text-decoration: none;
+  border-bottom: none;
+}
+.post-root .article-content #markdown-toc li a::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-text);
+  transform: scaleX(0);
+  transform-origin: 0 0;
+  transition: transform 0.2s var(--ease-out);
+}
+.post-root .article-content #markdown-toc li a:hover::after { transform: scaleX(1); }
+/* Nested ul (H3 children of H2s) — indent slightly */
+.post-root .article-content #markdown-toc ul {
+  list-style: none;
+  padding-left: 1.5rem;
+  margin-block-start: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.post-root .article-content #markdown-toc ul li::before {
+  content: "—";
+  color: var(--color-text-faint);
+}
+
+/* ============================================================
    NOTE-ONLY — V2 layout (lightweight note template, Brandur-clone)
    Scoped to body.layout-note so V1 selectors aren't disturbed.
    ============================================================ */
