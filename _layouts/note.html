@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include post-head.html %}
+<body class="layout-note">
+<div class="post-root"{% if page.show_section_numbers %} data-section-numbers="on"{% endif %}>
+
+{% include page-nav.html %}
+
+<article class="article">
+  <header class="article-header">
+    <h1 class="article-header__title">{{ page.title }}</h1>
+  </header>
+
+  {% if page.cover %}
+  <figure class="v2-cover">
+    <div class="v2-cover__inner">
+      <img class="v2-cover__img" src="{{ page.cover | relative_url }}" alt="{{ page.cover_alt }}" loading="lazy">
+    </div>
+  </figure>
+  {% endif %}
+
+  <div class="article-body">
+    {{ content }}
+  </div>
+</article>
+
+{% if page.show_meta_card != false %}
+<section class="v2-meta">
+  <details class="v2-meta__card">
+    <summary class="v2-meta__summary">
+      <span class="v2-meta__label">About this post</span>
+      <span class="v2-meta__icon" aria-hidden="true"></span>
+    </summary>
+    <div class="v2-meta__body">
+      <dl class="v2-meta__row"><dt>Written</dt><dd>{{ page.date | date: "%B %-d, %Y" }}</dd></dl>
+      {% if page.last_updated and page.last_updated != page.date %}
+      <dl class="v2-meta__row"><dt>Last updated</dt><dd>{{ page.last_updated | date: "%B %-d, %Y" }}</dd></dl>
+      {% endif %}
+      {% if page.reading_time %}
+      <dl class="v2-meta__row"><dt>Duration</dt><dd>{{ page.reading_time }}</dd></dl>
+      {% else %}
+      {%- assign words = content | strip_html | number_of_words -%}
+      {%- assign minutes = words | divided_by: 200 | at_least: 1 -%}
+      <dl class="v2-meta__row"><dt>Duration</dt><dd>{{ minutes }} min</dd></dl>
+      {% endif %}
+      {% if page.topics %}
+      <dl class="v2-meta__row"><dt>Topics</dt><dd>{% for topic in page.topics %}{{ topic }}{% unless forloop.last %} · {% endunless %}{% endfor %}</dd></dl>
+      {% endif %}
+      <dl class="v2-meta__row"><dt>Author</dt><dd><a href="/">{{ site.title }}</a></dd></dl>
+    </div>
+  </details>
+</section>
+{% endif %}
+
+{% include post-footer.html %}
+
+</div>
+</body>
+</html>
