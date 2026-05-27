@@ -244,14 +244,17 @@
 </div>
 <script>
 (function() {
-  var injected = false;
+  var article = null;
+  var sidenotes = [];   // { aside, ref } pairs
 
-  function injectSidenotes() {
-    if (injected) return;
-    if (window.matchMedia('(max-width: 999px)').matches) return;
+  function inDesktop() {
+    return window.matchMedia('(min-width: 1000px)').matches;
+  }
+
+  function injectOnce() {
+    if (!inDesktop()) return;
     if (!document.body.classList.contains('layout-article')) return;
-
-    var article = document.querySelector('.post-root .article-content');
+    article = document.querySelector('.post-root .article-content');
     if (!article) return;
 
     var refs = article.querySelectorAll('sup[role="doc-noteref"]');
@@ -262,39 +265,22 @@
       if (!anchor) return;
       var href = anchor.getAttribute('href');
       if (!href || href[0] !== '#') return;
-      var targetId = href.slice(1);
-      var li = document.getElementById(targetId);
+      var li = document.getElementById(href.slice(1));
       if (!li) return;
 
-      // Walk up to the closest direct-child-of-article ancestor — that's
-      // the element CSS grid-positions in cols 10-12. If the ref is
-      // inside a callout/blockquote, we attach the sidenote AFTER the
-      // whole callout/blockquote, not inside it (which would break grid).
-      var paragraph = ref.closest('p, li, h2, h3, h4');
-      if (!paragraph) return;
-      var anchorBlock = paragraph;
-      while (anchorBlock.parentNode && anchorBlock.parentNode !== article) {
-        anchorBlock = anchorBlock.parentNode;
-      }
-      if (anchorBlock.parentNode !== article) return;
-
-      // Clone the footnote body and strip:
-      //   - the backref arrow (visually noisy in the gutter)
-      //   - any `id` attributes (the originals stay in the bottom
-      //     footnotes block; cloning would produce duplicate IDs which
-      //     breaks anchors and screen-reader navigation)
+      // Clone the footnote body; strip backref + all ids (originals
+      // stay in the bottom block — cloning would create duplicate ids).
       var clone = li.cloneNode(true);
-      var backref = clone.querySelector('a.reversefootnote, a.footnote-backref');
-      if (backref) backref.parentNode.removeChild(backref);
-      if (clone.id) clone.removeAttribute('id');
+      clone.querySelectorAll('a.reversefootnote, a.footnote-backref').forEach(function(a) {
+        a.parentNode.removeChild(a);
+      });
+      clone.removeAttribute('id');
       clone.querySelectorAll('[id]').forEach(function(el) {
         el.removeAttribute('id');
       });
 
       var aside = document.createElement('aside');
       aside.className = 'sidenote sidenote--injected';
-      // AT reads the bottom footnotes block; the visual sidenote is a
-      // duplicate, so hide it from accessibility tree.
       aside.setAttribute('aria-hidden', 'true');
 
       var num = document.createElement('span');
@@ -302,22 +288,42 @@
       num.textContent = anchor.textContent + '.';
       aside.appendChild(num);
       aside.appendChild(document.createTextNode(' '));
-
       Array.prototype.forEach.call(clone.childNodes, function(node) {
         aside.appendChild(node.cloneNode(true));
       });
 
-      anchorBlock.parentNode.insertBefore(aside, anchorBlock.nextSibling);
+      article.appendChild(aside);   // single mounting point: end of article
+      sidenotes.push({ aside: aside, ref: ref });
     });
 
     article.classList.add('sidenotes-active');
-    injected = true;
+    position();
+  }
+
+  function position() {
+    if (!article || sidenotes.length === 0) return;
+    if (!inDesktop()) return;
+
+    var articleTop = article.getBoundingClientRect().top + window.scrollY;
+    var lastBottom = -Infinity;
+    var MIN_GAP = 12;   // px between stacked sidenotes
+
+    sidenotes.forEach(function(item) {
+      var refTop = item.ref.getBoundingClientRect().top + window.scrollY;
+      var desiredTop = Math.max(refTop - articleTop, lastBottom + MIN_GAP);
+      item.aside.style.top = desiredTop + 'px';
+      lastBottom = desiredTop + item.aside.offsetHeight;
+    });
   }
 
   function run() {
-    // requestAnimationFrame defers to after layout, fixing parse-time
-    // matchMedia races (e.g., iframe contexts, DevTools open at narrow).
-    requestAnimationFrame(injectSidenotes);
+    requestAnimationFrame(function() {
+      injectOnce();
+      // Re-position after fonts load (Inter loads async; text reflows)
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(position);
+      }
+    });
   }
 
   if (document.readyState === 'loading') {
@@ -325,6 +331,13 @@
   } else {
     run();
   }
+
+  // Re-position on resize (debounced)
+  var resizeTimer = null;
+  window.addEventListener('resize', function() {
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(position, 100);
+  });
 })();
 </script>
 

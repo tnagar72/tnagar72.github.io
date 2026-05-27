@@ -987,22 +987,34 @@
 }
 
 /* Injected sidenotes (V1 desktop, rendered by sidenotes.html JS).
-   The script clones the bottom-footnote body into a sibling <aside>
-   right after the paragraph containing the anchor. On desktop, the
-   12-col grid pins it to cols 10-12 in the right gutter. */
+   Tufte-style: each sidenote is absolutely positioned in the right
+   gutter at its anchor's y-coordinate. JS measures and sets `top`.
+   Sidenotes don't participate in the 12-col grid; they float above
+   it. The grid still pins prose to cols 4-9, leaving cols 10-12 free
+   for the sidenotes to overlap into. */
 @media (min-width: 1000px) {
+  .post-root .article-content {
+    position: relative;   /* so sidenote `top` is relative to article box */
+  }
   .post-root .article-content .sidenote--injected {
-    display: block;
-    grid-column: 10 / span 3;
-    align-self: start;
-    margin-top: 0;
+    position: absolute;
+    /* Override the grid auto-placement that gives this element an
+       implicit `left` based on its source-order grid cell. Explicitly
+       set left:auto so width:calc resolves against the container. */
+    left: auto;
+    right: 0;
+    width: calc(25% - 1rem);
+    grid-column: auto;
+    grid-row: auto;
+    top: 0;   /* JS overwrites this */
+    margin: 0;
+    padding-left: 0.75rem;
+    border-left: 2px solid var(--color-border-mid);
     font-family: var(--font-sans);
     font-size: 0.8125rem;
     line-height: 1.5;
     color: var(--color-text-mid);
-    border-left: 2px solid var(--color-border-mid);
-    padding-left: 0.75rem;
-    margin-block-end: 0.5rem;
+    transition: top 0.2s var(--ease-out);
   }
   .post-root .article-content .sidenote--injected .sidenote__num {
     color: var(--color-link);
