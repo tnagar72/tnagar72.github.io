@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title | escape }} · {{ site.title | escape }}</title>
+  {%- assign desc = page.description | default: page.subtitle -%}
+  {%- if desc -%}<meta name="description" content="{{ desc | strip_html | strip_newlines | truncate: 160 | escape }}">{%- endif -%}
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/minimal-post.css' | relative_url }}">
+</head>
+<body>
+  {% include header.html %}
+
+  <main class="minimal-post">
+    <article>
+      <header class="minimal-post__header">
+        <h1 class="minimal-post__title">{{ page.title }}</h1>
+        <p class="minimal-post__date">
+          <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time>
+        </p>
+      </header>
+
+      <div class="minimal-post__body">
+        {{ content }}
+      </div>
+    </article>
+  </main>
+
+  {% include footer.html %}
+  <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
+</body>
+</html>
