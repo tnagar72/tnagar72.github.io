@@ -1,0 +1,39 @@
+{%- comment -%}
+  Boxed callout — one of 5 types.
+
+  Usage (block body via capture):
+    {% capture body %}
+    Markdown body, multiline supported.
+    {% endcapture %}
+    {% include callout.html type="note|warning|tip|question|meta" title="Optional title" body=body %}
+
+  Default titles:
+    note     → "Note"
+    warning  → "Warning"
+    tip      → "Tip"
+    question → "Open Question"
+    meta     → "Meta"
+
+  Pass title="" to suppress the title entirely.
+{%- endcomment -%}
+
+{%- assign type = include.type | default: "note" -%}
+{%- if include.title -%}
+  {%- assign title = include.title -%}
+{%- else -%}
+  {%- case type -%}
+    {%- when "note" -%}{%- assign title = "Note" -%}
+    {%- when "warning" -%}{%- assign title = "Warning" -%}
+    {%- when "tip" -%}{%- assign title = "Tip" -%}
+    {%- when "question" -%}{%- assign title = "Open Question" -%}
+    {%- when "meta" -%}{%- assign title = "Meta" -%}
+    {%- else -%}{%- assign title = "" -%}
+  {%- endcase -%}
+{%- endif -%}
+
+<aside class="callout callout--{{ type }}">
+  {%- if title and title != "" -%}
+    <div class="callout__title">{{ title }}</div>
+  {%- endif -%}
+  <div class="callout__body">{{ include.body | markdownify }}</div>
+</aside>
