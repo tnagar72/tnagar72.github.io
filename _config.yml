@@ -3,6 +3,22 @@ url: "https://tnagar72.github.io"
 baseurl: ""
 markdown: kramdown
 
+kramdown:
+  parse_block_html: true
+  math_engine: katex
+
+collections:
+  writing:
+    output: true
+    permalink: /writing/:path/
+
+defaults:
+  - scope:
+      path: ""
+      type: writing
+    values:
+      layout: article
+
 exclude:
   - README.md
   - Gemfile

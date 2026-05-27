@@ -1,0 +1,58 @@
+/* ============================================================
+   post.css — styles for writing pages (article + note layouts)
+   Loaded ONLY on pages whose layout is `article` or `note`,
+   via `_includes/post-head.html`. Does not affect homepage or
+   field-notes — which use main.css + field-notes.css respectively.
+
+   Token note: this file uses `--color-*` custom properties; the
+   site-wide `main.css` uses unprefixed `--background`, `--foreground`,
+   `--muted-foreground`. The two sets do NOT collide. They live in
+   different load contexts.
+
+   All selectors are (or will be) prefixed with `.post-root` to
+   prevent any accidental bleed even if this stylesheet ever loads
+   on a page it shouldn't.
+
+   Sections (filled in subsequent issues):
+     :ROOT TOKENS    — done in Issue 1 (this file)
+     SHARED          — Issue 4 (prose, page-nav, callouts, footnotes, a11y)
+     ARTICLE-ONLY    — Issue 4/5 (frame, cover-band, header grid, TOC, sidenotes)
+     NOTE-ONLY       — Issue 6 (single column, centered title, v2-cover, v2-meta)
+     ROUGE SHIM      — Issue 7 (map Rouge classes to .tok-* palette)
+   ============================================================ */
+
+:root {
+  --color-text: #2a2722;
+  --color-background: #ffffff;
+  --color-text-mid: #6a6760;
+  --color-text-faint: #85827c;
+  --color-border-mid: #dadada;
+  --color-border-light: #ebe9e3;
+  --color-rule-strong: #2a2722;
+
+  --color-link: #0066cc;
+
+  --color-note-bg: #e8f4f8;
+  --color-note-border: #17a2b8;
+  --color-note-fg: #0a5d6b;
+  --color-warn-bg: #fff3cd;
+  --color-warn-border: #ffc107;
+  --color-tip-bg: #f0fff4;
+  --color-tip-border: #9ae6b4;
+  --color-q-bg: #f8f4ff;
+  --color-q-border: #d6bcfa;
+  --color-meta-bg: #f5f5f5;
+  --color-meta-border: #ddd;
+
+  --color-highlight-pill: #cc3300;
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --ease-out: cubic-bezier(0.645, 0.045, 0.355, 1);
+  --bdrs: 0.5rem;
+  --bdrs-lg: 0.75rem;
+
+  --color-text-on-dark: #fafafa;
+  --color-bg-on-dark: #2a2722;
+}
