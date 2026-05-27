@@ -1,0 +1,15 @@
+{%- comment -%}
+  Single paper reference. Renders as a plain blue link (.link-paper class).
+  No "pill" styling — paper refs deliberately blend with other links per
+  the May 2026 markdown-system decision.
+
+  Usage:
+    {% include paper.html
+       title="ConfAIde — ICLR 2024 Spotlight"
+       url="https://arxiv.org/abs/2310.17884"
+       venue="ICLR 2024" %}
+
+  `venue` is optional; if not embedded in title, it appears in parens.
+{%- endcomment -%}
+
+<a class="link-paper" href="{{ include.url }}" target="_blank" rel="noopener noreferrer">{{ include.title }}{%- if include.venue %} ({{ include.venue }}){%- endif -%}</a>

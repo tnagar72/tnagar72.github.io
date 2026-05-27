@@ -1,0 +1,34 @@
+# Footer column definitions for writing pages.
+# Each column is referenced by alias from footer_presets.yml.
+# Three column shapes: single-link, link-group, social-list.
+
+home:
+  use_version: true                 # post-footer renders meta_title as site.data.site.version
+  shape: single-link
+  link: { text: "Home", url: "/" }
+
+writing:
+  meta_title: "Sections"
+  shape: link-group
+  links:
+    - { text: "Writing", url: "/writing/", description: "Essays, notes, observations" }
+    - { text: "Research", url: "/research/", description: "Papers, talks, ongoing work" }
+    - { text: "Projects", url: "/projects/", description: "Builds and experiments" }
+
+about:
+  meta_title: "About"
+  shape: link-group
+  links:
+    - { text: "Home", url: "/", description: "About me & research" }
+    - { text: "Field Notes", url: "/field-notes", description: "Photos & postcards" }
+
+elsewhere:
+  meta_title: "Elsewhere"
+  shape: social-list
+  # Refers to entries by `name` in _data/social.yaml
+  social_keys: [github, linkedin, scholar, bluesky, email, twitter]
+
+contact:
+  meta_title: "Contact"
+  shape: single-link
+  link: { text: "tanaynagar7@gmail.com", url: "mailto:tanaynagar7@gmail.com" }

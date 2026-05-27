@@ -1,0 +1,27 @@
+{%- comment -%}
+  Grouped paper-references aside. Used at the end of a section to point
+  at related work — Tanay's or others'.
+
+  Two input shapes accepted:
+
+  (A) Inline array in the include call:
+    {% assign mypapers = "ConfAIde — ICLR 2024||https://arxiv.org/abs/2310.17884,CIMemories — ICLR 2026||https://arxiv.org/abs/2511.14937" | split: "," %}
+    {% include paper-list.html heading="My papers on this" papers=mypapers %}
+    (each entry: "title||url")
+
+  (B) Frontmatter array of objects:
+    related_papers:
+      - { title: "ConfAIde — ICLR 2024", url: "..." }
+      - { title: "CIMemories — ICLR 2026", url: "..." }
+    Then: {% include paper-list.html heading="My papers on this" papers=page.related_papers %}
+{%- endcomment -%}
+
+{%- assign heading = include.heading | default: "Related papers" -%}
+
+<aside class="paper-list" markdown="0">
+<strong>{{ heading }}</strong>
+<ul>
+{% for entry in include.papers %}{% if entry.title %}<li><a class="link-paper" href="{{ entry.url }}" target="_blank" rel="noopener noreferrer">{{ entry.title }}</a></li>
+{% else %}{% assign parts = entry | split: "||" %}<li><a class="link-paper" href="{{ parts[1] | strip }}" target="_blank" rel="noopener noreferrer">{{ parts[0] | strip }}</a></li>
+{% endif %}{% endfor %}</ul>
+</aside>

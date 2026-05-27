@@ -7,7 +7,7 @@
 :root {
     --background: #ffffff;
     --foreground: oklch(0.145 0 0);
-    --muted-foreground: #717182;
+    --muted-foreground: #565666;
     --border: rgba(0, 0, 0, 0.1);
     --secondary: oklch(0.95 0.0058 264.53);
     --secondary-foreground: #030213;
@@ -411,5 +411,61 @@ section {
     .hero-bio > img {
         width: 180px;
         height: 180px;
+    }
+}
+
+/* ============================================================
+   /writing/ index page — typography-led ordered list
+   ============================================================ */
+.writing-index {
+    padding: 5rem 2rem 6rem;
+}
+.writing-index__inner {
+    max-width: 720px;
+    margin: 0 auto;
+}
+.writing-index__title {
+    font-size: 2.75rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 3rem;
+    color: var(--foreground);
+}
+.writing-index__empty {
+    color: var(--muted-foreground);
+    font-size: 1.0625rem;
+    font-style: italic;
+}
+.writing-index__list {
+    list-style: decimal;
+    padding-left: 1.75rem;
+    margin: 0;
+}
+.writing-index__list li {
+    margin-block: 0.5rem;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--muted-foreground);
+}
+.writing-index__link {
+    color: #0066cc;
+    text-decoration: none;
+    transition: text-decoration-color 0.15s, color 0.15s;
+}
+.writing-index__link:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.25em;
+    color: #004999;
+}
+
+@media (max-width: 600px) {
+    .writing-index {
+        padding: 3rem 1.25rem 4rem;
+    }
+    .writing-index__title {
+        font-size: 2rem;
+        margin-bottom: 2rem;
     }
 }

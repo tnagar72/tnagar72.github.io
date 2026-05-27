@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include post-head.html %}
+<body class="layout-article">
+<div class="post-root"{% if page.show_section_numbers %} data-section-numbers="on"{% endif %}>
+
+{% include page-nav.html %}
+
+<div class="article-frame">
+
+  <header class="article-header">
+    <div class="article-header__inner">
+      <div class="article-header__mast">
+        {% if page.category %}<p class="article-header__category">{{ page.category }}</p>{% endif %}
+        <h1 class="article-header__title">{{ page.title }}</h1>
+        {% if page.subtitle %}<p class="article-header__subtitle">{{ page.subtitle }}</p>{% endif %}
+
+        {% if page.authors %}
+        <div class="article-header__authors">
+          {% for author in page.authors %}
+            {% if author.name %}
+              {%- comment -%} Inline object: external author. Render as plain span (no link in header; links live in full-metadata card below). {%- endcomment -%}
+              <div class="article-header__author">
+                <span class="article-header__author-name">{{ author.name }}</span>
+                {% if author.affiliation %}<span class="article-header__author-affil">{{ author.affiliation }}</span>{% endif %}
+              </div>
+            {% else %}
+              {%- comment -%} String: lookup in _data/people.yaml by name key {%- endcomment -%}
+              {% assign person = site.data.people[author] %}
+              <div class="article-header__author">
+                <span class="article-header__author-name">{{ author }}</span>
+                {% if person.affiliation %}<span class="article-header__author-affil">{{ person.affiliation }}</span>{% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <dl class="article-header__meta">
+        <div class="article-header__meta-row article-header__meta-row--written">
+          <dt>Written</dt>
+          <dd>{{ page.date | date: "%B %-d, %Y" }}</dd>
+        </div>
+        {% if page.last_updated and page.last_updated != page.date %}
+        <div class="article-header__meta-row article-header__meta-row--updated">
+          <dt>Last updated</dt>
+          <dd>{{ page.last_updated | date: "%B %-d, %Y" }}</dd>
+        </div>
+        {% endif %}
+        {% if page.reading_time %}
+        <div class="article-header__meta-row article-header__meta-row--duration">
+          <dt>Duration</dt>
+          <dd>{{ page.reading_time }}</dd>
+        </div>
+        {% else %}
+        {%- assign words = content | strip_html | number_of_words -%}
+        {%- assign minutes = words | divided_by: 200 | at_least: 1 -%}
+        <div class="article-header__meta-row article-header__meta-row--duration">
+          <dt>Duration</dt>
+          <dd>{{ minutes }} min</dd>
+        </div>
+        {% endif %}
+        {% if page.status %}
+        <div class="article-header__meta-row article-header__meta-row--status">
+          <dt>Status</dt>
+          <dd>{{ page.status }}</dd>
+        </div>
+        {% endif %}
+        {% if page.topics %}
+        <div class="article-header__meta-row article-header__topics">
+          <dt>Topics</dt>
+          <dd>
+            <ul class="article-header__topics-list">
+              {% for topic in page.topics %}<li>{{ topic }}</li>{% endfor %}
+            </ul>
+          </dd>
+        </div>
+        {% endif %}
+      </dl>
+    </div>
+  </header>
+
+  {% if page.tldr %}
+  <div class="tldr">
+    <span class="tldr__label">TL;DR</span>
+    {{ page.tldr | markdownify }}
+  </div>
+  {% endif %}
+
+  {% if page.cover %}
+  <div class="cover-band">
+    <div class="cover-band__inner">
+      <img class="cover-band__img" src="{{ page.cover | relative_url }}" alt="{{ page.cover_alt | escape }}" loading="lazy">
+    </div>
+  </div>
+  <hr class="cover-divider" aria-hidden="true" />
+  {% endif %}
+
+</div>
+
+<article class="article-content">
+  {{ content }}
+</article>
+
+{% if page.authors or page.resources or page.discussion %}
+<section class="full-metadata">
+  <div class="full-metadata-card">
+    <div class="full-metadata__header">
+      <span class="full-metadata__label">Full metadata</span>
+    </div>
+    <div class="full-metadata__body">
+
+      {% if page.authors %}
+      <div class="full-metadata__section">
+        <span class="full-metadata__section-label">Authors</span>
+        <div class="full-metadata__inline-list">
+          {% for author in page.authors %}
+            {% if author.name %}
+              {% if author.url %}<a href="{{ author.url }}"{% unless author.me %} target="_blank" rel="noopener noreferrer"{% endunless %}>{{ author.name }}</a>{% else %}<span>{{ author.name }}</span>{% endif %}
+            {% else %}
+              {%- assign person = site.data.people[author] -%}
+              {%- comment -%} If person.me (it's Tanay), link to the homepage; otherwise use their people.yaml URL (external link). {%- endcomment -%}
+              {% if person.me %}<a href="{{ '/' | relative_url }}">{{ author }}</a>
+              {% elsif person.url %}<a href="{{ person.url }}" target="_blank" rel="noopener noreferrer">{{ author }}</a>
+              {% else %}<span>{{ author }}</span>{% endif %}
+            {% endif %}
+            {% unless forloop.last %}<span class="sep">·</span>{% endunless %}
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if page.resources %}
+      <div class="full-metadata__section">
+        <span class="full-metadata__section-label">Resources</span>
+        {% assign kinds = page.resources | group_by: "kind" %}
+        {% for k in kinds %}
+        <dl class="full-metadata__resource-row">
+          <dt>{{ k.name | capitalize }}</dt>
+          <dd>
+            {% for r in k.items %}<a href="{{ r.url }}"{% if r.external != false %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ r.label }}</a>{% unless forloop.last %}<span class="sep">·</span>{% endunless %}{% endfor %}
+          </dd>
+        </dl>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if page.discussion %}
+      <div class="full-metadata__section">
+        <span class="full-metadata__section-label">Discussion</span>
+        <div class="full-metadata__inline-list">
+          {% for d in page.discussion %}<a href="{{ d.url }}" target="_blank" rel="noopener noreferrer">{{ d.label }}</a>{% unless forloop.last %}<span class="sep">·</span>{% endunless %}{% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% include post-footer.html %}
+
+</div>
+{% include sidenotes.html %}
+</body>
+</html>

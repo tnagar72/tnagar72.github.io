@@ -1,0 +1,57 @@
+{%- comment -%}
+  Listing card for the /writing/ index page. Reusable later for /research/
+  and /projects/ indexes — pass `kind` to distinguish if styling needs to
+  branch.
+
+  Usage:
+    {% include entry-card.html entry=item kind="writing" %}
+
+  Renders:
+    - eyebrow (category, optional)
+    - title (linked to entry.url)
+    - subtitle (optional)
+    - date
+    - topic chips (optional)
+    - cover thumbnail (optional, right side)
+{%- endcomment -%}
+
+{%- assign entry = include.entry -%}
+{%- assign kind = include.kind | default: "writing" -%}
+
+<article class="entry-card entry-card--{{ kind }}">
+  {%- if entry.cover -%}
+    <a class="entry-card__cover" href="{{ entry.url | relative_url }}" aria-hidden="true">
+      <img src="{{ entry.cover | relative_url }}" alt="">
+    </a>
+  {%- endif -%}
+
+  <div class="entry-card__body">
+    {%- if entry.category -%}
+      <p class="entry-card__eyebrow">{{ entry.category }}</p>
+    {%- endif -%}
+
+    <h3 class="entry-card__title">
+      <a href="{{ entry.url | relative_url }}">{{ entry.title }}</a>
+    </h3>
+
+    {%- if entry.subtitle -%}
+      <p class="entry-card__subtitle">{{ entry.subtitle }}</p>
+    {%- endif -%}
+
+    <div class="entry-card__meta">
+      <time datetime="{{ entry.date | date: '%Y-%m-%d' }}">{{ entry.date | date: "%B %-d, %Y" }}</time>
+      {%- if entry.reading_time -%}
+        <span class="entry-card__dot">·</span>
+        <span>{{ entry.reading_time }}</span>
+      {%- endif -%}
+    </div>
+
+    {%- if entry.topics -%}
+      <ul class="entry-card__topics">
+        {%- for topic in entry.topics -%}
+          <li class="entry-card__topic">{{ topic }}</li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</article>

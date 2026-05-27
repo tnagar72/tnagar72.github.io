@@ -1,0 +1,27 @@
+{%- comment -%}
+  Figure with caption.
+
+  Usage:
+    {% include figure.html
+       src="/assets/images/writing/<slug>/img.png"
+       alt="alt text"
+       caption="Caption with **markdown** supported"
+       width="default|wide|full-bleed|constrained|grid"
+       credit="optional photo credit" %}
+
+  Width omitted = default (prose column). `grid` is for multi-panel
+  comparisons (pass src as a comma-separated list).
+{%- endcomment -%}
+
+{%- assign width = include.width | default: "default" -%}
+{%- if width == "default" -%}
+  {%- assign fig_class = "figure" -%}
+{%- else -%}
+  {%- assign fig_class = "figure figure-" | append: width -%}
+{%- endif -%}
+
+<figure class="{{ fig_class }}" markdown="0">
+{% if width == "grid" %}{% assign srcs = include.src | split: "," %}{% for s in srcs %}<img src="{{ s | strip | relative_url }}" alt="{{ include.alt | escape }}">
+{% endfor %}{% else %}<img src="{{ include.src | relative_url }}" alt="{{ include.alt | escape }}">
+{% endif %}{% if include.caption %}<figcaption>{{ include.caption | markdownify | remove: "<p>" | remove: "</p>" }}{% if include.credit %} <span class="figure__credit">— {{ include.credit }}</span>{% endif %}</figcaption>
+{% endif %}</figure>

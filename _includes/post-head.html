@@ -1,0 +1,29 @@
+{%- comment -%}
+  <head> for writing pages (article + note layouts).
+  Loads Google Fonts (Inter + JetBrains Mono) and post.css; injects
+  KaTeX only when page.has_math is true.
+
+  Distinct from _includes/head.html, which is used by the homepage and
+  field-notes pages and loads main.css/field-notes.css.
+{%- endcomment -%}
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title | default: site.title | escape }}{% if page.title %} · {{ site.title | escape }}{% endif %}</title>
+
+  {%- assign desc = page.description | default: page.subtitle | default: page.tldr -%}
+  {%- if desc -%}
+    <meta name="description" content="{{ desc | strip_html | strip_newlines | truncate: 160 | escape }}">
+  {%- endif -%}
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+
+  <link rel="stylesheet" href="{{ '/assets/css/post.css' | relative_url }}">
+
+  {%- if page.has_math -%}
+    {%- include katex.html -%}
+  {%- endif -%}
+</head>

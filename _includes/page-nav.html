@@ -1,0 +1,26 @@
+{%- comment -%}
+  Three-zone top nav for writing pages.
+    LEFT:   back arrow → /writing
+    CENTER: [v0.x] brand → / with hover-reveal "— Go Home"
+    RIGHT:  tagline slot (empty by default; pass via page.nav_tagline)
+
+  The bracketed brand uses CSS pseudo-elements `[` and `]` so we don't
+  ship typed brackets in the HTML — this lets the closing bracket slide
+  over the flag text on hover.
+
+  Version pulled from _data/site.yml so changing version once updates
+  every page.
+{%- endcomment -%}
+
+<nav class="page-nav">
+  <a class="page-nav__back-arrow" href="/writing">
+    <span class="page-nav__back-arrow-symbol">&larr;</span>
+    <span class="page-nav__back-arrow-text">All Writing</span>
+  </a>
+
+  <a class="page-nav__brand" href="/" aria-label="Go home">
+    <span class="page-nav__brand-text">{{ site.data.site.version }}</span><span class="page-nav__brand-flag">&mdash; Go Home</span>
+  </a>
+
+  <span class="page-nav__tagline">{{ page.nav_tagline }}</span>
+</nav>
