@@ -56,3 +56,1294 @@
   --color-text-on-dark: #fafafa;
   --color-bg-on-dark: #2a2722;
 }
+
+/* ============================================================
+   SHARED — applies to both article and note layouts
+   (Extracted from V1 prototype, all selectors prefixed with
+   `.post-root` so they only apply inside writing-layout pages.)
+   ============================================================ */
+
+/* ============================================================
+   V1 FINAL — article template (heaviest chrome)
+   Locked-in decisions from May 2026 design session:
+     · Title sans (Helvetica/Inter), Brandur-shaped tracking
+     · All links blue (#0066cc)
+     · Body sans 16px, Niloofar-leaning
+     · Boxed callouts (5 types)
+     · GitHub Light code theme
+     · Sidenotes on desktop, footnotes on mobile
+     · Section number toggle via body[data-section-numbers]
+     · Image figures with shadow + italic mid-grey captions
+     · Niloofar's exact callout palette
+   ============================================================ */
+.post-root *, .post-root *::before, .post-root *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Body-level defaults — applied to the .post-root wrapper so they
+   don't leak onto the homepage. The layouts add `class="post-root"`
+   to a top-level wrapper div. */
+.post-root {
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+.post-root a { color: inherit; text-decoration: none; }
+.post-root ul, .post-root ol { list-style: none; }
+.post-root img { display: block; max-width: 100%; }
+
+/* ============================================================
+   PAGE NAV — three-zone row, back-link left, version brand right
+   ============================================================ */
+/* PAGE NAV — three-zone row:
+     LEFT:    back arrow (→ /articles)
+     CENTER:  "Home" text (→ site root)
+     RIGHT:   ✷ v0.1 brand (→ site root, version label)
+   Grid lets us pin center to the middle regardless of left/right widths. */
+.post-root .page-nav {
+  position: relative;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 1.5rem 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+/* THREE-ZONE NAV (Henry pattern):
+     LEFT:   ← All Articles (back to article index)
+     CENTER: ✷ v0.1 brand with hover-reveal "— Go Home"
+     RIGHT:  tagline (empty for now) */
+
+/* LEFT — back arrow + "All Articles" text */
+.post-root .page-nav__back-arrow {
+  grid-column: 1;
+  justify-self: start;
+  color: var(--color-text);
+  line-height: 1;
+  padding: 0.25rem 0.5rem;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5ch;
+  transition: opacity 0.15s var(--ease-out);
+}
+.post-root .page-nav__back-arrow:hover { opacity: 0.6; }
+.post-root .page-nav__back-arrow-symbol { font-size: 1.125rem; }
+.post-root .page-nav__back-arrow-text {
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* CENTER — v0.1 brand wrapped in square brackets (self-referential nod
+   to the citation system: [1], [2], etc., and now [v0.1]).
+   At rest: [ v0.1 ]
+   On hover: [ v0.1 — Go Home ] — content grows, brackets stay anchored. */
+.post-root .page-nav__brand {
+  grid-column: 2;
+  justify-self: center;
+  color: var(--color-text);
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+  text-decoration: none;
+}
+/* The brackets — rendered as pseudo-elements so they stay put while the
+   inner content (the flag) animates in. Slight letter-spacing reset on
+   the brackets themselves so they sit tight to the text. */
+.post-root .page-nav__brand::before,
+.post-root .page-nav__brand::after {
+  color: var(--color-text-mid);
+  letter-spacing: 0;
+  margin-inline: 0.4ch;
+}
+.post-root .page-nav__brand::before { content: '['; }
+.post-root .page-nav__brand::after  { content: ']'; }
+
+/* Flag uses max-width animation so the closing bracket slides over
+   at rest. Original Henry timing: 0.4s with editorial easing.
+   Slower than the default UI transition because this is a "reveal"
+   moment, not a state change — it should feel deliberate. */
+.post-root .page-nav__brand-flag {
+  display: inline-block;
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  transform: translateX(-0.5rem);
+  transition: max-width 0.4s cubic-bezier(0.645, 0.045, 0.355, 1),
+              opacity 0.4s cubic-bezier(0.645, 0.045, 0.355, 1),
+              transform 0.4s cubic-bezier(0.645, 0.045, 0.355, 1),
+              margin-inline-start 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
+  pointer-events: none;
+  margin-inline-start: 0;
+}
+.post-root .page-nav__brand:hover .page-nav__brand-flag,
+.post-root .page-nav__brand:focus-visible .page-nav__brand-flag {
+  max-width: 12em;
+  opacity: 1;
+  transform: translateX(0);
+  margin-inline-start: 0.5ch;
+}
+/* Bracket subtle hover state — they brighten slightly with the rest of
+   the brand to signal "this is one connected interactive element". */
+.post-root .page-nav__brand:hover::before,
+.post-root .page-nav__brand:hover::after {
+  color: var(--color-text);
+}
+@media (prefers-reduced-motion: reduce) {
+  .post-root .page-nav__brand-flag { transition-duration: 0s; }
+}
+
+/* RIGHT — tagline slot (empty placeholder) */
+.post-root .page-nav__tagline {
+  grid-column: 3;
+  justify-self: end;
+}
+
+/* Mobile: just the arrow + centered "v0.1 — Go Home" (always expanded
+   since you can't hover on touch — the brand shows its full state). */
+@media (max-width: 999px) {
+  .post-root .page-nav__back-arrow-text { display: none; }
+  /* Force the flag visible always on mobile — same content as desktop hover */
+  .post-root .page-nav__brand-flag {
+    max-width: 12em;
+    opacity: 1;
+    transform: translateX(0);
+    margin-inline-start: 0.5ch;
+    transition: none;
+  }
+}
+
+/* ============================================================
+   ARTICLE FRAME — flex container for header + TOC + cover-band.
+   Mobile order (default DOM order): header → mobile-toc → cover
+   Desktop reorders to: cover → header (mobile-toc hidden entirely)
+
+   IMPORTANT: children need width:100% otherwise their `margin: auto`
+   centers them inside the flex column (shrinks them to 0).
+   ============================================================ */
+.post-root .article-frame {
+  display: flex;
+  flex-direction: column;
+}
+.post-root .article-frame > * { width: 100%; }
+/* Mobile order (≤999px):
+     1. article-header
+     2. cover-band
+     3. cover-divider (the thin HR after the cover)
+     4. tldr           (plain text summary block)
+   TOC card lives inside .article-content prose for both viewports. */
+@media (max-width: 999px) {
+  .post-root .article-frame .article-header   { order: 1; }
+  .post-root .article-frame .cover-band       { order: 2; }
+  .post-root .article-frame .cover-divider    { order: 3; }
+  .post-root .article-frame .tldr             { order: 4; }
+}
+@media (min-width: 1000px) {
+  /* Desktop: cover FIRST, then header. TL;DR + cover-divider hidden. */
+  .post-root .article-frame .cover-band       { order: 1; }
+  .post-root .article-frame .article-header   { order: 2; }
+  .post-root .article-frame .tldr             { display: none; }
+  .post-root .article-frame .cover-divider    { display: none; }
+}
+
+/* ============================================================
+   COVER BAND — rounded banner on laptop, square on mobile
+   ============================================================ */
+.post-root .cover-band {
+  max-width: 1400px;
+  margin: 1.5rem auto 0;
+  padding-inline: 1rem;
+}
+/* On mobile, the cover sits AFTER the header — so the top margin is
+   the breathing room between TOC and cover. Bottom margin ensures the
+   rounded corner doesn't visually clip against the divider that follows. */
+@media (max-width: 999px) {
+  /* Cover sits with breathing room above (so the metadata block doesn't
+     crowd it), tight bottom margin so HR is close (Henry pattern). */
+  .post-root .cover-band { margin: 2.5rem auto 0; }
+}
+/* COVER INNER — shared visuals (border, radius, gradient).
+   Sizing is handled in separate media-query blocks below so mobile
+   and desktop never collide. */
+.post-root .cover-band__inner {
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+  border-radius: var(--bdrs-lg);
+  overflow: hidden;
+  border: 1.5px solid var(--color-rule-strong);
+  background:
+    linear-gradient(135deg, #d4cfc4 0%, #e9e6df 50%, #c5beb0 100%);
+  position: relative;
+}
+/* MOBILE sizing only */
+@media (max-width: 767px) {
+  .post-root .cover-band__inner {
+    aspect-ratio: 16 / 9;          /* Henry-like banner on phones */
+    height: auto;
+  }
+}
+/* DESKTOP sizing only — restored from original v1 spec */
+@media (min-width: 768px) {
+  .post-root .cover-band__inner {
+    aspect-ratio: auto;
+    height: 20rem;                 /* 320px — original v1 banner height */
+  }
+}
+.post-root .cover-band__inner::after {
+  content: 'COVER IMAGE  ·  16:9 ON MOBILE  ·  WIDE BANNER ON LAPTOP';
+  position: absolute;
+  bottom: 1rem;
+  left: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  color: rgba(42, 39, 34, 0.5);
+  text-transform: uppercase;
+}
+/* When a real image is added (<img class="cover-band__img"> inside .cover-band__inner)
+   the img fills the wrapper and the placeholder gradient/label gets hidden. */
+.post-root .cover-band__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.post-root .cover-band__inner:has(.cover-band__img) {
+  background: none;
+}
+.post-root .cover-band__inner:has(.cover-band__img)::after {
+  display: none;
+}
+
+/* Cover divider — thin HR between cover image and prose on mobile only.
+   On desktop the article-header has its own bottom border, so we hide this.
+   Audit-fix: dropped max-width:1400px and the conflicting margin-inline
+   override that was causing 15-16px horizontal overflow on mobile. */
+.post-root .cover-divider {
+  border: 0;
+  border-top: 1px solid var(--color-border-mid);
+  margin: 1rem 1rem 0;          /* horizontal margin = 1rem, no auto-center conflict */
+}
+@media (min-width: 1000px) {
+  .post-root .cover-divider { display: none; }
+}
+
+/* ============================================================
+   ARTICLE HEADER — title, subtitle, authors, meta column
+   ============================================================ */
+.post-root .article-header {
+  max-width: 1400px;
+  margin: 4rem auto 3rem;
+  padding-inline: 1rem;
+  padding-block-end: 1rem;
+  border-block-end: 1px solid var(--color-border-mid);
+}
+/* On mobile, header comes first (before cover). The article-header +
+   metadata + cover need to fill the viewport so the HR sits at the
+   bottom edge of common mobile screens (iPhone 14/15/16 ~844-852px,
+   iPhone Pro Max ~956px). We aim for the HR around y=830-880 absolute. */
+@media (max-width: 999px) {
+  .post-root .article-header {
+    margin-block-start: 4.5rem;     /* extra breathing room from page-nav */
+    margin-block-end: 0;
+    padding-block-end: 0;
+    border-block-end: none;
+  }
+}
+.post-root .article-header__inner {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 1000px) {
+  .post-root .article-header__inner {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 1rem;
+  }
+}
+.post-root .article-header__mast {
+  display: flex;
+  flex-direction: column;
+}
+@media (min-width: 1000px) {
+  .post-root .article-header__mast { grid-column: 1 / span 7; }
+}
+.post-root .article-header__category {
+  margin-block-end: 0.875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-mid);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.post-root .article-header__title {
+  font-family: Helvetica, var(--font-sans);
+  font-size: 2.5rem;
+  font-weight: 400;
+  line-height: 1;
+  margin-block-end: 1rem;
+  letter-spacing: -0.05em;
+}
+@media (min-width: 1000px) {
+  .post-root .article-header__title {
+    font-size: 3.75rem;
+    letter-spacing: -0.08em;
+  }
+}
+.post-root .article-header__subtitle {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 1.0625rem;
+  line-height: 1.45;
+  color: var(--color-text-mid);
+  margin-block-end: 1.5rem;
+  max-width: 38em;
+}
+/* Mobile: more breathing room around the title and subtitle so the
+   header doesn't feel crumpled when stacked vertically. */
+@media (max-width: 999px) {
+  .post-root .article-header__category { margin-block-end: 1rem; }
+  .post-root .article-header__title { margin-block-end: 1.25rem; }
+  .post-root .article-header__subtitle { margin-block-end: 2.25rem; }
+}
+.post-root .article-header__authors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.875rem 2rem;
+  margin-block-end: 1.5rem;
+  align-items: baseline;
+}
+.post-root .article-header__author { display: flex; flex-direction: column; gap: 0.05rem; }
+.post-root .article-header__author-name {
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+.post-root .article-header__author-affil {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--color-text-mid);
+}
+
+.post-root .article-header__meta {
+  display: grid;
+  column-gap: 1.5rem;
+  row-gap: 1.25rem;
+  grid-template-columns: 1fr 1fr;
+  margin-block-end: 2rem;
+  text-transform: uppercase;
+}
+@media (min-width: 1000px) {
+  .post-root .article-header__meta {
+    grid-column: 9 / span 4;
+    grid-row: 1 / span 4;
+    grid-template-columns: 1fr 1fr;
+    align-content: start;
+  }
+}
+.post-root .article-header__meta dt {
+  color: var(--color-text-mid);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-block-end: 0.25rem;
+}
+.post-root .article-header__meta dd {
+  font-size: 0.875rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--color-text);
+}
+/* On mobile: hide author block + Last Updated + Status.
+   Keep: Written (date), Duration (reading time), Topics.
+   Topics moves to the right column of a 2-col grid (Henry pattern). */
+@media (max-width: 999px) {
+  .post-root .article-header__authors { display: none; }
+  .post-root .article-header__meta-row--updated,
+  .post-root .article-header__meta-row--status { display: none; }
+  .post-root .article-header__meta {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "written topics"
+      "duration topics";
+    column-gap: 1.5rem;
+    row-gap: 1.75rem;             /* breathing room between Written and Duration */
+    margin-block-end: 2rem;       /* tighter gap to cover (was 3.5rem — pushed HR off-page) */
+  }
+  .post-root .article-header__meta-row--written  { grid-area: written; }
+  .post-root .article-header__meta-row--duration { grid-area: duration; }
+  .post-root .article-header__topics { grid-area: topics; }
+  /* Bigger metadata field values on mobile — Henry's read at body size */
+  .post-root .article-header__meta dt {
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+  }
+  .post-root .article-header__meta dd { font-size: 1rem; }
+  .post-root .article-header__topics-list li { font-size: 1rem; }
+}
+
+.post-root .article-header__topics {
+  /* On desktop, topics spans the full meta width below the other fields */
+}
+@media (min-width: 1000px) {
+  .post-root .article-header__topics { grid-column: 1 / -1; }
+}
+/* Topics list — plain vertical list everywhere, same as other metadata
+   values. No pill chrome — Niloofar pattern. Tanay rejected the pill style. */
+.post-root .article-header__topics-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.post-root .article-header__topics-list li {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.875rem;
+  color: var(--color-text);
+  /* Match the inherited text-transform: uppercase from .article-header__meta */
+}
+
+/* ============================================================
+   MOBILE-TOC — collapsible details/summary card.
+   Closed: shows "Table of Contents" + small + icon — IN the rectangle.
+   Open: same rectangle expands to show the numbered list — STILL ONE BOX.
+   The border lives on .mobile-toc (the wrapper) so it always wraps
+   everything inside, including the expanded list (v1 original design).
+   ============================================================ */
+/* TL;DR — plain text block. Sits between cover (with HR above it) and TOC. */
+.post-root .tldr {
+  max-width: 1400px;
+  margin: 2rem auto 0;
+  padding-inline: 1rem;
+}
+.post-root .tldr__label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--color-text-mid);
+  font-weight: 500;
+  margin-block-end: 0.75rem;
+}
+.post-root .tldr p {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* TOC CARD — boxed, sits inside the prose column on both viewports.
+   Restored from original laptop-v1.html: white card, dark border at 60%
+   opacity that darkens to 100% on hover, hole-punch dot top-right,
+   numbered list with (01)— prefix, grow-from-left link underline. */
+.post-root .toc-card {
+  background: #fafafa;             /* hair off-white — separates card from pure-white page */
+  border: 1.5px solid rgba(42, 39, 34, 0.6);
+  border-radius: var(--bdrs);
+  /* top, sides, bottom — asymmetric: tighter bottom because the last
+     list-item already has line-height leading below its text. */
+  padding: 1.125rem 1.5rem 0.875rem;
+  margin-block: 0 2.5rem;
+  position: relative;
+  box-shadow: 0 1px 0 rgba(42, 39, 34, 0.04);
+  transition: border-color 0.15s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+.post-root .toc-card:hover { border-color: #2a2722; }
+
+.post-root .toc-card__title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-block-end: 0.625rem;        /* tighter (was 1rem) */
+}
+.post-root .toc-card__title {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--color-text-mid);
+  font-weight: 500;
+}
+/* Hole-punch dot — fill matches page bg so it reads as a hole cut
+   through the card. Stays page-color even when border darkens. */
+.post-root .toc-card__dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border: 1.5px solid #2a2722;
+  border-radius: 999px;
+  background: var(--color-background);
+}
+
+/* Force-override the global .article-content ol/li padding+margin rules.
+   Without this, the global adds 18px margin + 24px left-padding, which
+   made the card feel too padded at the bottom. */
+.post-root .article-content .toc-card__list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.post-root .article-content .toc-card__list li {
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  display: flex;
+  gap: 0.5ch;
+  margin: 0;
+  padding-left: 0;
+}
+.post-root .toc-card__num {
+  color: var(--color-text-faint);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.post-root .toc-card__dash { color: var(--color-text-faint); }
+
+/* TOC links — DARK at rest (override the global .article-content blue
+   link rule). No resting underline; grow-from-left underline appears
+   on hover (Henry's scaleX 0→1 pattern). */
+.post-root .article-content .toc-card__link,
+.post-root .article-content .toc-card__link:visited,
+.post-root .article-content .toc-card__link:hover {
+  position: relative;
+  z-index: 0;
+  color: var(--color-text);
+  text-decoration: none;
+  border-bottom: none;
+}
+.post-root .toc-card__link::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: 0 0;
+  transition: transform 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+.post-root .toc-card__link:hover::after { transform: scaleX(1); }
+@media (prefers-reduced-motion: reduce) {
+  .post-root .toc-card__link::after { transition: none; }
+}
+.post-root .mobile-toc__list li {
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  display: flex;
+  gap: 0.5ch;
+}
+.post-root .mobile-toc__num   { color: var(--color-text-faint); font-variant-numeric: tabular-nums; }
+.post-root .mobile-toc__dash  { color: var(--color-text-faint); }
+/* Subtle underline on TOC links at rest — they're navigational so
+   looking like links matters more here than in prose. (Per Tanay's
+   screenshot 47 showing the v1 original style.) */
+.post-root .mobile-toc__list a {
+  color: var(--color-text);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--color-border-mid);
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color 0.15s var(--ease-out);
+}
+.post-root .mobile-toc__list a:hover {
+  text-decoration-color: var(--color-text);
+}
+
+/* ============================================================
+   ARTICLE CONTENT — 12-col grid, prose in cols 4-9
+   Sidenotes float in cols 10-12 on desktop.
+   ============================================================ */
+.post-root .article-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-inline: 1rem;
+  padding-block: 2rem 4rem;
+}
+@media (min-width: 1000px) {
+  .post-root .article-content {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 1rem;
+  }
+  .post-root .article-content > * { grid-column: 4 / span 6; }
+  /* Pre + tables stay within prose width so they don't push into the sidenote column.
+     Wide-figure can use the extra column 4-10 because figures don't collide with
+     sidenotes the same way (figures have margin-block, not inline-block, so they
+     don't sit beside sidenotes). */
+  .post-root .article-content > pre,
+  .post-root .article-content > .table-wrap { grid-column: 4 / span 6; max-width: 100%; min-width: 0; }
+  .post-root .article-content > .figure-wide { grid-column: 4 / span 7; }
+  .post-root .article-content > .figure-full-bleed { grid-column: 1 / -1; }
+  .post-root .article-content > .figure-constrained { grid-column: 5 / span 4; }
+  .post-root .article-content > .sidenote,
+  .post-root .article-content > .cite-sidenote {
+    grid-column: 10 / span 3;
+    margin-top: 0;
+  }
+}
+
+/* ============================================================
+   PROSE — headings, paragraphs, inline, lists, code, blockquote
+   ============================================================ */
+.post-root .article-content { counter-reset: h2-counter; }
+.post-root .article-content > h2 {
+  font-family: var(--font-sans);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  margin-block: 2.5rem 0.75rem;
+  color: var(--color-text);
+}
+.post-root .article-content > h2:not([data-no-number]) {
+  counter-increment: h2-counter;
+}
+.post-root[data-section-numbers="on"] .article-content > h2:not([data-no-number])::before {
+  content: counter(h2-counter, decimal-leading-zero);
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-text-faint);
+  margin-block-end: 0.25rem;
+}
+.post-root .article-content > h3 {
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-block: 1.75rem 0.5rem;
+  color: var(--color-text);
+}
+
+.post-root .article-content > p {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.65;
+  margin-block-end: 1.125rem;
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+.post-root .article-content strong { font-weight: 600; color: var(--color-text); }
+.post-root .article-content em { font-style: italic; }
+.post-root .article-content del { text-decoration: line-through; color: var(--color-text-mid); }
+.post-root .article-content u {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-decoration-color: var(--color-text);
+  text-underline-offset: 0.25em;
+  color: var(--color-text);
+}
+
+/* All links blue */
+.post-root .article-content a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+.post-root .article-content a:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.post-root .article-content :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: #f4f4f4;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  color: var(--color-text);
+}
+.post-root .article-content mark,
+.post-root .article-content .highlight-pill {
+  background: transparent;
+  font-size: 1.4em;
+  font-weight: 700;
+  color: var(--color-highlight-pill);
+  padding: 0;
+}
+
+.post-root .article-content ul,
+.post-root .article-content ol {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  padding-left: 1.5rem;
+  margin-block: 1.125rem;
+  list-style: revert;
+}
+.post-root .article-content ul { list-style: disc; }
+.post-root .article-content ol { list-style: decimal; }
+.post-root .article-content li { margin-block-end: 0.3rem; padding-left: 0.25rem; }
+.post-root .article-content li > ul,
+.post-root .article-content li > ol { margin-block: 0.375rem; }
+
+.post-root .article-content blockquote {
+  border-inline-start: 4px solid var(--color-border-mid);
+  margin-block: 1.5rem;
+  padding-inline-start: 1.25rem;
+  color: var(--color-text-mid);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+.post-root .article-content blockquote p { margin-block-end: 0.5rem; }
+.post-root .article-content blockquote p:last-child { margin-block-end: 0; }
+
+/* Code blocks — GitHub Light theme */
+.post-root .article-content pre {
+  background: #f6f8fa;
+  color: #24292f;
+  padding: 1rem 1.25rem;
+  border-radius: var(--bdrs);
+  border: 1px solid #d0d7de;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  margin-block: 1.25rem;
+}
+.post-root .article-content pre code {
+  background: transparent; padding: 0; color: inherit;
+  font-size: inherit; font-family: inherit; border: 0;
+}
+.post-root .tok-kw   { color: #cf222e; }
+.post-root .tok-fn   { color: #8250df; }
+.post-root .tok-str  { color: #0a3069; }
+.post-root .tok-num  { color: #0550ae; }
+.post-root .tok-com  { color: #6e7781; font-style: italic; }
+.post-root .tok-var  { color: #24292f; }
+.post-root .tok-op   { color: #24292f; }
+.post-root .tok-type { color: #953800; }
+
+/* ============================================================
+   FIGURES — image with caption, multiple width variants
+   ============================================================ */
+.post-root .article-content figure {
+  margin-block: 1.75rem;
+  text-align: center;
+}
+.post-root .article-content figure > img,
+.post-root .article-content figure > .img-placeholder {
+  max-width: 100%;
+  border-radius: var(--bdrs);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.14), 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+.post-root .article-content figcaption {
+  font-family: var(--font-sans);
+  font-style: italic;
+  font-size: 0.8125rem;
+  color: var(--color-text-mid);
+  margin-top: 0.625rem;
+  line-height: 1.45;
+  max-width: 38em;
+  margin-inline: auto;
+}
+.post-root .article-content figcaption strong {
+  color: var(--color-text);
+  font-style: normal;
+}
+.post-root .img-placeholder {
+  background:
+    linear-gradient(135deg, #d4cfc4 0%, #e9e6df 50%, #c5beb0 100%);
+  color: #4a4540;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 1rem;
+  aspect-ratio: 16 / 9;
+}
+
+/* ============================================================
+   CALLOUTS — five types, all boxed
+   ============================================================ */
+.post-root .article-content .callout {
+  margin-block: 1.25rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--bdrs);
+  border: 1px solid;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+.post-root .article-content .callout__title {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.375rem;
+}
+.post-root .article-content .callout p:last-child { margin-block-end: 0; }
+.post-root .article-content .callout p { margin-block-end: 0.5rem; }
+.post-root .article-content .callout--note { background: var(--color-note-bg); border-color: var(--color-note-border); }
+.post-root .article-content .callout--note .callout__title { color: var(--color-note-fg); }
+.post-root .article-content .callout--warning { background: var(--color-warn-bg); border-color: var(--color-warn-border); }
+.post-root .article-content .callout--warning .callout__title { color: #b35400; }
+.post-root .article-content .callout--tip { background: var(--color-tip-bg); border-color: var(--color-tip-border); }
+.post-root .article-content .callout--tip .callout__title { color: #276749; }
+.post-root .article-content .callout--question { background: var(--color-q-bg); border-color: var(--color-q-border); }
+.post-root .article-content .callout--question .callout__title { color: #553c9a; }
+.post-root .article-content .callout--meta { background: var(--color-meta-bg); border-color: var(--color-meta-border); }
+.post-root .article-content .callout--meta .callout__title { color: var(--color-text-mid); }
+
+/* ============================================================
+   SIDENOTES — V1 desktop only
+   ============================================================ */
+.post-root .article-content sup.footnote-ref {
+  font-size: 0.7em;
+  line-height: 0;
+  vertical-align: super;
+}
+.post-root .article-content sup.footnote-ref a {
+  color: var(--color-link);
+  font-weight: 600;
+  padding: 0 0.1em;
+}
+/* Sidenote (footnote-only) — Henry's left-rule treatment.
+   align-self: start makes the box only as tall as its text. */
+.post-root .article-content .sidenote {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--color-text-mid);
+  display: none;
+  border-left: 2px solid var(--color-border-mid);
+  padding-left: 0.75rem;
+  margin-block-end: 0.5rem;
+  align-self: start;
+}
+.post-root .article-content .sidenote__num {
+  color: var(--color-link);
+  font-weight: 600;
+  margin-right: 0.25ch;
+}
+@media (min-width: 1000px) {
+  .post-root .article-content .sidenote { display: block; }
+}
+
+/* Cite-sidenote — citations in the right gutter on desktop.
+   Distinct from footnote sidenote: blue [N] marker, no left rule,
+   reads as a "this is sourced" annotation. Hidden on mobile (full
+   bibliography lives in the References block below the prose). */
+.post-root .article-content .cite-sidenote {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--color-text-mid);
+  display: none;
+  padding-left: 0;
+  margin-block-end: 0.5rem;
+  align-self: start;
+}
+.post-root .article-content .cite-sidenote__num {
+  color: var(--color-link);
+  font-weight: 600;
+  margin-right: 0.25ch;
+  font-variant-numeric: tabular-nums;
+}
+.post-root .article-content .cite-sidenote em { font-style: italic; }
+.post-root .article-content .cite-sidenote a { color: var(--color-link); text-decoration: none; }
+.post-root .article-content .cite-sidenote a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+@media (min-width: 1000px) {
+  .post-root .article-content .cite-sidenote {
+    display: block;
+    grid-column: 10 / span 3;
+    margin-top: 0;
+  }
+}
+
+/* Footnotes block — V1 mobile only (desktop uses sidenotes) */
+.post-root .footnotes {
+  grid-column: 4 / span 6 !important;
+  margin-block: 3rem 1.5rem;
+  padding-block-start: 1.5rem;
+  border-block-start: 1px solid var(--color-border-mid);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--color-text-mid);
+  font-family: var(--font-sans);
+}
+.post-root .footnotes ol { padding-left: 1.5rem; margin: 0; list-style: decimal; }
+.post-root .footnotes li { margin-block-end: 0.5rem; }
+.post-root .footnotes a.footnote-backref { margin-left: 0.25em; color: var(--color-text-faint); text-decoration: none; }
+@media (min-width: 1000px) {
+  .post-root .footnotes { display: none; }
+}
+
+/* ============================================================
+   CITATIONS — distinct from footnotes
+   · Inline marker: small [N] in blue, NO sidenote treatment
+   · Full bibliography in .references section at the bottom (always shown)
+   The citation marker is just a navigation cue. The whole point is to
+   stay out of the prose flow — unlike a footnote, the reader doesn't
+   need to read the citation while reading the prose.
+   ============================================================ */
+.post-root .article-content sup.citation-ref {
+  font-size: 0.75em;
+  line-height: 0;
+  vertical-align: super;
+  font-weight: 500;
+}
+.post-root .article-content sup.citation-ref a {
+  color: var(--color-link);
+  text-decoration: none;
+  padding: 0 0.05em;
+}
+.post-root .article-content sup.citation-ref a::before { content: '['; }
+.post-root .article-content sup.citation-ref a::after { content: ']'; }
+
+/* References section — always shown on V1, V2, and mobile. */
+.post-root .references {
+  grid-column: 4 / span 6 !important;
+  margin-block: 3rem 1.5rem;
+  padding-block-start: 1.5rem;
+  border-block-start: 1px solid var(--color-border-mid);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--color-text-mid);
+}
+.post-root .references__title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-mid);
+  margin-block-end: 0.875rem;
+}
+.post-root .references__list {
+  list-style: none !important;
+  padding: 0;
+  margin: 0;
+  counter-reset: ref-counter;
+}
+.post-root .references__entry {
+  list-style: none;
+  counter-increment: ref-counter;
+  margin-block-end: 0.625rem;
+  padding-left: 2.25rem;
+  text-indent: -2.25rem;
+  position: relative;
+}
+.post-root .references__entry::before {
+  content: '[' counter(ref-counter) ']';
+  color: var(--color-text-faint);
+  font-variant-numeric: tabular-nums;
+  margin-right: 0.5ch;
+  display: inline-block;
+  width: 1.75rem;
+}
+.post-root .references__entry em { font-style: italic; }
+.post-root .references__entry a { font-size: 0.875rem; color: var(--color-link); }
+/* Backref arrow on each reference entry — returns to where the citation was made */
+.post-root .references__backref {
+  margin-left: 0.25em;
+  color: var(--color-text-faint) !important;
+  text-decoration: none;
+}
+
+/* ============================================================
+   FULL METADATA CARD — collapsible, closed by default
+   Sits between References and Footer. Holds: Authors, Resources,
+   Discussion. Slimmer than the original v1 (dropped word count,
+   revisions, version, license, translations, BibTeX — useful to
+   almost nobody).
+   Uses the same details/summary pattern as the TOC for consistency.
+   ============================================================ */
+.post-root .full-metadata {
+  max-width: 1400px;
+  margin: 3rem auto 2rem;
+  padding-inline: 1rem;
+}
+/* The card itself — same border + radius as the TOC card.
+   Not collapsible; always shows its content. */
+.post-root .full-metadata-card {
+  background: #fafafa;           /* off-white — separates card from pure-white page */
+  border: 1.5px solid rgba(42, 39, 34, 0.6);
+  border-radius: var(--bdrs-lg);
+  overflow: hidden;
+}
+
+/* Card header (label only, no icon since there's no toggle) */
+.post-root .full-metadata__header {
+  padding: 1rem 1.25rem 0.875rem;
+  border-bottom: 1px solid var(--color-border-light);
+}
+.post-root .full-metadata__label {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--color-text-mid);
+  font-weight: 500;
+}
+
+/* Card body — three sections stacked: Authors, Resources, Discussion */
+.post-root .full-metadata__body {
+  padding: 1rem 1.5rem 1.5rem;
+}
+.post-root .full-metadata__section {
+  padding-block-start: 1rem;
+  margin-block-start: 1rem;
+  border-block-start: 1px solid var(--color-border-light);
+}
+.post-root .full-metadata__section:first-child {
+  padding-block-start: 0;
+  margin-block-start: 0;
+  border-block-start: none;
+}
+.post-root .full-metadata__section-label {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--color-text-mid);
+  margin-block-end: 0.625rem;
+  display: block;
+}
+/* The inline link rows inside each section — use the unified blue link color */
+.post-root .full-metadata__inline-list {
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--color-text);
+}
+.post-root .full-metadata__inline-list a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+.post-root .full-metadata__inline-list a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.post-root .full-metadata__inline-list .sep {
+  color: var(--color-text-faint);
+  margin-inline: 0.4ch;
+}
+/* Resources: each resource type on its own row with a label on the left */
+.post-root .full-metadata__resource-row {
+  display: grid;
+  grid-template-columns: 7rem 1fr;
+  gap: 1rem;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  margin-block-end: 0.4rem;
+}
+@media (max-width: 700px) {
+  .post-root .full-metadata__resource-row { grid-template-columns: 1fr; gap: 0.25rem; }
+}
+.post-root .full-metadata__resource-row dt {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-mid);
+  align-self: center;
+}
+.post-root .full-metadata__resource-row dd { margin: 0; }
+.post-root .full-metadata__resource-row dd a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+.post-root .full-metadata__resource-row dd a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.post-root .full-metadata__resource-row dd .sep {
+  color: var(--color-text-faint);
+  margin-inline: 0.4ch;
+}
+
+/* ============================================================
+   HR + ORNAMENT
+   ============================================================ */
+.post-root .article-content hr {
+  border: 0;
+  border-block-start: 1px solid var(--color-border-mid);
+  margin-block: 2.5rem;
+  max-width: 60%;
+  margin-inline: auto;
+}
+.post-root .article-content .section-divider {
+  text-align: center;
+  margin-block: 3rem;
+  font-size: 1.125rem;
+  color: var(--color-text-faint);
+  letter-spacing: 1em;
+  text-indent: 1em;
+}
+
+/* ============================================================
+   MATH (KaTeX)
+   ============================================================ */
+.post-root .article-content .katex-display {
+  margin-block: 1.25rem !important;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.post-root .article-content .katex { font-size: 1.05em; }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.post-root .footer {
+  background: var(--color-bg-on-dark);
+  color: var(--color-text-on-dark);
+  padding: 4rem 2rem 3rem;
+  margin-block-start: 4rem;
+}
+.post-root .footer__nav {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+@media (min-width: 900px) {
+  .post-root .footer__nav {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .post-root .footer__section--social { grid-column: span 2; }
+}
+.post-root .footer__section { display: flex; flex-direction: column; gap: 0.5rem; }
+.post-root .footer__meta-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  margin-block-end: 0.5rem;
+}
+.post-root .footer__link {
+  color: var(--color-text-on-dark);
+  font-size: 1rem;
+  display: inline-block;
+  align-self: start;
+  position: relative;
+}
+.post-root .footer__link::after {
+  content: ''; position: absolute; bottom: -2px; left: 0;
+  width: 100%; height: 1px; background-color: currentColor;
+  transform: scaleX(0); transform-origin: 0 0;
+  transition: transform 0.2s var(--ease-out);
+}
+.post-root .footer__link:hover::after { transform: scaleX(1); }
+
+/* Social list with inline SVG icons — hybrid set:
+     GitHub + LinkedIn = filled paths (16×16 viewBox, slightly smaller)
+     Scholar + Bluesky + Twitter = filled outline (24×24 viewBox)
+     Email = stroked outline (24×24)
+   All use currentColor so they inherit the white footer text color. */
+.post-root .social-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.post-root .social-list__list-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75ch;
+  font-size: 1rem;
+}
+.post-root .social-list__icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-on-dark);
+}
+.post-root .social-list__icon svg { width: 100%; height: 100%; display: block; }
+/* GitHub + LinkedIn have 16×16 viewBoxes — render at 1rem so the
+   filled paths don't look heavier than the 24×24 outline icons. */
+.post-root .social-list__list-item:nth-child(1) .social-list__icon svg,
+.post-root .social-list__list-item:nth-child(2) .social-list__icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+.post-root .social-list__link {
+  position: relative;
+  z-index: 0;
+  color: var(--color-text-on-dark);
+  text-decoration: none;
+  display: inline-block;
+}
+.post-root .social-list__link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: 0 0;
+  transition: transform 0.2s var(--ease-out);
+}
+.post-root .social-list__link:hover::after { transform: scaleX(1); }
+
+.post-root .footer__colophon {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  max-width: 1400px;
+  margin: 3rem auto 0;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--color-text-faint);
+}
+
+/* Section numbers are controlled by body[data-section-numbers]; in
+   production that attribute is set by Jekyll from the post frontmatter
+   `show_section_numbers: true/false`. No on-page toggle needed. */
+
+@media (prefers-reduced-motion: reduce) {
+  .post-root *, .post-root *::before, .post-root *::after { transition: none !important; }
+}
+
+/* ============================================================
+   NOTE-ONLY — filled in Issue #12 (note layout)
+   ============================================================ */
+/* Placeholder — extends in Issue #12 */
+
+/* ============================================================
+   ROUGE SHIM — filled in Issue #13 (syntax highlighter)
+   ============================================================ */
+/* Placeholder — extends in Issue #13 */
