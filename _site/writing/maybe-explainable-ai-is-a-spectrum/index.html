@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maybe Explainable AI Is a Spectrum · Tanay Nagar</title><meta name="description" content="Explainability in AI is not sufficient for ethical deployment if systemic harms persist. But it remains a plausible ethical goal if we treat it as a spectrum..."><link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+
+  <link rel="stylesheet" href="/assets/css/post.css"></head>
+
+<body class="layout-article">
+<div class="post-root" data-section-numbers="on">
+
+<nav class="page-nav">
+  <a class="page-nav__back-arrow" href="/writing">
+    <span class="page-nav__back-arrow-symbol">&larr;</span>
+    <span class="page-nav__back-arrow-text">All Writing</span>
+  </a>
+
+  <a class="page-nav__brand" href="/" aria-label="Go home">
+    <span class="page-nav__brand-text">v0.1</span><span class="page-nav__brand-flag">&mdash; Go Home</span>
+  </a>
+
+  <span class="page-nav__tagline"></span>
+</nav>
+
+
+<div class="article-frame">
+
+  <header class="article-header">
+    <div class="article-header__inner">
+      <div class="article-header__mast">
+        
+        <h1 class="article-header__title">Maybe Explainable AI Is a Spectrum</h1>
+        
+
+        
+        <div class="article-header__authors">
+          
+            
+              <div class="article-header__author">
+                <span class="article-header__author-name">Tanay Nagar</span>
+                
+              </div>
+            
+          
+        </div>
+        
+      </div>
+
+      <dl class="article-header__meta">
+        <div class="article-header__meta-row article-header__meta-row--written">
+          <dt>Written</dt>
+          <dd>December 10, 2024</dd>
+        </div>
+        
+        <div class="article-header__meta-row article-header__meta-row--updated">
+          <dt>Last updated</dt>
+          <dd>August 20, 2025</dd>
+        </div>
+        
+        
+        <div class="article-header__meta-row article-header__meta-row--duration">
+          <dt>Duration</dt>
+          <dd>10 min</dd>
+        </div>
+        
+        
+        <div class="article-header__meta-row article-header__meta-row--status">
+          <dt>Status</dt>
+          <dd>Published</dd>
+        </div>
+        
+        
+        <div class="article-header__meta-row article-header__topics">
+          <dt>Topics</dt>
+          <dd>
+            <ul class="article-header__topics-list">
+              <li>AI Ethics</li><li>Explainability</li><li>Philosophy</li><li>Accountability</li>
+            </ul>
+          </dd>
+        </div>
+        
+      </dl>
+    </div>
+  </header>
+
+  
+  <div class="tldr">
+    <span class="tldr__label">TL;DR</span>
+    <p>Explainability in AI is not sufficient for ethical deployment if systemic harms persist. But it remains a plausible ethical goal if we treat it as a spectrum rather than a binary — calibrating depth to the stakes.</p>
+
+  </div>
+  
+
+  
+
+</div>
+
+<article class="article-content">
+  
+<aside class="callout callout--meta">
+<div class="callout__title">Meta</div>
+<div class="callout__body">
+<p>This essay was my final submission for <a href="https://guide.wisc.edu/courses/philos/">PHILOS 543: Special Topics in Ethics</a> at UW–Madison, December 2024.</p>
+</div>
+</aside>
+
+<p>Artificial Intelligence’s (AI) growing influence raises urgent questions about fairness, trustworthiness, transparency, and broader ethical goals. Explainable AI (XAI) tries to address these problems through human-interpretable justifications for the decisions these frequently ‘black-boxed’ AI systems make. XAI’s plausibility as an ethical goal hinges on the balance it achieves between its two evaluation metrics: practical feasibility and ethical importance. Specifically, XAI can only be regarded as a plausible ethical goal if it remains ethically crucial enough to address the core principles of transparency and fairness while bound to the technical and resource constraints of the real world. This paper argues that XAI is a plausible ethical goal because it upholds several essential principles including fairness, transparency, and accountability while supporting a nuanced, context-sensitive approach to account for the technical realities of implementing this explainable framework that counterbalances aforementioned ethical imperatives.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#the-ethical-case-for-explainability" id="markdown-toc-the-ethical-case-for-explainability">The ethical case for explainability</a></li>
+  <li><a href="#fairness-accountability-and-the-failures-of-opacity" id="markdown-toc-fairness-accountability-and-the-failures-of-opacity">Fairness, accountability, and the failures of opacity</a></li>
+  <li><a href="#the-technical-constraints" id="markdown-toc-the-technical-constraints">The technical constraints</a></li>
+  <li><a href="#a-context-sensitive-approach" id="markdown-toc-a-context-sensitive-approach">A context-sensitive approach</a></li>
+  <li><a href="#in-conclusion" id="markdown-toc-in-conclusion">In conclusion</a></li>
+</ul>
+
+<p>I first expound on the ethical importance of XAI, focusing on the aforementioned ethical principles. I then put forward the technical limitations accompanying XAI, followed by a discussion of a context-sensitive approach to XAI, finally ending with addressing long-term ethical imperatives while responding to intermediary counter-arguments along with each sub-topic to support the indispensability of XAI despite its challenges.</p>
+
+<h2 id="the-ethical-case-for-explainability">The ethical case for explainability</h2>
+
+<p>Explainable AI is an ethical necessity across all applications (to ensure fairness, accountability, and transparency), but its importance becomes critical for high-stakes domains where AI decisions can significantly impact the rights of individuals, public trust, or even societal structures. In domains like healthcare, finance, and criminal sentencing, every decision can have serious implications. Without explainability, decisions risk being unchallenged, eroding trust in the system and perpetuating harm. Enabling explainability enables all users of the system — from developers to regulators — to better scrutinize and improve AI systems to make sure they are up to code with ethical standards. From the lens of transparency, stakeholders and anyone impacted have the ability to access and interpret the logic, methodology, and the rationale behind decisions taken to ensure that any decision is understandable and can always be contested. This requirement is further warranted by Seth Lazar’s argument that “automated decision making intensifies existing power structures”.<sup id="fnref:taylor" role="doc-noteref"><a href="#fn:taylor" class="footnote" rel="footnote">1</a></sup> For example, transparency in facial recognition systems revealed disproportionate effect on marginalized groups. These power imbalances would not be intervened upon without transparency. More centrally, opaqueness in these systems is a threat to individual autonomy. The impacted parties can only instill trust in a system through rightful influence on decisions taken in the system. Transparency provides the “informed self-advocacy”<sup id="fnref:vredenburgh" role="doc-noteref"><a href="#fn:vredenburgh" class="footnote" rel="footnote">2</a></sup> needed to ensure fairness and maintain public support. For example, transparent hiring algorithms allow applicants to challenge discriminatory evaluations of resumes, something that instills reliance and certainty in the system. Another example of this logic is in how GDPR-compliant<sup id="fnref:gdpr" role="doc-noteref"><a href="#fn:gdpr" class="footnote" rel="footnote">3</a></sup> loan-denial systems ensure equitable behavior by providing decision criteria, allowing applicants to contest decisions too. A common counter-argument to this position is that ‘gaming the system’ becomes ever easier and that transparency undermines proprietary systems by exposing sensitive algorithmic information. There are however many barricades and safety nets to prevent this from happening. Ethical frameworks like the GDPR balance transparency with protecting proprietary information by requiring sufficient explanation without full disclosure of intellectual properties, treating transparency as a spectrum instead of an analog decision. Further, processes can always be set up to provide explainability selectively to relevant authorities while maintaining confidentiality from the general public.</p>
+
+<h2 id="fairness-accountability-and-the-failures-of-opacity">Fairness, accountability, and the failures of opacity</h2>
+
+<p>Just like transparency, fairness also advocates for the indispensability of explainability in AI. We have multiple examples of opaque systems perpetuating systemic biases instead of equitable treatment. ProPublica’s analysis<sup id="fnref:propublica" role="doc-noteref"><a href="#fn:propublica" class="footnote" rel="footnote">4</a></sup> showed how the COMPAS tool disproportionately labeled Black defendants as high risk. Similarly, Buolamwini and Gebru’s Gender Shades study revealed higher error rates for dark-skinned women in facial recognition systems. This lack of explainability obscuring systemic inequities is not the only reason to warrant explainability. The Like Cases Maxim asserts that individuals with morally equivalent characteristics should be treated equally. Furthermore, Zimmerman and Stronach argue that avoiding doxastic negligence — making decisions based on incomplete or biased data — demands the need for transparency in AI systems. Lastly, accountability also creates a strong case for explainability. Accountability ensures that decisions can be traced back to their sources, assigning responsibility for harmful outcomes. AI systems need to be held at the same standard as their human counterparts. For instance, in healthcare, AI-assisted diagnoses should be held at the same level as doctors; explainability allows for patient safety and reduced chances of flawed outputs. Accountability through explainability allows for the “articulation and justification of decisions,”<sup id="fnref:taylor:1" role="doc-noteref"><a href="#fn:taylor" class="footnote" rel="footnote">1</a></sup> empowering stakeholders to hold systems accountable. It additionally also ensures regulatory backing, like through GDPR Article 30 which requires justification for all data processing activities. A common rebuttal to this line of thought is justifying decisions through outcomes-based evaluations, but I argue such alternatives are insufficient. Explainability allows for traceability and a deeper scrutiny of logic and processes, not post-hoc confirmation of righteousness. For instance, in healthcare, understanding why an AI system makes a diagnosis is much more important than just simply noting the error. This applies for all high-stakes contexts.</p>
+
+<h2 id="the-technical-constraints">The technical constraints</h2>
+
+<p>While I present multiple rationales on the imperativeness of explainable AI, its implementation is constrained by substantial technical challenges including complexity, trade-offs with accuracy, and resource demands too. Complex models, like deep neural networks, are inherently opaque, which makes their decision-making processes very difficult to interpret, and achieving explainability often involves simplifications that could obscure critical contexts or nuances. There do exist simpler, more explainable models like decision trees, but these models often lack the precision that is needed for a complex action. Taylor and Vredenburgh however underscore that the complexity that explainability brings in the former cases still does not outweigh the moral importance of transparency, foundational to accountability and trust. Especially in high-stakes scenarios like healthcare and criminal justice, I do not believe that marginal accuracy gains trump the ethical importance of explainability. Another challenge in practical feasibility lies in the cost and resources needed to implement XAI. Explainable systems not only require significant computational power but also human supervision. While these requisites might be easily fulfilled in high-resource domains like finance and healthcare, underfunded and low-resource settings risk perpetuating structural inequities through opaque and inscrutable systems. Finally, explainability often involves oversimplification, which is a significant hurdle. Simplified explanations often omit very crucial details or nuances about the decisions made, leading to misinterpretations, misuses, and worse: a false sense of transparency. While critics argue that the technical bottlenecks make XAI impractical, I believe the recent advances from continued research have addressed these challenges significantly. Methods like SHAP and LIME enable scalable and meaningful explainability.</p>
+
+<h2 id="a-context-sensitive-approach">A context-sensitive approach</h2>
+
+<p>With the ethical imperative and the practical feasibility of XAI acting like counterbalances, I believe a nuanced, context-sensitive approach is ideal — ensuring that ethical imperatives are prioritized in high-stakes domains while practical limitations help guide the scope and depth of XAI elsewhere.</p>
+
+<p>Domains like healthcare, criminal justice, and finance demand the highest level and standard of explainability due to their profound impact on individual rights and on the structures of society. In this context, ethical principles like accountability and fairness, achieved through XAI, must be at the forefront, and minor trade-offs to accuracy and efficiency are acceptable. For example, we would much rather have an AI system used for cancer diagnosis provide rigorous explanations to build patient safety and trust in the healthcare system than get only the diagnosis back just a little faster. On the other side, low-stakes applications like recommendation systems or algorithms used in social media may be controlled by less rigorous standards for explainability. In low-stakes scenarios, I believe scalability and usability should be prioritized, given they do not compromise trust. For example, a recommendation system for movies might only need to reveal basic insights instead of a detailed rationale into its logic, overwhelming the users. Finally, I do want to explicitly state that explainability should not be treated as a binary requirement but as a spectrum, with the depth and detail of explanations tailored to the specific use case being considered. Just like GDPR exemplifies a tiered transparency model, allowing selective disclosure, high-stakes scenarios can similarly necessitate full transparency while low-stakes scenarios can operate with partial transparency because the harmful outlook is minimal. One may argue that such a varying approach might bring confusion, but clear guidelines and frameworks (like the tiered model in GDPR) can provide consistency while being adaptable to a variety of use cases.</p>
+
+<h2 id="in-conclusion">In conclusion</h2>
+
+<p>I want to establish XAI as a cornerstone of ethical artificial intelligence, ensuring fairness, transparency, and accountability across systems that have a deep influence on our lives. I reiterate my argument that XAI is a plausible ethical goal because it upholds these baser, foundational ethical principles, even as it navigates its technical limitations in reality. While current challenges in the implementation of XAI exist, these challenges are surmountable with ongoing advances in research and innovation. A context-sensitive framework offers a unique pragmatic solution, balancing the ethical rigor needed with AI systems along with the challenges that accompany it, based on the potential for impact an AI system holds — treating this trade-off as a spectrum instead of a binary decision.</p>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:taylor" role="doc-endnote">
+      <p>Taylor, Elanor. “Explanation and the Right to Explanation.” <em>Journal of the American Philosophical Association</em> 10, no. 3 (2023): 467–82. <a href="https://doi.org/10.1017/apa.2023.7">https://doi.org/10.1017/apa.2023.7</a>. <a href="#fnref:taylor" class="reversefootnote" role="doc-backlink">&#8617;</a> <a href="#fnref:taylor:1" class="reversefootnote" role="doc-backlink">&#8617;<sup>2</sup></a></p>
+    </li>
+    <li id="fn:vredenburgh" role="doc-endnote">
+      <p>Vredenburgh, Kate. “The Right to Explanation.” <em>Journal of Political Philosophy</em> 30, no. 2 (2021): 209–29. <a href="https://doi.org/10.1111/jopp.12262">https://doi.org/10.1111/jopp.12262</a>. <a href="#fnref:vredenburgh" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:gdpr" role="doc-endnote">
+      <p>General Data Protection Regulation (GDPR). “General Data Protection Regulation (GDPR) – Legal Text.” Accessed December 10, 2024. <a href="https://gdpr-info.eu/">https://gdpr-info.eu/</a>. <a href="#fnref:gdpr" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:propublica" role="doc-endnote">
+      <p>Angwin, Julia, Jeff Larson, Lauren Kirchner, and Surya Mattu. “Machine Bias.” ProPublica. Accessed December 10, 2024. <a href="https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing">https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing</a>. <a href="#fnref:propublica" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+</article>
+
+
+<section class="full-metadata">
+  <div class="full-metadata-card">
+    <div class="full-metadata__header">
+      <span class="full-metadata__label">Full metadata</span>
+    </div>
+    <div class="full-metadata__body">
+
+      
+      <div class="full-metadata__section">
+        <span class="full-metadata__section-label">Authors</span>
+        <div class="full-metadata__inline-list">
+          
+            <a href="/">Tanay Nagar</a>
+              
+            
+            
+          
+        </div>
+      </div>
+      
+
+      
+
+      
+
+    </div>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <nav class="footer__nav"><section class="footer__section">
+          <div class="footer__meta-title">v0.1</div>
+          <a class="footer__link" href="/">Home</a>
+        </section><section class="footer__section footer__section--social">
+          <div class="footer__meta-title">Elsewhere</div>
+          <ul class="social-list"><li class="social-list__list-item">
+                  <span class="social-list__icon" aria-hidden="true"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
+    <path d="M9 18c-4.51 2-5-2-7-2"/>
+</svg>
+</span>
+                  <a class="social-list__link" href="https://github.com/tnagar72" target="_blank" rel="noopener noreferrer">GitHub</a>
+                </li><li class="social-list__list-item">
+                  <span class="social-list__icon" aria-hidden="true"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+    <rect width="4" height="12" x="2" y="9"/>
+    <circle cx="4" cy="4" r="2"/>
+</svg>
+</span>
+                  <a class="social-list__link" href="https://www.linkedin.com/in/tanaynagar/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                </li><li class="social-list__list-item">
+                  <span class="social-list__icon" aria-hidden="true"><svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 9a8 8 0 0 1 7.162 4.44L24 9.5z"/>
+</svg>
+</span>
+                  <a class="social-list__link" href="https://scholar.google.com/citations?user=MEVH8HQAAAAJ&hl=en" target="_blank" rel="noopener noreferrer">Google Scholar</a>
+                </li><li class="social-list__list-item">
+                  <span class="social-list__icon" aria-hidden="true"><svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741 0 0 1-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478 0-.69-.139-1.861-.902-2.206-.659-.298-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8z"/>
+</svg>
+</span>
+                  <a class="social-list__link" href="https://bsky.app/profile/tnagar.bsky.social" target="_blank" rel="noopener noreferrer">Bluesky</a>
+                </li><li class="social-list__list-item">
+                  <span class="social-list__icon" aria-hidden="true"><svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <rect width="20" height="16" x="2" y="4" rx="2"/>
+    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+</svg>
+</span>
+                  <a class="social-list__link" href="mailto:tanaynagar7@gmail.com">Email</a>
+                </li><li class="social-list__list-item">
+                  <span class="social-list__icon" aria-hidden="true"><svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+</svg>
+</span>
+                  <a class="social-list__link" href="https://x.com/tnagar72" target="_blank" rel="noopener noreferrer">X/Twitter</a>
+                </li></ul>
+        </section></nav><div class="footer__colophon"><span class="footer__colophon-left">Tanay Nagar</span><span class="footer__colophon-right">Written from Madison & Mumbai</span></div></footer>
+
+
+</div>
+<script>
+(function() {
+  var injected = false;
+
+  function injectSidenotes() {
+    if (injected) return;
+    if (window.matchMedia('(max-width: 999px)').matches) return;
+    if (!document.body.classList.contains('layout-article')) return;
+
+    var article = document.querySelector('.post-root .article-content');
+    if (!article) return;
+
+    var refs = article.querySelectorAll('sup[role="doc-noteref"]');
+    if (refs.length === 0) return;
+
+    refs.forEach(function(ref) {
+      var anchor = ref.querySelector('a.footnote');
+      if (!anchor) return;
+      var href = anchor.getAttribute('href');
+      if (!href || href[0] !== '#') return;
+      var targetId = href.slice(1);
+      var li = document.getElementById(targetId);
+      if (!li) return;
+
+      // Walk up to the closest direct-child-of-article ancestor — that's
+      // the element CSS grid-positions in cols 10-12. If the ref is
+      // inside a callout/blockquote, we attach the sidenote AFTER the
+      // whole callout/blockquote, not inside it (which would break grid).
+      var paragraph = ref.closest('p, li, h2, h3, h4');
+      if (!paragraph) return;
+      var anchorBlock = paragraph;
+      while (anchorBlock.parentNode && anchorBlock.parentNode !== article) {
+        anchorBlock = anchorBlock.parentNode;
+      }
+      if (anchorBlock.parentNode !== article) return;
+
+      // Clone the footnote body and strip:
+      //   - the backref arrow (visually noisy in the gutter)
+      //   - any `id` attributes (the originals stay in the bottom
+      //     footnotes block; cloning would produce duplicate IDs which
+      //     breaks anchors and screen-reader navigation)
+      var clone = li.cloneNode(true);
+      var backref = clone.querySelector('a.reversefootnote, a.footnote-backref');
+      if (backref) backref.parentNode.removeChild(backref);
+      if (clone.id) clone.removeAttribute('id');
+      clone.querySelectorAll('[id]').forEach(function(el) {
+        el.removeAttribute('id');
+      });
+
+      var aside = document.createElement('aside');
+      aside.className = 'sidenote sidenote--injected';
+      // AT reads the bottom footnotes block; the visual sidenote is a
+      // duplicate, so hide it from accessibility tree.
+      aside.setAttribute('aria-hidden', 'true');
+
+      var num = document.createElement('span');
+      num.className = 'sidenote__num';
+      num.textContent = anchor.textContent + '.';
+      aside.appendChild(num);
+      aside.appendChild(document.createTextNode(' '));
+
+      Array.prototype.forEach.call(clone.childNodes, function(node) {
+        aside.appendChild(node.cloneNode(true));
+      });
+
+      anchorBlock.parentNode.insertBefore(aside, anchorBlock.nextSibling);
+    });
+
+    article.classList.add('sidenotes-active');
+    injected = true;
+  }
+
+  function run() {
+    // requestAnimationFrame defers to after layout, fixing parse-time
+    // matchMedia races (e.g., iframe contexts, DevTools open at narrow).
+    requestAnimationFrame(injectSidenotes);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+})();
+</script>
+
+</body>
+</html>
