@@ -11,6 +11,9 @@ collections:
   writing:
     output: true
     permalink: /writing/:path/
+  research:
+    output: true
+    permalink: /research/:path/
 
 defaults:
   - scope:
@@ -18,9 +21,15 @@ defaults:
       type: writing
     values:
       layout: article
+  - scope:
+      path: ""
+      type: research
+    values:
+      layout: research
 
 exclude:
   - README.md
   - Gemfile
   - Gemfile.lock
   - _original
+  - NOTES.md

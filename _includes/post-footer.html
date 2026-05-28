@@ -72,7 +72,7 @@
   {%- if show_byline or show_colophon -%}
     <div class="footer__colophon">
       {%- if show_byline -%}
-        <span class="footer__colophon-left">{{ site.data.site.byline_name }}</span>
+        <a class="footer__colophon-left" href="{{ '/' | relative_url }}">{{ site.data.site.byline_name }}</a>
       {%- else -%}
         <span class="footer__colophon-left"></span>
       {%- endif -%}

@@ -1,0 +1,289 @@
+  /* ============================================================
+     v1 canonical — research page template
+     Decisions: V1/V2 responsive venue strip, Fred-blue TL;DR
+     by default, per-page accent switch (5 colors matching blog
+     callouts), secondary author links + tertiary affiliation
+     links, full-box TL;DR (no stripe).
+     ============================================================ */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --background: #ffffff;
+    --foreground: oklch(0.145 0 0);
+    --muted-foreground: #565666;
+    --border: rgba(0, 0, 0, 0.10);
+    --border-strong: rgba(0, 0, 0, 0.22);
+
+    /* The 5 accents — match the blog callout palette.
+       The page picks one via `data-accent="blue|purple|green|amber|grey"` on <body>. */
+    --accent-blue-bg: #ebf2fc;       --accent-blue-border: #b5cef0;       --accent-blue-ink: #1e5fb8;
+    --accent-purple-bg: #f3eefe;     --accent-purple-border: #c8b6f8;     --accent-purple-ink: #5a3acc;
+    --accent-green-bg: #f0fff4;      --accent-green-border: #9ae6b4;      --accent-green-ink: #276749;
+    --accent-amber-bg: #fff3cd;      --accent-amber-border: #ffc107;      --accent-amber-ink: #b35400;
+    --accent-grey-bg: #f5f5f5;       --accent-grey-border: #ddd;          --accent-grey-ink: #565666;
+
+    --system: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --crimson-text: 'Crimson Text', Georgia, serif;
+  }
+
+  /* The accent resolution. body[data-accent="blue"] sets which set is "live". */
+  body[data-accent="blue"]   { --tldr-bg: var(--accent-blue-bg);   --tldr-border: var(--accent-blue-border);   --tldr-ink: var(--accent-blue-ink); }
+  body[data-accent="purple"] { --tldr-bg: var(--accent-purple-bg); --tldr-border: var(--accent-purple-border); --tldr-ink: var(--accent-purple-ink); }
+  body[data-accent="green"]  { --tldr-bg: var(--accent-green-bg);  --tldr-border: var(--accent-green-border);  --tldr-ink: var(--accent-green-ink); }
+  body[data-accent="amber"]  { --tldr-bg: var(--accent-amber-bg);  --tldr-border: var(--accent-amber-border);  --tldr-ink: var(--accent-amber-ink); }
+  body[data-accent="grey"]   { --tldr-bg: var(--accent-grey-bg);   --tldr-border: var(--accent-grey-border);   --tldr-ink: var(--accent-grey-ink); }
+  /* Default if no accent set on body */
+  body:not([data-accent]) { --tldr-bg: var(--accent-blue-bg); --tldr-border: var(--accent-blue-border); --tldr-ink: var(--accent-blue-ink); }
+
+  html, body {
+    background: var(--background); color: var(--foreground);
+    font-family: var(--system); font-size: 16px; line-height: 1.55;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  }
+
+  /* Default anchor — tertiary link (foreground, no underline at rest, hover-reveal underline) */
+  a { color: var(--foreground); text-decoration: none; }
+  a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: rgba(0, 0, 0, 0.4);
+  }
+
+  /* ============================================================
+     Top nav — back to publications
+     ============================================================ */
+  .topnav { padding: 22px 6vw 0; max-width: 1200px; margin: 0 auto; }
+  .topnav a {
+    font-family: var(--system); font-size: 14px;
+    color: var(--muted-foreground);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .topnav a:hover { color: var(--foreground); text-decoration: none; }
+  .topnav .chev { font-size: 12px; }
+
+  /* ============================================================
+     Hero
+     ============================================================ */
+  .hero { max-width: 1024px; margin: 56px auto 0; padding: 0 6vw; text-align: center; }
+
+  /* VENUE STRIP — responsive: V1 (single line) on ≥720px, V2 (two-line) below */
+  .venue-strip {
+    font-family: var(--system);
+    margin-bottom: 24px;
+    line-height: 1.55;
+  }
+  /* Desktop: single line, Niloofar-style */
+  @media (min-width: 720px) {
+    .venue-strip {
+      font-size: 13.5px;
+      color: var(--muted-foreground);
+      line-height: 1.55;
+    }
+    .venue-strip__name { color: var(--foreground); font-weight: 500; }
+    .venue-strip__meta { display: inline; }
+    .venue-strip__meta-pre { display: inline; }
+    .venue-strip__meta-pre::before { content: ' · '; color: rgba(0,0,0,.25); margin: 0 1px; }
+    .venue-strip__sep { color: rgba(0,0,0,.25); margin: 0 7px; }
+  }
+  /* Mobile: two lines hierarchy */
+  @media (max-width: 719px) {
+    .venue-strip { line-height: 1.4; }
+    .venue-strip__name {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--foreground);
+      letter-spacing: -.005em;
+    }
+    .venue-strip__meta {
+      display: block;
+      font-size: 12.5px;
+      color: var(--muted-foreground);
+      margin-top: 4px;
+    }
+    .venue-strip__meta-pre { display: none; }
+    .venue-strip__sep { color: rgba(0,0,0,.25); margin: 0 7px; }
+  }
+
+  /* TITLE */
+  .hero h1 {
+    font-family: var(--system); font-weight: 500;
+    font-size: clamp(32px, 4.5vw, 50px);
+    line-height: 1.1; letter-spacing: -.015em;
+    color: var(--foreground); margin-bottom: 28px;
+    max-width: 28ch; margin-left: auto; margin-right: auto;
+  }
+
+  /* SECONDARY LINKS — author byline (foreground + faint underline) */
+  .authors-line {
+    font-family: var(--system); font-size: 16px;
+    color: var(--foreground); margin-bottom: 6px; line-height: 1.55;
+  }
+  .authors-line a {
+    color: var(--foreground);
+    text-decoration: underline;
+    text-decoration-color: rgba(0, 0, 0, 0.18);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: text-decoration-color .15s ease;
+  }
+  .authors-line a:hover {
+    text-decoration-color: var(--foreground);
+    text-decoration-thickness: 1px;
+  }
+  .authors-line a sup {
+    font-size: 10px; color: var(--muted-foreground);
+    vertical-align: super; margin-left: 1px;
+  }
+
+  /* Equal-contribution legend */
+  .eq-legend {
+    font-family: var(--mono); font-size: 10.5px;
+    letter-spacing: .14em; color: var(--muted-foreground);
+    margin-top: 4px; margin-bottom: 14px;
+  }
+  .eq-legend .glyph { color: var(--foreground); font-weight: 500; margin-right: 2px; }
+  .eq-legend .sep { color: rgba(0,0,0,.3); margin: 0 10px; }
+
+  /* TERTIARY LINKS — affiliations.
+     Organizations: no underline at rest, hover-reveal underline. */
+  .aff-legend {
+    font-family: var(--system); font-size: 13.5px;
+    color: var(--muted-foreground); margin-bottom: 36px; line-height: 1.55;
+  }
+  .aff-legend sup { font-size: 9.5px; vertical-align: super; margin-right: 2px; color: rgba(0,0,0,.4); }
+  .aff-legend .sep { color: rgba(0,0,0,.25); margin: 0 10px; }
+  .aff-legend a {
+    color: var(--muted-foreground);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  .aff-legend a:hover {
+    color: var(--foreground);
+    border-bottom-color: rgba(0, 0, 0, 0.35);
+    text-decoration: none;
+  }
+
+  /* ============================================================
+     Buttons — ghost pill
+     ============================================================ */
+  .actions { display: inline-flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 0; }
+  .btn-ghost {
+    font-family: var(--system); font-size: 13.5px; font-weight: 500;
+    color: var(--foreground); background: transparent;
+    padding: 8px 14px; border-radius: 999px;
+    border: 1px solid var(--border-strong);
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 7px;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .btn-ghost:hover {
+    background: var(--foreground); color: var(--background); border-color: var(--foreground);
+    text-decoration: none;
+  }
+  .btn-ghost i { font-size: 12px; opacity: .85; }
+
+  /* ============================================================
+     Body — abstract, sections, BibTeX
+     ============================================================ */
+  .body { max-width: calc(72ch + 320px); margin: 56px auto 0; padding: 0 6vw 0; }
+  .body h2 {
+    font-family: var(--system); font-weight: 600; font-size: 22px;
+    line-height: 1.2; letter-spacing: -.012em;
+    color: var(--foreground); margin: 40px 0 14px;
+  }
+  .body h2:first-child { margin-top: 0; }
+  .body p {
+    font-family: var(--system); font-size: 17px; line-height: 1.65;
+    color: var(--foreground); margin-bottom: 16px;
+  }
+
+  /* PRIMARY links inside body prose — paper refs, external citations */
+  .body p a {
+    color: var(--foreground);
+    text-decoration: underline;
+    text-decoration-color: rgba(0, 0, 0, 0.25);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: text-decoration-color .15s ease;
+  }
+  .body p a:hover { text-decoration-color: var(--foreground); }
+
+  /* TL;DR — accent-themed, full-box (matches blog callout pattern) */
+  .tldr {
+    background: var(--tldr-bg);
+    border: 1px solid var(--tldr-border);
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-family: var(--system); font-size: 15px;
+    color: var(--foreground);
+    margin-bottom: 18px; line-height: 1.55;
+  }
+  .tldr .lbl {
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: .22em; text-transform: uppercase;
+    color: var(--tldr-ink); margin-right: 8px;
+  }
+
+  /* BibTeX */
+  .bib-block {
+    background: rgba(0,0,0,.04); border: 1px solid var(--border);
+    border-radius: 6px; padding: 16px 20px;
+    font-family: var(--mono); font-size: 12.5px;
+    line-height: 1.6; color: var(--foreground);
+    overflow-x: auto; position: relative; margin-top: 12px;
+  }
+  .bib-block pre { font: inherit; color: inherit; }
+  .bib-block .copy {
+    position: absolute; top: 10px; right: 12px;
+    font-family: var(--mono); font-size: 11px;
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 4px; padding: 4px 10px;
+    color: var(--muted-foreground); cursor: pointer;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 5px;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .bib-block .copy:hover {
+    background: var(--foreground); color: var(--background); border-color: var(--foreground);
+    text-decoration: none;
+  }
+  .bib-block .copy.copied { background: #d4f0d4; color: #1a5a1a; border-color: #6cc06c; }
+  .bib-block .copy.copied::before { content: '✓'; margin-right: 2px; }
+
+  /* Acknowledgements */
+  .ack-section { max-width: 1024px; margin: 56px auto 0; padding: 0 6vw; }
+  .ack-section h2 {
+    font-family: var(--system); font-weight: 600; font-size: 22px;
+    line-height: 1.2; letter-spacing: -.012em;
+    color: var(--foreground); margin: 0 0 14px;
+  }
+  .ack-section p {
+    font-style: italic; color: var(--muted-foreground);
+    font-family: var(--crimson-text); font-size: 16.5px; line-height: 1.6;
+    max-width: none;
+  }
+
+  /* Footer */
+  .page-footer {
+    max-width: calc(72ch + 320px); margin: 80px auto 0;
+    padding: 24px 6vw 60px;
+    border-top: 1px solid var(--border);
+    font-family: var(--system); font-size: 13px;
+    color: var(--muted-foreground);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 10px;
+  }
+  .page-footer a {
+    color: var(--muted-foreground);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    transition: color .15s ease, border-color .15s ease;
+  }
+  .page-footer a:hover {
+    color: var(--foreground); border-color: var(--foreground);
+    text-decoration: none;
+  }
