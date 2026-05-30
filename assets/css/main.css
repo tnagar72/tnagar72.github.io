@@ -339,15 +339,11 @@ section {
     text-decoration: none;
 }
 
-/* Inline-SVG icons inside .pub-misc pills (e.g. Phosphor "Quotes" for
-   BibTeX). Sized to match adjacent Font Awesome glyphs at the .pub-misc
-   font-size (0.75rem) so a mixed row of FA <i> + Phosphor <svg> reads
-   as one consistent icon set. currentColor inherits from the anchor. */
-.pub-misc a > .pub-icon-svg {
-    width: 0.95em;
-    height: 0.95em;
-    flex-shrink: 0;
-}
+/* Icons inside .pub-misc pills inherit font-size from the parent <a>
+   (set by .pub-misc to 0.75rem = 12px). Both FA (.fas) and Phosphor
+   (.ph-fill, .ph) icon-font glyphs render at that size automatically;
+   no per-icon CSS is needed because both libraries treat their <i>
+   elements as text-sized characters. */
 
 /* Contact */
 .section-header {

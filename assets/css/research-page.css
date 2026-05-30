@@ -234,13 +234,10 @@
     background: var(--foreground); color: var(--background); border-color: var(--foreground);
     text-decoration: none;
   }
+  /* Both FA (.fas) and Phosphor (.ph-fill / .ph) icons inherit font-size
+     from .btn-ghost. Set to 12px so all icons render at the same scale
+     regardless of which library they come from. */
   .btn-ghost i { font-size: 12px; opacity: .85; }
-  /* Phosphor inline-SVG icons inside action buttons: match FA <i> glyph
-     size (~12px) so a mixed row of FA solid + Phosphor Fill reads as one
-     consistent system. currentColor inherits from .btn-ghost. */
-  .btn-ghost > .pub-icon-svg {
-    width: 14px; height: 14px; opacity: .85; flex-shrink: 0;
-  }
 
   /* ============================================================
      Body — abstract, sections, BibTeX
