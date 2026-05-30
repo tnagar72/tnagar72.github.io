@@ -149,17 +149,29 @@
   .eq-legend .glyph { color: var(--foreground); font-weight: 500; margin-right: 2px; }
   .eq-legend .sep { color: rgba(0,0,0,.3); margin: 0 10px; }
 
-  /* Prevent name+marks or affiliation+mark from breaking across two lines */
-  .nowrap { white-space: nowrap; }
+  /* Prevent name+marks or affiliation+mark from breaking across two lines.
+     The inner sup needs explicit nowrap too because some browsers treat
+     <sup> as a separate line-breakable unit even inside white-space:nowrap. */
+  .nowrap,
+  .nowrap sup,
+  .nowrap a { white-space: nowrap; }
 
   /* TERTIARY LINKS — affiliations.
-     Organizations: no underline at rest, hover-reveal underline. */
+     Each affiliation on its own line, centered. The inline · separators
+     emitted by the layout are hidden because vertical stacking doesn't
+     need them. Organizations: no underline at rest, hover-reveal. */
   .aff-legend {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
     font-family: var(--system); font-size: 13.5px;
     color: var(--muted-foreground); margin-bottom: 36px; line-height: 1.55;
+    text-align: center;
   }
   .aff-legend sup { font-size: 9.5px; vertical-align: super; margin-right: 2px; color: rgba(0,0,0,.4); }
-  .aff-legend .sep { color: rgba(0,0,0,.25); margin: 0 10px; }
+  /* Hide inline · separators — vertical stacking doesn't need them. */
+  .aff-legend > .sep { display: none; }
   .aff-legend a {
     color: var(--muted-foreground);
     text-decoration: none;
@@ -239,7 +251,16 @@
     border-radius: 6px; padding: 16px 20px;
     font-family: var(--mono); font-size: 12.5px;
     line-height: 1.6; color: var(--foreground);
-    overflow-x: auto; position: relative; margin-top: 12px;
+    position: relative; margin-top: 12px;
+    /* overflow-x lives on the inner .bib-scroll wrapper so the copy
+       button (absolutely positioned on .bib-block) stays anchored when
+       the user scrolls long BibTeX entries on mobile. */
+  }
+  .bib-block .bib-scroll {
+    overflow-x: auto;
+    /* Reserve space on the right edge so the BibTeX text never tucks
+       under the absolutely-positioned copy button at top:10px right:12px. */
+    padding-right: 64px;
   }
   .bib-block pre { font: inherit; color: inherit; }
   .bib-block .copy {
