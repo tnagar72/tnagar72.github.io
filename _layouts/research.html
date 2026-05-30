@@ -60,15 +60,20 @@
   <h1>{{ pub.title }}</h1>
 
   {%- comment -%}
-    Byline. The research page renders EVERYONE in pub.authors in one row —
-    authors AND advisors — with each name carrying its `marks` as sup-marks.
-    Each name+marks pair is wrapped in a <span class="nowrap"> so a name
-    like "Anna Sokol" can never split across two lines.
+    Byline. Renders everyone in pub.authors in one row (authors + advisors)
+    with each name carrying its `marks` as sup-marks. We intentionally do
+    NOT wrap names in white-space:nowrap — long names (e.g. "Amorn N.
+    Salyapongse" or affiliations like "Department of Orthopedics and
+    Rehabilitation, University of Wisconsin School of Medicine and Public
+    Health") would otherwise force horizontal page overflow on phones.
+    The <sup> stays glued to its preceding word naturally because <sup>
+    is not a line-break opportunity in browsers; mid-name wraps land at
+    word boundaries, which is the desired behavior on narrow viewports.
   {%- endcomment -%}
   {%- if pub.authors and pub.authors.size > 0 -%}
   <p class="authors-line">
     {%- for person in pub.authors -%}
-      <span class="nowrap">{% include person.html person=person %}{%- if person.marks and person.marks != "" -%}<sup>{{ person.marks }}</sup>{%- endif -%}</span>
+      {% include person.html person=person %}{%- if person.marks and person.marks != "" -%}<sup>{{ person.marks }}</sup>{%- endif -%}
       {%- unless forloop.last -%}, {% endunless -%}
     {%- endfor -%}
   </p>
@@ -77,7 +82,7 @@
   {%- if pub.affiliations and pub.affiliations.size > 0 -%}
   <p class="aff-legend">
     {%- for aff in pub.affiliations -%}
-      <span class="nowrap"><sup>{{ aff.mark }}</sup>{%- if aff.url and aff.url != "" -%}<a href="{{ aff.url }}" target="_blank" rel="noopener noreferrer">{{ aff.name }}</a>{%- else -%}{{ aff.name }}{%- endif -%}</span>
+      <span class="aff-item"><sup>{{ aff.mark }}</sup>{%- if aff.url and aff.url != "" -%}<a href="{{ aff.url }}" target="_blank" rel="noopener noreferrer">{{ aff.name }}</a>{%- else -%}{{ aff.name }}{%- endif -%}</span>
       {%- unless forloop.last -%}<span class="sep">·</span>{%- endunless -%}
     {%- endfor -%}
   </p>

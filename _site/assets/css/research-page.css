@@ -149,9 +149,12 @@
   .eq-legend .glyph { color: var(--foreground); font-weight: 500; margin-right: 2px; }
   .eq-legend .sep { color: rgba(0,0,0,.3); margin: 0 10px; }
 
-  /* Prevent name+marks or affiliation+mark from breaking across two lines.
-     The inner sup needs explicit nowrap too because some browsers treat
-     <sup> as a separate line-breakable unit even inside white-space:nowrap. */
+  /* Used only for short legend entries (e.g. "‡ Thesis advisor") where
+     splitting a glyph from its short label looks awkward. NOT used on
+     author names or affiliations — those must be allowed to wrap at word
+     boundaries so long names/orgs don't force horizontal page overflow
+     on narrow viewports (the <sup> stays glued to its preceding word
+     naturally since <sup> isn't a line-break opportunity). */
   .nowrap,
   .nowrap sup,
   .nowrap a { white-space: nowrap; }
@@ -172,6 +175,14 @@
   .aff-legend sup { font-size: 9.5px; vertical-align: super; margin-right: 2px; color: rgba(0,0,0,.4); }
   /* Hide inline · separators — vertical stacking doesn't need them. */
   .aff-legend > .sep { display: none; }
+  /* Each affiliation is a flex item; max-width:100% lets long org names
+     wrap at word boundaries instead of forcing horizontal page overflow.
+     display:block ensures the flex parent treats it as a single sized
+     child rather than letting the inline content set the intrinsic width. */
+  .aff-legend > .aff-item {
+    display: block;
+    max-width: 100%;
+  }
   .aff-legend a {
     color: var(--muted-foreground);
     text-decoration: none;
