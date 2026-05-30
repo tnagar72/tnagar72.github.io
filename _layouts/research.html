@@ -12,7 +12,8 @@
   inside _includes/person.html (which we updated in Step 2 to handle
   both string and object inputs).
 {%- endcomment -%}
-{%- assign pub = site.data.publications | where: "id", page.id | first -%}
+{%- assign pub = site.data.publications | where: "id", page.paper_id | first -%}
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">

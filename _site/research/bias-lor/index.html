@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Exploring Bias in Letters of Recommendation using NLP Techniques · Tanay Nagar</title><meta name="description" content="We investigate implicit biases in 5,679 plastic surgery residency letters of recommendation through traditional NLP methods, examining how gender and race/et..."><link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/research-page.css">
+</head><body data-accent="blue">
+
+<!-- Top nav: back to homepage publications anchor -->
+<nav class="topnav">
+  <a href="/#publications"><span class="chev">‹</span> Tanay Nagar / Publications</a>
+</nav>
+
+<!-- Hero -->
+<header class="hero"><div class="venue-strip">
+    <span class="venue-strip__name">ACEPS 2025</span><span class="venue-strip__meta">
+      <span class="venue-strip__meta-pre"></span>Oral Presentation<span class="venue-strip__sep">·</span>Published in PRS Global Open · Vol 13, S4 · pp 4–5</span></div><h1>Exploring Bias in Letters of Recommendation using NLP Techniques</h1><p class="authors-line"><a href="#hero">Tanay Nagar</a><sup>1</sup>, <a href="https://www.surgery.wisc.edu/staff/sarah-sullivan/" target="_blank" rel="noopener noreferrer">Sarah Jung</a><sup>2</sup>, <a href="https://www.surgery.wisc.edu/staff/peter-wirth/" target="_blank" rel="noopener noreferrer">Peter Wirth</a><sup>2</sup>, <a href="https://www.linkedin.com/in/alyssa-schappe/" target="_blank" rel="noopener noreferrer">Alyssa Schappe</a><sup>2</sup>, <a href="https://www.uwhealth.org/providers/a-neil-salyapongse-md" target="_blank" rel="noopener noreferrer">Amorn N. Salyapongse</a><sup>3</sup></p><p class="aff-legend"><sup>1</sup><a href="https://www.wisc.edu/" target="_blank" rel="noopener noreferrer">University of Wisconsin-Madison, United States</a><span class="sep">·</span><sup>2</sup><a href="https://www.surgery.wisc.edu/" target="_blank" rel="noopener noreferrer">Department of Surgery, UW SMPH</a><span class="sep">·</span><sup>3</sup>Department of Orthopedics and Rehabilitation, University of Wisconsin School of Medicine and Public Health</p><div class="actions"><a class="btn-ghost" href="/PRS_Global/wisc-surgery-ppt-template.pptx%20(2).pdf"><i class="fas fa-window-maximize"></i> Talk Slides
+      </a><a class="btn-ghost" href="https://journals.lww.com/prsgo/fulltext/2025/06004/7__detecting_bias_in_plastic_surgery_residency.7.aspx?context=latestarticles" target="_blank" rel="noopener noreferrer"><i class="fas fa-file-pdf"></i> PRS Global Article
+      </a><a class="btn-ghost" href="https://scholar.google.com/citations?view_op=view_citation&hl=en&user=MEVH8HQAAAAJ&citation_for_view=MEVH8HQAAAAJ:u5HHmVD_uO8C" target="_blank" rel="noopener noreferrer"><i class="fas fa-graduation-cap"></i> Google Scholar
+      </a><a class="btn-ghost" href="https://doi.org/10.1097/01.GOX.0001123584.49942.fe" target="_blank" rel="noopener noreferrer"><i class="fas fa-anchor"></i> DOI
+      </a><a class="btn-ghost" href="#bibtex">
+      <i class="fas fa-quote-left"></i> BibTeX
+    </a></div></header>
+
+<!-- Body -->
+<article class="body"><h2>Abstract</h2><div class="tldr">
+    <span class="lbl">TL;DR</span>We investigate implicit biases in 5,679 plastic surgery residency letters of recommendation through traditional NLP methods, examining how gender and race/ethnicity affect language use and other trends.
+  </div><p>We use natural language processing to analyze plastic surgery residency letters of recommendation, surfacing systematic patterns in wording that may reflect bias and influence selection decisions. The work highlights how computational text analysis can support fairer, more transparent evaluation of applicants.</p><div class="writeup">
+    
+
+  </div><h2 id="bibtex">BibTeX</h2>
+  <div class="bib-block">
+    <button class="copy" id="copyBtn" onclick="copyBibtex()">copy</button>
+<pre id="bib">@article{nagar_lor_bias,
+  title    = {Detecting Bias in Plastic Surgery Residency Application Letters of Recommendation using Natural Language Processing},
+  author   = {Nagar, Tanay and Jung, Sarah and Wirth, Peter and Schappe, Alyssa and Salyapongse, Amorn N.},
+  journal  = {Plastic and Reconstructive Surgery -- Global Open},
+  volume   = {13},
+  number   = {S4},
+  pages    = {4--5},
+  year     = {2025},
+  month    = jun,
+  doi      = {10.1097/01.GOX.0001123584.49942.fe},
+  url      = {https://journals.lww.com/10.1097/01.GOX.0001123584.49942.fe},
+  issn     = {2169-7574},
+  language = {en}
+}</pre>
+  </div></article><footer class="page-footer">
+  <span>Last updated May 2026.</span>
+  <span><a href="/">tnagar72.github.io</a></span>
+</footer><script>
+  function copyBibtex() {
+    const text = document.getElementById('bib').innerText;
+    const btn  = document.getElementById('copyBtn');
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'copied';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'copy';
+        btn.classList.remove('copied');
+      }, 1800);
+    });
+  }
+</script></body>
+</html>
