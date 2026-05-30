@@ -37,7 +37,9 @@
   venue_name: "ACEPS 2025"
   venue_meta:
     - "Oral Presentation"
-    - "Published in PRS Global Open · Vol 13, S4 · pp 4–5"
+    - "Published in PRS Global Open"
+    - "Vol 13, S4"
+    - "pp 4–5"
   affiliations:
     - { mark: "1", name: "University of Wisconsin-Madison, United States", url: "https://www.wisc.edu/" }
     - { mark: "2", name: "Department of Surgery, UW SMPH", url: "https://www.surgery.wisc.edu/" }
@@ -160,4 +162,4 @@
     - { mark: "4", name: "Department of Computer Sciences, UW-Madison", url: "https://www.cs.wisc.edu/" }
   legend:
     - { glyph: "‡", text: "Thesis advisor" }
-  acknowledgements: "I thank my thesis advisors Dr. Sarah Jung (Department of Surgery, UW SMPH), Dr. Shamya Karumbaiah (Department of Educational Psychology), and Dr. Fred Sala (Department of Computer Sciences) for their guidance across the medical, learning-sciences, and machine-learning dimensions of this work. This research was supported by the Hilldale Undergraduate/Faculty Research Fellowship and the Richard Ralph Phoenix Rising Humanitarian Scholarship."
+  acknowledgements: "This research was supported by the Hilldale Undergraduate/Faculty Research Fellowship and the Richard Ralph Phoenix Rising Humanitarian Scholarship."
