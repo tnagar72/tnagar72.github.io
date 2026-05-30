@@ -100,16 +100,29 @@
   </p>
   {%- endif -%}
 
+  {%- comment -%}
+    Project-page action buttons. Icons resolve like in _includes/pub-link.html:
+    Phosphor tokens render inline SVG (Fill weight); FA classes render <i>.
+    Keep the BibTeX glyph in sync with the homepage card's BibTeX pill.
+  {%- endcomment -%}
   {%- if pub.links and pub.links.size > 0 -%}
   <div class="actions">
     {%- for link in pub.links -%}
       <a class="btn-ghost" href="{{ link.url | relative_url }}"{% if link.url contains 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}>
-        {%- if link.icon -%}<i class="fas {{ link.icon }}"></i> {% endif -%}{{ link.label }}
+        {%- if link.icon == "phosphor-lectern" -%}
+          <svg class="pub-icon-svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M246.3,120.84l-40-80A15.92,15.92,0,0,0,192,32H64A15.92,15.92,0,0,0,49.7,40.84l-40,80A16,16,0,0,0,24,144h96v64H96a8,8,0,0,0,0,16h64a8,8,0,0,0,0-16H136V144h96a16,16,0,0,0,14.31-23.16ZM192,120H64a8,8,0,0,1,0-16H192a8,8,0,0,1,0,16Z"/></svg>
+        {%- elsif link.icon == "phosphor-presentation-chart" -%}
+          <svg class="pub-icon-svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M216,40H136V24a8,8,0,0,0-16,0V40H40A16,16,0,0,0,24,56V176a16,16,0,0,0,16,16H79.36L57.75,219a8,8,0,0,0,12.5,10l29.59-37h56.32l29.59,37a8,8,0,1,0,12.5-10l-21.61-27H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM104,144a8,8,0,0,1-16,0V120a8,8,0,0,1,16,0Zm32,0a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm32,0a8,8,0,0,1-16,0V88a8,8,0,0,1,16,0Z"/></svg>
+        {%- elsif link.icon -%}
+          <i class="fas {{ link.icon }}"></i>
+        {%- endif -%}
+        {{ link.label }}
       </a>
     {%- endfor -%}
     {%- if pub.bibtex and pub.bibtex != "" -%}
     <a class="btn-ghost" href="#bibtex">
-      <i class="fas fa-quote-left"></i> BibTeX
+      <svg class="pub-icon-svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M116,72v88a48.05,48.05,0,0,1-48,48,8,8,0,0,1,0-16,32,32,0,0,0,32-32v-8H40a16,16,0,0,1-16-16V72A16,16,0,0,1,40,56h60A16,16,0,0,1,116,72ZM216,56H156a16,16,0,0,0-16,16v64a16,16,0,0,0,16,16h60v8a32,32,0,0,1-32,32,8,8,0,0,0,0,16,48.05,48.05,0,0,0,48-48V72A16,16,0,0,0,216,56Z"/></svg>
+      BibTeX
     </a>
     {%- endif -%}
   </div>

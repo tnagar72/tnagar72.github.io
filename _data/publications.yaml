@@ -18,7 +18,7 @@
   links:
     - label: "Talk Slides"
       url: "/PRS_Global/wisc-surgery-ppt-template.pptx (2).pdf"
-      icon: "fa-window-maximize"
+      icon: "phosphor-lectern"
     - label: "PRS Global Article"
       url: "https://journals.lww.com/prsgo/fulltext/2025/06004/7__detecting_bias_in_plastic_surgery_residency.7.aspx?context=latestarticles"
       icon: "fa-file-pdf"
@@ -84,7 +84,7 @@
   links:
     - label: "NAACL SRW Poster"
       url: "/Bridging_Language_Gaps_CS/NAACL 2025 Presentation.pdf"
-      icon: "fa-image"
+      icon: "phosphor-presentation-chart"
     - label: "Visualization"
       url: "/Bridging_Language_Gaps_CS/breaking_language_barriers_interactive_vis.html"
       icon: "fa-chart-line"
@@ -93,7 +93,7 @@
       icon: "fa-file-alt"
     - label: "ND Symposium Poster"
       url: "/Bridging_Language_Gaps_CS/Tanay ND Summer Symposium.pdf"
-      icon: "fa-image"
+      icon: "phosphor-presentation-chart"
   summary: "We study code-switched fine-tuning strategies for multilingual language models, focusing on how mixing languages in realistic ways affects performance. The work explores how these techniques can narrow performance gaps for low-resource and multilingual communities."
   # ────────── Research-page fields ──────────
   tldr: "Fine-tuning with synthetic code-switched data closes 80% of the Hindi–English reasoning performance gap on CommonsenseQA — without any English degradation."
@@ -145,7 +145,7 @@
   links:
     - label: "Honors Symposium Talk"
       url: "/Senior_Honors_Thesis/NAGAR_SYMPOSIUM2025.pptx (2).pdf"
-      icon: "fa-window-maximize"
+      icon: "phosphor-lectern"
     - label: "Fellowship Proposal"
       url: "/Senior_Honors_Thesis/Nagar Senior Honors Thesis Grant Proposal.pdf"
       icon: "fa-file-alt"

@@ -1,3 +1,23 @@
+{%- comment -%}
+Renders one icon-pill link.
+
+`include.link.icon` can be:
+  - A Font Awesome class like "fa-file-pdf" → renders <i class="fas fa-…">
+  - A Phosphor token: "phosphor-lectern" (talk) or "phosphor-presentation-chart"
+    (poster) → renders an inline SVG. Used for the unified icon system where
+    Phosphor Fill glyphs sit alongside FA solid icons in the same row.
+
+Add new Phosphor tokens here as needed; keep the SVGs inline because the
+site already bundles no SVG sprite system and this keeps publications.yaml
+declarative.
+{%- endcomment -%}
 <a href="{{ include.link.url }}"{% if include.link.url contains 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}>
-    <i class="fas {{ include.link.icon }}" aria-hidden="true"></i> {{ include.link.label }}
+    {%- if include.link.icon == "phosphor-lectern" -%}
+        <svg class="pub-icon-svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M246.3,120.84l-40-80A15.92,15.92,0,0,0,192,32H64A15.92,15.92,0,0,0,49.7,40.84l-40,80A16,16,0,0,0,24,144h96v64H96a8,8,0,0,0,0,16h64a8,8,0,0,0,0-16H136V144h96a16,16,0,0,0,14.31-23.16ZM192,120H64a8,8,0,0,1,0-16H192a8,8,0,0,1,0,16Z"/></svg>
+    {%- elsif include.link.icon == "phosphor-presentation-chart" -%}
+        <svg class="pub-icon-svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M216,40H136V24a8,8,0,0,0-16,0V40H40A16,16,0,0,0,24,56V176a16,16,0,0,0,16,16H79.36L57.75,219a8,8,0,0,0,12.5,10l29.59-37h56.32l29.59,37a8,8,0,1,0,12.5-10l-21.61-27H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM104,144a8,8,0,0,1-16,0V120a8,8,0,0,1,16,0Zm32,0a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm32,0a8,8,0,0,1-16,0V88a8,8,0,0,1,16,0Z"/></svg>
+    {%- else -%}
+        <i class="fas {{ include.link.icon }}" aria-hidden="true"></i>
+    {%- endif -%}
+    {{ include.link.label }}
 </a>
