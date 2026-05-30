@@ -47,14 +47,23 @@ person.html still handles it.
 
     <div class="pub-misc">
         {%- comment -%}
-          Add a "Project Page" pill linking to /research/<id>/ IF a
-          matching entry exists in the _research collection.
+          "Project Page" pill links to /research/<id>/ IF a matching entry
+          exists in the _research collection. "BibTeX" pill deep-links to
+          the project page's #bibtex anchor, where the full citation block
+          + copy button is already styled. We don't render an inline BibTeX
+          reveal on the homepage card because the project page already does
+          this well; deep-linking keeps the homepage card compact.
         {%- endcomment -%}
         {%- assign research_entry = site.research | where: "paper_id", include.pub.id | first -%}
         {%- if research_entry -%}
         <a href="{{ research_entry.url | relative_url }}">
             <i class="fas fa-window-maximize" aria-hidden="true"></i> Project Page
         </a>
+        {%- if include.pub.bibtex and include.pub.bibtex != "" -%}
+        <a href="{{ research_entry.url | append: '#bibtex' | relative_url }}">
+            <i class="fas fa-quote-right" aria-hidden="true"></i> BibTeX
+        </a>
+        {%- endif -%}
         {%- endif -%}
         {%- for link in include.pub.links -%}
             {% include pub-link.html link=link %}

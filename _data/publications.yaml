@@ -62,7 +62,10 @@
     }
 
 - id: bridging-language-gaps
-  title: "Bridging Language Gaps: Code-Switched Fine-Tuning for Multilingual LLMs"
+  # Slug stays "bridging-language-gaps" because it's the stable URL handle.
+  # Display title matches the canonical published title on arXiv + BibTeX so
+  # the page is searchable under the name other researchers will use.
+  title: "Breaking Language Barriers: Equitable Performance in Multilingual Language Models"
   authors:
     - { name: "Tanay Nagar",        role: "author", marks: "1, 3, †" }
     - { name: "Grigorii Khvatskii", role: "author", marks: "2, 4" }
