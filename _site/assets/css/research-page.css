@@ -138,14 +138,19 @@
     vertical-align: super; margin-left: 1px;
   }
 
-  /* Equal-contribution legend */
+  /* Equal-contribution / glyph legend.
+     Letter-spacing intentionally NOT set (was 0.14em — caused
+     stretched-out look on mobile). */
   .eq-legend {
     font-family: var(--mono); font-size: 10.5px;
-    letter-spacing: .14em; color: var(--muted-foreground);
-    margin-top: 4px; margin-bottom: 14px;
+    color: var(--muted-foreground);
+    margin-top: 8px; margin-bottom: 14px;
   }
   .eq-legend .glyph { color: var(--foreground); font-weight: 500; margin-right: 2px; }
   .eq-legend .sep { color: rgba(0,0,0,.3); margin: 0 10px; }
+
+  /* Prevent name+marks or affiliation+mark from breaking across two lines */
+  .nowrap { white-space: nowrap; }
 
   /* TERTIARY LINKS — affiliations.
      Organizations: no underline at rest, hover-reveal underline. */

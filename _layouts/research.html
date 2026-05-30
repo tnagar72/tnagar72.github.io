@@ -39,8 +39,9 @@
   <a href="{{ '/#publications' | relative_url }}"><span class="chev">‹</span> {{ site.title }} / Publications</a>
 </nav>
 
-<!-- Hero -->
-<header class="hero">
+<!-- Hero — uses <div>, not <header>, because main.css applies sticky+blur
+     to every <header> element on the page. -->
+<div class="hero">
 
   {%- if pub.venue_name -%}
   <div class="venue-strip">
@@ -61,25 +62,14 @@
   {%- comment -%}
     Byline. The research page renders EVERYONE in pub.authors in one row —
     authors AND advisors — with each name carrying its `marks` as sup-marks.
-    The legend (rendered below) explains what each glyph means.
+    Each name+marks pair is wrapped in a <span class="nowrap"> so a name
+    like "Anna Sokol" can never split across two lines.
   {%- endcomment -%}
   {%- if pub.authors and pub.authors.size > 0 -%}
   <p class="authors-line">
     {%- for person in pub.authors -%}
-      {% include person.html person=person %}
-      {%- if person.marks and person.marks != "" -%}<sup>{{ person.marks }}</sup>{%- endif -%}
+      <span class="nowrap">{% include person.html person=person %}{%- if person.marks and person.marks != "" -%}<sup>{{ person.marks }}</sup>{%- endif -%}</span>
       {%- unless forloop.last -%}, {% endunless -%}
-    {%- endfor -%}
-  </p>
-  {%- endif -%}
-
-  {%- if pub.legend and pub.legend.size > 0 -%}
-  <p class="eq-legend">
-    {%- for entry in pub.legend -%}
-      {%- if entry.glyph and entry.glyph != "" -%}
-        <span class="glyph">{{ entry.glyph }}</span>{{ entry.text }}
-        {%- unless forloop.last -%}<span class="sep">·</span>{%- endunless -%}
-      {%- endif -%}
     {%- endfor -%}
   </p>
   {%- endif -%}
@@ -87,13 +77,23 @@
   {%- if pub.affiliations and pub.affiliations.size > 0 -%}
   <p class="aff-legend">
     {%- for aff in pub.affiliations -%}
-      <sup>{{ aff.mark }}</sup>
-      {%- if aff.url and aff.url != "" -%}
-      <a href="{{ aff.url }}" target="_blank" rel="noopener noreferrer">{{ aff.name }}</a>
-      {%- else -%}
-      {{ aff.name }}
-      {%- endif -%}
+      <span class="nowrap"><sup>{{ aff.mark }}</sup>{%- if aff.url and aff.url != "" -%}<a href="{{ aff.url }}" target="_blank" rel="noopener noreferrer">{{ aff.name }}</a>{%- else -%}{{ aff.name }}{%- endif -%}</span>
       {%- unless forloop.last -%}<span class="sep">·</span>{%- endunless -%}
+    {%- endfor -%}
+  </p>
+  {%- endif -%}
+
+  {%- comment -%}
+    Legend explaining glyphs used in the byline (e.g., "† CCAS Intern").
+    Sits AFTER affiliations and BEFORE action buttons.
+  {%- endcomment -%}
+  {%- if pub.legend and pub.legend.size > 0 -%}
+  <p class="eq-legend">
+    {%- for entry in pub.legend -%}
+      {%- if entry.glyph and entry.glyph != "" -%}
+        <span class="nowrap"><span class="glyph">{{ entry.glyph }}</span>{{ entry.text }}</span>
+        {%- unless forloop.last -%}<span class="sep">·</span>{%- endunless -%}
+      {%- endif -%}
     {%- endfor -%}
   </p>
   {%- endif -%}
@@ -112,26 +112,28 @@
     {%- endif -%}
   </div>
   {%- endif -%}
-</header>
+</div>
 
 <!-- Body -->
 <article class="body">
 
-  {%- if pub.tldr or pub.summary -%}
-  <h2>Abstract</h2>
+  {%- comment -%}
+    TL;DR sits at the top of the body. No "Abstract" heading is auto-
+    generated. The `summary` field powers the homepage card description
+    and is NOT shown here. If the author wants a full abstract, they
+    write "## Abstract" + body text in the _research/<id>.md markdown
+    body, which renders in the .writeup block below.
+  {%- endcomment -%}
   {%- if pub.tldr and pub.tldr != "" -%}
   <div class="tldr">
     <span class="lbl">TL;DR</span>{{ pub.tldr }}
   </div>
   {%- endif -%}
-  {%- if pub.summary -%}
-  <p>{{ pub.summary }}</p>
-  {%- endif -%}
-  {%- endif -%}
 
   {%- comment -%}
     Optional markdown body from the _research/<id>.md file itself.
-    Renders BETWEEN the abstract and the BibTeX.
+    Author writes whatever they want here — abstract, methods,
+    results, story, anything. Renders below the TL;DR and above BibTeX.
   {%- endcomment -%}
   {%- if content and content != "" -%}
   <div class="writeup">
