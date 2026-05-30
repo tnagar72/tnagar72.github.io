@@ -46,6 +46,16 @@ person.html still handles it.
     {%- endfor -%}
 
     <div class="pub-misc">
+        {%- comment -%}
+          Add a "Project Page" pill linking to /research/<id>/ IF a
+          matching entry exists in the _research collection.
+        {%- endcomment -%}
+        {%- assign research_entry = site.research | where: "paper_id", include.pub.id | first -%}
+        {%- if research_entry -%}
+        <a href="{{ research_entry.url | relative_url }}">
+            <i class="fas fa-window-maximize" aria-hidden="true"></i> Project Page
+        </a>
+        {%- endif -%}
         {%- for link in include.pub.links -%}
             {% include pub-link.html link=link %}
         {%- endfor -%}
