@@ -1,25 +1,18 @@
 # news.yml — homepage Updates feed
 #
 # Each entry has:
-#   date: YYYY-MM-DD (ISO; rendered as "Mon YYYY" automatically)
+#   date: YYYY-MM-DD (ISO; rendered as "Mon YYYY" — e.g. "May 2026")
 #   body: free Markdown — [text](url) for links, *italic*, **bold**, emoji
 #
 # The include sorts newest-first by `date`, so file order doesn't matter.
 # Add a new entry at the top, bottom, or anywhere — it'll land in the
 # right spot when the site builds.
 #
-# When this file is empty (no entries), the Updates section disappears
-# from the homepage entirely — section heading, box, and all. So you
-# can leave it empty between updates and the homepage just won't have
-# that section.
+# When this file is empty (no entries), the homepage Updates section
+# disappears entirely (the include is guarded). The /updates/ page
+# still renders, just with a "Nothing yet." line.
 #
-# Examples of what you might put in `body`:
-#   - Published [the X essay](/writing/x/)
-#   - ✍️ Started writing about Y
-#   - Paper accepted at [NAACL 2025 SRW](#)
-#   - 🎉 Awarded the Hilldale Fellowship
+# Voice convention: first-person, light personality. Career milestones
+# can stay neutral; writing + personal entries can have voice.
 
-# Empty for now. Add new entries below, in any order. Example shape:
-#
-# - date: 2026-06-15
-#   body: 'Something that happened. Optionally with [a link](url).'
+# (empty — homepage will not render the Updates section)

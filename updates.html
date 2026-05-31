@@ -1,0 +1,37 @@
+---
+layout: default
+title: Updates
+permalink: /updates/
+---
+
+{%- comment -%}
+  Full updates archive — companion to the homepage's "Recent Updates"
+  section. Both views read from _data/news.yml; the homepage caps at 3
+  via `limit:3` in _includes/news.html, this page shows everything.
+
+  If news.yml is empty, this page still renders the heading + an
+  "Nothing yet." line, so the /updates/ URL is never a 404. The
+  homepage include is what disappears when there's no data.
+{%- endcomment -%}
+
+<section class="updates-page">
+  <div class="hero-content">
+    <div class="section-header">
+      <h2>Updates</h2>
+    </div>
+
+    {%- if site.data.news and site.data.news.size > 0 -%}
+    {%- assign sorted = site.data.news | sort: "date" | reverse -%}
+    <ul class="updates-list">
+      {%- for entry in sorted -%}
+      <li>
+        <time class="updates-when" datetime="{{ entry.date | date_to_xmlschema }}">{{ entry.date | date: "%b %Y" }}</time>
+        <div class="updates-body">{{ entry.body | markdownify | replace: '<p>', '' | replace: '</p>', '' }}</div>
+      </li>
+      {%- endfor -%}
+    </ul>
+    {%- else -%}
+    <p class="updates-empty">Nothing yet.</p>
+    {%- endif -%}
+  </div>
+</section>
