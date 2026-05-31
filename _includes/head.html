@@ -8,4 +8,18 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css">
     <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+
+    {%- if site.google_analytics -%}
+    <!-- Google Analytics (GA4). ID is centralized in _config.yml
+         (`google_analytics:`). Loaded async after CSS so it doesn't
+         block render. Tracks all pages that include this file
+         (homepage, /writing/ index, /updates/). -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '{{ site.google_analytics }}');
+    </script>
+    {%- endif -%}
 </head>

@@ -26,4 +26,18 @@
   {%- if page.has_math -%}
     {%- include katex.html -%}
   {%- endif -%}
+
+  {%- if site.google_analytics -%}
+  <!-- Google Analytics (GA4). Writing pages (article + note layouts)
+       use post-head.html, separate from _includes/head.html. Without
+       this, pageviews on /writing/<essay>/ would be invisible. ID
+       centralized in _config.yml. -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{ site.google_analytics }}');
+  </script>
+  {%- endif -%}
 </head>

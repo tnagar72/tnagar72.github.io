@@ -3,6 +3,12 @@ url: "https://tnagar72.github.io"
 baseurl: ""
 markdown: kramdown
 
+# Google Analytics (GA4) Measurement ID. Referenced from the gtag
+# snippet in _includes/head.html, _includes/post-head.html, and
+# _layouts/research.html as {{ site.google_analytics }}. Centralized
+# here so a rotation / property change is a one-line edit.
+google_analytics: "G-NRXRQL1ZL3"
+
 # Plugins. The github-pages gem bundles a curated allow-list of plugins
 # (including jekyll-sitemap); they only activate when listed here.
 plugins:
