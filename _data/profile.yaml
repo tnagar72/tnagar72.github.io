@@ -4,7 +4,12 @@ role: Independent researcher
 portrait: /Images/tanay-nd.jpeg
 portrait_alt: Portrait of Tanay Nagar
 
-areas: NLP · Human-Centered AI · Computational Social Science · AI Safety
+# Empty for now. We removed the 4-field area tagline because it overclaimed
+# expertise at this career stage. The original value is preserved in the
+# comment below — swap it back into `areas:` if/when you want it again,
+# or replace with a shorter honest version (e.g. "NLP and AI ethics").
+# areas: NLP · Human-Centered AI · Computational Social Science · AI Safety
+areas: ""
 
 # Consolidated bio HTML - single block for easier maintenance
 bio_html: |
