@@ -1,9 +1,24 @@
+{%- comment -%}
+Renders one publication card on the homepage.
+
+`include.pub.authors` is the unified people array:
+  [{ name, role: "author" | "advisor", marks }, ...]
+
+We split it by role:
+  - Authors row: only entries with role == "author"
+  - Advisors row: only entries with role == "advisor" (rendered only if non-empty)
+
+For backward compatibility, if any entry is a plain string (no .name field),
+person.html still handles it.
+{%- endcomment -%}
+{%- assign authors_only  = include.pub.authors | where: "role", "author"  -%}
+{%- assign advisors_only = include.pub.authors | where: "role", "advisor" -%}
 <article class="pub-entry">
     <h3 class="pub-title">
         {{ include.pub.title }}
     </h3>
     <p class="pub-authors">
-        {%- for author in include.pub.authors -%}
+        {%- for author in authors_only -%}
             {% include person.html person=author %}
             {%- unless forloop.last -%}, {% endunless -%}
         {%- endfor -%}
@@ -16,10 +31,10 @@
         {%- endif -%}
     </p>
 
-    {%- if include.pub.advisors %}
+    {%- if advisors_only.size > 0 %}
     <p class="pub-advisors">
         Advisors:
-        {% for advisor in include.pub.advisors -%}
+        {% for advisor in advisors_only -%}
             {% include person.html person=advisor %}
             {%- unless forloop.last -%}, {% endunless -%}
         {%- endfor %}
@@ -31,6 +46,31 @@
     {%- endfor -%}
 
     <div class="pub-misc">
+        {%- comment -%}
+          "Project Page" pill links to /research/<id>/ IF a matching entry
+          exists in the _research collection. "BibTeX" pill deep-links to
+          the project page's #bibtex anchor, where the full citation block
+          + copy button is already styled. We don't render an inline BibTeX
+          reveal on the homepage card because the project page already does
+          this well; deep-linking keeps the homepage card compact.
+        {%- endcomment -%}
+        {%- assign research_entry = site.research | where: "paper_id", include.pub.id | first -%}
+        {%- if research_entry -%}
+        <a href="{{ research_entry.url | relative_url }}">
+            <i class="fas fa-window-maximize" aria-hidden="true"></i> Project Page
+        </a>
+        {%- comment -%}
+          BibTeX icon: Phosphor's "Quotes" glyph (Fill weight) loaded as
+          an icon font, just like Font Awesome. Inherits font-size from
+          the parent .pub-misc a (0.75rem), so it sizes responsively with
+          the surrounding text — same behavior as fa-file-pdf next to it.
+        {%- endcomment -%}
+        {%- if include.pub.bibtex and include.pub.bibtex != "" -%}
+        <a href="{{ research_entry.url | append: '#bibtex' | relative_url }}">
+            <i class="ph-fill ph-quotes" aria-hidden="true"></i> BibTeX
+        </a>
+        {%- endif -%}
+        {%- endif -%}
         {%- for link in include.pub.links -%}
             {% include pub-link.html link=link %}
         {%- endfor -%}

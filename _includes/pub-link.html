@@ -1,3 +1,22 @@
+{%- comment -%}
+Renders one icon-pill link.
+
+`include.link.icon` can be:
+  - A Font Awesome class like "fa-file-pdf" → renders <i class="fas fa-…">
+  - A Phosphor token: "phosphor-lectern" (talk) or "phosphor-presentation-chart"
+    (poster) → renders <i class="ph-fill ph-…"> from the Phosphor icon font.
+    Both font systems inherit font-size from the parent pill, so they render
+    at consistent sizes without per-icon CSS.
+
+Add new Phosphor tokens here as needed.
+{%- endcomment -%}
 <a href="{{ include.link.url }}"{% if include.link.url contains 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}>
-    <i class="fas {{ include.link.icon }}" aria-hidden="true"></i> {{ include.link.label }}
+    {%- if include.link.icon == "phosphor-lectern" -%}
+        <i class="ph-fill ph-lectern" aria-hidden="true"></i>
+    {%- elsif include.link.icon == "phosphor-presentation-chart" -%}
+        <i class="ph-fill ph-presentation-chart" aria-hidden="true"></i>
+    {%- else -%}
+        <i class="fas {{ include.link.icon }}" aria-hidden="true"></i>
+    {%- endif -%}
+    {{ include.link.label }}
 </a>

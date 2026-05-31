@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+{%- comment -%}
+  Research-page layout.
+
+  Reads ALL paper metadata from _data/publications.yaml via id lookup
+  (page.id must match a publications.yaml entry). The per-paper .md file
+  in _research/ only carries `id` plus optional `accent` override and an
+  optional markdown writeup body.
+
+  Author URLs are resolved from _data/people.yaml via name lookup
+  inside _includes/person.html (which we updated in Step 2 to handle
+  both string and object inputs).
+{%- endcomment -%}
+{%- assign pub = site.data.publications | where: "id", page.paper_id | first -%}
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{ pub.title | escape }} · {{ site.title | escape }}</title>
+  {%- assign desc = pub.tldr | default: pub.summary -%}
+  {%- if desc -%}
+  <meta name="description" content="{{ desc | strip_html | strip_newlines | truncate: 160 | escape }}">
+  {%- endif -%}
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital@0;1&family=JetBrains+Mono:wght@300;400;500&family=Roboto:wght@300;400;500;700&family=Mukta:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css">
+  {%- comment -%}
+    Cache-busters: site.time changes on every build, so the query string
+    changes too, which forces browsers to re-fetch the CSS instead of
+    serving a stale cached copy. Without this, mobile Safari + Chrome can
+    hold an old stylesheet for hours/days even after a deploy.
+  {%- endcomment -%}
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+  <link rel="stylesheet" href="{{ '/assets/css/research-page.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+</head>
+
+{%- assign accent = page.accent | default: pub.accent | default: 'blue' -%}
+<body data-accent="{{ accent }}">
+
+{%- comment -%}
+  Site-wide header. Reuses the homepage's masthead so research pages
+  share the same chrome as the homepage and writing pages. The name
+  on the left links back to home (browser back works too); 6 social
+  icons sit on the right. Replaces the previous "‹ Tanay Nagar"
+  breadcrumb pattern, which was doing affordance work the browser
+  already covers and was inconsistent with the rest of the site.
+{%- endcomment -%}
+{% include header.html %}
+
+<!-- Hero — uses <div>, not <header>, because main.css applies sticky+blur
+     to every <header> element on the page. -->
+<div class="hero">
+
+  {%- if pub.venue_name -%}
+  <div class="venue-strip">
+    <span class="venue-strip__name">{{ pub.venue_name }}</span>
+    {%- if pub.venue_meta and pub.venue_meta.size > 0 -%}
+    <span class="venue-strip__meta">
+      <span class="venue-strip__meta-pre"></span>
+      {%- for item in pub.venue_meta -%}
+        <span class="venue-strip__item">{{ item }}</span>{%- unless forloop.last -%}<span class="venue-strip__sep">·</span>{%- endunless -%}
+      {%- endfor -%}
+    </span>
+    {%- endif -%}
+  </div>
+  {%- endif -%}
+
+  <h1>{{ pub.title }}</h1>
+
+  {%- comment -%}
+    Byline. Each name (+ marks) is wrapped in .author-name with nowrap,
+    so two-word names like "Anna Sokol" never split first/last across a
+    line. Wraps happen BETWEEN authors at the commas (inline-block lets
+    the line break at chunk boundaries), not inside names. Affiliations
+    handle long-string overflow separately via .aff-item block-wrap.
+  {%- endcomment -%}
+  {%- if pub.authors and pub.authors.size > 0 -%}
+  <p class="authors-line">
+    {%- for person in pub.authors -%}
+      <span class="author-name">{% include person.html person=person %}{%- if person.marks and person.marks != "" -%}<sup>{{ person.marks }}</sup>{%- endif -%}</span>{%- unless forloop.last -%}, {% endunless -%}
+    {%- endfor -%}
+  </p>
+  {%- endif -%}
+
+  {%- if pub.affiliations and pub.affiliations.size > 0 -%}
+  <p class="aff-legend">
+    {%- for aff in pub.affiliations -%}
+      <span class="aff-item"><sup>{{ aff.mark }}</sup>{%- if aff.url and aff.url != "" -%}<a href="{{ aff.url }}" target="_blank" rel="noopener noreferrer">{{ aff.name }}</a>{%- else -%}{{ aff.name }}{%- endif -%}</span>
+      {%- unless forloop.last -%}<span class="sep">·</span>{%- endunless -%}
+    {%- endfor -%}
+  </p>
+  {%- endif -%}
+
+  {%- comment -%}
+    Legend explaining glyphs used in the byline (e.g., "† CCAS Intern").
+    Sits AFTER affiliations and BEFORE action buttons.
+  {%- endcomment -%}
+  {%- if pub.legend and pub.legend.size > 0 -%}
+  <p class="eq-legend">
+    {%- for entry in pub.legend -%}
+      {%- if entry.glyph and entry.glyph != "" -%}
+        <span class="nowrap"><span class="glyph">{{ entry.glyph }}</span>{{ entry.text }}</span>
+        {%- unless forloop.last -%}<span class="sep">·</span>{%- endunless -%}
+      {%- endif -%}
+    {%- endfor -%}
+  </p>
+  {%- endif -%}
+
+  {%- comment -%}
+    Project-page action buttons. Icons follow the same convention as
+    _includes/pub-link.html: Phosphor tokens render <i class="ph-fill ph-…">
+    from the icon font; FA classes render <i class="fas fa-…">. Both inherit
+    parent font-size for consistent sizing — no per-icon CSS needed.
+  {%- endcomment -%}
+  {%- if pub.links and pub.links.size > 0 -%}
+  <div class="actions">
+    {%- for link in pub.links -%}
+      <a class="btn-ghost" href="{{ link.url | relative_url }}"{% if link.url contains 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}>
+        {%- if link.icon == "phosphor-lectern" -%}
+          <i class="ph-fill ph-lectern"></i>
+        {%- elsif link.icon == "phosphor-presentation-chart" -%}
+          <i class="ph-fill ph-presentation-chart"></i>
+        {%- elsif link.icon -%}
+          <i class="fas {{ link.icon }}"></i>
+        {%- endif -%}
+        {{ link.label }}
+      </a>
+    {%- endfor -%}
+    {%- if pub.bibtex and pub.bibtex != "" -%}
+    <a class="btn-ghost" href="#bibtex">
+      <i class="ph-fill ph-quotes"></i>
+      BibTeX
+    </a>
+    {%- endif -%}
+  </div>
+  {%- endif -%}
+</div>
+
+<!-- Body -->
+<article class="body">
+
+  {%- comment -%}
+    TL;DR sits at the top of the body. No "Abstract" heading is auto-
+    generated. The `summary` field powers the homepage card description
+    and is NOT shown here. If the author wants a full abstract, they
+    write "## Abstract" + body text in the _research/<id>.md markdown
+    body, which renders in the .writeup block below.
+  {%- endcomment -%}
+  {%- if pub.tldr and pub.tldr != "" -%}
+  <div class="tldr">
+    <span class="lbl">TL;DR</span>{{ pub.tldr }}
+  </div>
+  {%- endif -%}
+
+  {%- comment -%}
+    Optional markdown body from the _research/<id>.md file itself.
+    Author writes whatever they want here — abstract, methods,
+    results, story, anything. Renders below the TL;DR and above BibTeX.
+  {%- endcomment -%}
+  {%- if content and content != "" -%}
+  <div class="writeup">
+    {{ content }}
+  </div>
+  {%- endif -%}
+
+  {%- if pub.bibtex and pub.bibtex != "" -%}
+  <h2 id="bibtex">BibTeX</h2>
+  <div class="bib-block">
+    <button class="copy" id="copyBtn" onclick="copyBibtex()">copy</button>
+    <div class="bib-scroll">
+<pre id="bib">{{ pub.bibtex }}</pre>
+    </div>
+  </div>
+  {%- endif -%}
+</article>
+
+{%- if pub.acknowledgements and pub.acknowledgements != "" -%}
+<section class="ack-section">
+  <h2>Acknowledgements</h2>
+  <p>{{ pub.acknowledgements }}</p>
+</section>
+{%- endif -%}
+
+<footer class="page-footer">
+  <span>Last updated {{ site.time | date: "%B %Y" }}.</span>
+  <span><a href="{{ '/' | relative_url }}">tnagar72.github.io</a></span>
+</footer>
+
+{%- if pub.bibtex and pub.bibtex != "" -%}
+<script>
+  function copyBibtex() {
+    const text = document.getElementById('bib').innerText;
+    const btn  = document.getElementById('copyBtn');
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'copied';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'copy';
+        btn.classList.remove('copied');
+      }, 1800);
+    });
+  }
+</script>
+{%- endif -%}
+
+</body>
+</html>

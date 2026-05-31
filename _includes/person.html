@@ -1,10 +1,23 @@
 {%- comment -%}
-Person lookup template - looks up person data from _data/people.yml
-Usage: {% include person.html person="Person Name" %}
+Person lookup template — looks up person data from _data/people.yaml.
+
+Accepts TWO input shapes for backward compatibility:
+  1. STRING (legacy):  pass a name string like "Tanay Nagar"
+  2. OBJECT (new):     pass an entry from publications.yaml `authors` array
+                       (a hash with .name, .role, .marks).
+                       The object's `.name` field is used as the lookup key.
+
+Renders just the name (as a link if found in people.yaml). Does NOT render
+marks or role — those are handled by the calling template if needed.
 {%- endcomment -%}
-{%- assign data = site.data.people[include.person] -%}
-{%- if data.url -%}
-<a href="{{ data.url }}"{% unless data.me %} target="_blank" rel="noopener noreferrer"{% endunless %}>{{ include.person }}</a>
+{%- if include.person.name -%}
+  {%- assign person_name = include.person.name -%}
 {%- else -%}
-{{ include.person }}
+  {%- assign person_name = include.person -%}
+{%- endif -%}
+{%- assign data = site.data.people[person_name] -%}
+{%- if data.url -%}
+<a href="{{ data.url }}"{% unless data.me %} target="_blank" rel="noopener noreferrer"{% endunless %}>{{ person_name }}</a>
+{%- else -%}
+{{ person_name }}
 {%- endif -%}

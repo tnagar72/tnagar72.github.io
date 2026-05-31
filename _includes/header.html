@@ -1,7 +1,26 @@
+{%- comment -%}
+  Site-wide header. On the homepage, the name button scrolls to the
+  hero anchor (avoids a page reload). On every other page (research,
+  minimal, etc.), it's a link back to the homepage. We detect via
+  page.url — only "/" is the homepage.
+{%- endcomment -%}
 <header>
     <div class="header-container">
         <nav>
-            <button class="nav-name" onclick="scrollToSection('hero')">{{ site.data.profile.name }}</button>
+            {%- comment -%}
+              Masthead name: Latin name | Devanagari name, separated by
+              a pipe. Pattern borrowed from Riku Arakawa's site
+              (rikky0611.github.io) — bilingual identity sits in the
+              persistent top nav so it's visible from every page without
+              dominating the H1 of any single page. The .nav-name-hindi
+              span lets the CSS treat the Devanagari portion separately
+              (e.g. hide on very narrow viewports if it crowds the bar).
+            {%- endcomment -%}
+            {%- if page.url == "/" -%}
+            <button class="nav-name" onclick="scrollToSection('hero')">{{ site.data.profile.name }} <span class="nav-name-sep">|</span> <span class="nav-name-hindi" lang="hi">{{ site.data.profile.name_hindi }}</span></button>
+            {%- else -%}
+            <a class="nav-name" href="{{ '/' | relative_url }}">{{ site.data.profile.name }} <span class="nav-name-sep">|</span> <span class="nav-name-hindi" lang="hi">{{ site.data.profile.name_hindi }}</span></a>
+            {%- endif -%}
             <div class="nav-links">
                 <div class="social-links">
                     {%- for link in site.data.social -%}

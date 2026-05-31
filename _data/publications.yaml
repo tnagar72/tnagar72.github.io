@@ -1,11 +1,11 @@
 - id: bias-lor
   title: "Exploring Bias in Letters of Recommendation using NLP Techniques"
   authors:
-    - Tanay Nagar
-    - Sarah Jung
-    - Peter Wirth
-    - Alyssa Schappe
-    - Amorn N. Salyapongse
+    - { name: "Tanay Nagar",          role: "author", marks: "1" }
+    - { name: "Sarah Jung",           role: "author", marks: "2" }
+    - { name: "Peter Wirth",          role: "author", marks: "2" }
+    - { name: "Alyssa Schappe",       role: "author", marks: "2" }
+    - { name: "Amorn N. Salyapongse", role: "author", marks: "3" }
   venue: "Oral presentation: ACEPS 2025 · Extended abstract published in PRS Global Open 2025."
   venue-shorthand: ACEPS
   year: 2025
@@ -13,14 +13,12 @@
   featured: true
   feature-order: 1
   selected: true
-  # bibtex: |-
-  #   @inproceedings{...}
   awards:
     - text: "Hina and Faisal Mushtaq Scholarship"
   links:
     - label: "Talk Slides"
       url: "/PRS_Global/wisc-surgery-ppt-template.pptx (2).pdf"
-      icon: "fa-window-maximize"
+      icon: "phosphor-lectern"
     - label: "PRS Global Article"
       url: "https://journals.lww.com/prsgo/fulltext/2025/06004/7__detecting_bias_in_plastic_surgery_residency.7.aspx?context=latestarticles"
       icon: "fa-file-pdf"
@@ -31,14 +29,48 @@
       url: "https://doi.org/10.1097/01.GOX.0001123584.49942.fe"
       icon: "fa-anchor"
   summary: "We use natural language processing to analyze plastic surgery residency letters of recommendation, surfacing systematic patterns in wording that may reflect bias and influence selection decisions. The work highlights how computational text analysis can support fairer, more transparent evaluation of applicants."
+  # ────────── Research-page fields ──────────
+  tldr: "We investigate implicit biases in 5,679 plastic surgery residency letters of recommendation through traditional NLP methods, examining how gender and race/ethnicity affect language use and other trends."
+  accent: blue
+  subjects: [Fairness, NLP, Bias]
+  keywords: [LIWC, letter-of-recommendation, residency-selection, gender-bias, racial-bias]
+  venue_name: "ACEPS 2025"
+  venue_meta:
+    - "Oral Presentation"
+    - "Published in PRS Global Open"
+    - "Vol 13, S4"
+    - "pp 4–5"
+  affiliations:
+    - { mark: "1", name: "University of Wisconsin-Madison, United States", url: "https://www.wisc.edu/" }
+    - { mark: "2", name: "Department of Surgery, UW SMPH", url: "https://www.surgery.wisc.edu/" }
+    - { mark: "3", name: "Department of Orthopedics and Rehabilitation, University of Wisconsin School of Medicine and Public Health", url: "" }
+  acknowledgements: ""
+  bibtex: |-
+    @article{nagar_lor_bias,
+      title    = {Detecting Bias in Plastic Surgery Residency Application Letters of Recommendation using Natural Language Processing},
+      author   = {Nagar, Tanay and Jung, Sarah and Wirth, Peter and Schappe, Alyssa and Salyapongse, Amorn N.},
+      journal  = {Plastic and Reconstructive Surgery -- Global Open},
+      volume   = {13},
+      number   = {S4},
+      pages    = {4--5},
+      year     = {2025},
+      month    = jun,
+      doi      = {10.1097/01.GOX.0001123584.49942.fe},
+      url      = {https://journals.lww.com/10.1097/01.GOX.0001123584.49942.fe},
+      issn     = {2169-7574},
+      language = {en}
+    }
 
 - id: bridging-language-gaps
-  title: "Bridging Language Gaps: Code-Switched Fine-Tuning for Multilingual LLMs"
+  # Slug stays "bridging-language-gaps" because it's the stable URL handle.
+  # Display title matches the canonical published title on arXiv + BibTeX so
+  # the page is searchable under the name other researchers will use.
+  title: "Breaking Language Barriers: Equitable Performance in Multilingual Language Models"
   authors:
-    - Tanay Nagar
-    - Grigorii Khvatskii
-    - Anna Sokol
-    - Nitesh V. Chawla
+    - { name: "Tanay Nagar",        role: "author", marks: "1, 3, †" }
+    - { name: "Grigorii Khvatskii", role: "author", marks: "2, 4" }
+    - { name: "Anna Sokol",         role: "author", marks: "2, 4" }
+    - { name: "Nitesh V. Chawla",   role: "author", marks: "2, 4" }
   venue_html: 'Poster: NAACL 2025 Student Research Workshop (SRW); ND Summer Research Symposium 2024 · Full paper on <a href="https://arxiv.org/abs/2508.12662" target="_blank" rel="noopener noreferrer">arXiv</a> 2025.'
   venue-shorthand: NAACL
   year: 2025
@@ -46,34 +78,61 @@
   featured: true
   feature-order: 2
   selected: true
-  # bibtex: |-
-  #   @inproceedings{...}
   awards:
     - text: "Bromley Conference Travel Award"
     - text: "CDIS Student Travel Award"
   links:
     - label: "NAACL SRW Poster"
       url: "/Bridging_Language_Gaps_CS/NAACL 2025 Presentation.pdf"
-      icon: "fa-image"
+      icon: "phosphor-presentation-chart"
     - label: "Visualization"
       url: "/Bridging_Language_Gaps_CS/breaking_language_barriers_interactive_vis.html"
       icon: "fa-chart-line"
     - label: "arXiv"
       url: "https://arxiv.org/abs/2508.12662"
       icon: "fa-file-alt"
+    - label: "Code + Data"
+      url: "https://github.com/tnagar72/Breaking-Language-Barriers-Equitable-Performance-in-Multilingual-Language-Models"
+      icon: "fa-code"
     - label: "ND Symposium Poster"
       url: "/Bridging_Language_Gaps_CS/Tanay ND Summer Symposium.pdf"
-      icon: "fa-image"
-  summary: "We study code-switched fine-tuning strategies for multilingual language models, focusing on how mixing languages in realistic ways affects performance. The work explores how these techniques can narrow performance gaps for low-resource and multilingual communities."
+      icon: "phosphor-presentation-chart"
+  summary: "We fine-tune a multilingual language model on synthetic code-switched text at controlled mixing ratios and study how those ratios affect performance on both low- and high-resource languages. We find that the ratio matters: a medium ratio optimally closes ~80% of the Hindi–English reasoning gap on CommonsenseQA without degrading English performance."
+  # ────────── Research-page fields ──────────
+  tldr: "Fine-tuning with synthetic code-switched data closes 80% of the Hindi–English reasoning performance gap on CommonsenseQA — without any English degradation."
+  accent: blue
+  subjects: [NLP, Multilingual, Language Equity]
+  keywords: [code-switching, low-resource-languages, hindi, code-mixing-index, fine-tuning, CommonsenseQA, LLaMA-3]
+  venue_name: "NAACL 2025"
+  venue_meta:
+    - "Student Research Workshop"
+    - "Poster"
+  affiliations:
+    - { mark: "1", name: "University of Wisconsin–Madison", url: "https://www.wisc.edu/" }
+    - { mark: "2", name: "University of Notre Dame", url: "https://www.nd.edu/" }
+    - { mark: "3", name: "NSF Center for Computer Assisted Synthesis (CCAS), University of Notre Dame", url: "https://ccas.nd.edu/" }
+    - { mark: "4", name: "Lucy Family Institute for Data & Society, University of Notre Dame", url: "https://lucyinstitute.nd.edu/" }
+  legend:
+    - { glyph: "†", text: "Work done as a CCAS Intern at the University of Notre Dame" }
+  acknowledgements: "This work was supported by the NSF Center for Computer Assisted Synthesis (CCAS) at the University of Notre Dame. Travel support was provided by the Bromley Conference Travel Award and the CDIS Student Travel Award. Special thanks to Mr. Peter and Mrs. April Spiro, whose generosity made it possible for me to attend and present this work at NAACL."
+  bibtex: |-
+    @article{nagar2025breakinglanguagebarriersequitable,
+      title         = {Breaking Language Barriers: Equitable Performance in Multilingual Language Models},
+      author        = {Tanay Nagar and Grigorii Khvatskii and Anna Sokol and Nitesh V. Chawla},
+      year          = {2025},
+      eprint        = {2508.12662},
+      archivePrefix = {arXiv},
+      primaryClass  = {cs.CL},
+      url           = {https://arxiv.org/abs/2508.12662}
+    }
 
 - id: honors-thesis
   title: "Decoding Bias in Letters of Recommendation: A Word Embeddings Approach"
   authors:
-    - Tanay Nagar
-  advisors:
-    - Dr. Fred Sala
-    - Dr. Sarah Jung
-    - Dr. Shamya Karumbaiah
+    - { name: "Tanay Nagar",           role: "author",  marks: "1" }
+    - { name: "Dr. Fred Sala",         role: "advisor", marks: "4, ‡" }
+    - { name: "Dr. Sarah Jung",        role: "advisor", marks: "2, ‡" }
+    - { name: "Dr. Shamya Karumbaiah", role: "advisor", marks: "3, ‡" }
   venue: "Senior Honors Thesis, University of Wisconsin-Madison, 2025 · Oral presentation: UW Honors Research Symposium 2025."
   venue-shorthand: "UW Honors"
   year: 2025
@@ -81,8 +140,6 @@
   featured: true
   feature-order: 3
   selected: true
-  # bibtex: |-
-  #   @mastersthesis{...}
   awards:
     - text: "Hilldale Undergraduate/Faculty Research Fellowship"
       url: "https://awards.advising.wisc.edu/campus-wide-award-recipients/test-hilldale-fellows/#:~:text=Tanay%20Nagar%2C%20Computer%20Sciences%2C%20Philosophy%2C%20Sarah%20Jung"
@@ -91,8 +148,24 @@
   links:
     - label: "Honors Symposium Talk"
       url: "/Senior_Honors_Thesis/NAGAR_SYMPOSIUM2025.pptx (2).pdf"
-      icon: "fa-window-maximize"
+      icon: "phosphor-lectern"
     - label: "Fellowship Proposal"
       url: "/Senior_Honors_Thesis/Nagar Senior Honors Thesis Grant Proposal.pdf"
       icon: "fa-file-alt"
   summary: "Using 1,585 de-identified letters of recommendation (~919k tokens), my thesis combines Word2Vec and fine-tuned Mistral-7B embeddings to measure gender-directional framing via bias axes, WEAT-style tests, and analogy probes. It turns long-standing concerns about biased LoR language into quantitative metrics that can be used for reviewer calibration, dashboards, and faculty workshops to support fairer admissions and evaluations."
+  # ────────── Research-page fields ──────────
+  tldr: "We use word embeddings (word2Vec + transformer-based) on an 11-year corpus of UW Plastic Surgery residency letters of recommendation to quantify, interpret, and visualize implicit gender and ethnic biases/trends."
+  accent: grey
+  subjects: [Fairness, NLP, Bias]
+  keywords: [word-embeddings, word2Vec, letter-of-recommendation, SC-WEAT, t-SNE, senior-thesis]
+  venue_name: "Senior Honors Thesis"
+  venue_meta:
+    - "Oral Presentation at UW Honors Symposium"
+  affiliations:
+    - { mark: "1", name: "University of Wisconsin–Madison", url: "https://www.wisc.edu/" }
+    - { mark: "2", name: "Department of Surgery, UW SMPH", url: "https://www.surgery.wisc.edu/" }
+    - { mark: "3", name: "Department of Educational Psychology, UW-Madison", url: "https://edpsych.education.wisc.edu/" }
+    - { mark: "4", name: "Department of Computer Sciences, UW-Madison", url: "https://www.cs.wisc.edu/" }
+  legend:
+    - { glyph: "‡", text: "Thesis advisor" }
+  acknowledgements: "This research was supported by the Hilldale Undergraduate/Faculty Research Fellowship and the Richard Ralph Phoenix Rising Humanitarian Scholarship."

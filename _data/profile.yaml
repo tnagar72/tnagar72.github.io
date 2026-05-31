@@ -4,12 +4,17 @@ role: Independent researcher
 portrait: /Images/tanay-nd.jpeg
 portrait_alt: Portrait of Tanay Nagar
 
-areas: NLP · Human-Centered AI · Computational Social Science · AI Safety
+# Empty for now. We removed the 4-field area tagline because it overclaimed
+# expertise at this career stage. The original value is preserved in the
+# comment below — swap it back into `areas:` if/when you want it again,
+# or replace with a shorter honest version (e.g. "NLP and AI ethics").
+# areas: NLP · Human-Centered AI · Computational Social Science · AI Safety
+areas: ""
 
 # Consolidated bio HTML - single block for easier maintenance
 bio_html: |
-  <p>My work focuses on developing <span class="highlight">equitable, socially-aware language technologies</span> that prioritize <strong>language equity</strong> for low-resource languages, uphold the <strong>socio-cultural nuances</strong> of diverse linguistic communities, and ensure robust <strong>human-AI dynamics</strong>.</p>
-  <p>I'm particularly interested in how we can:</p>
+  <p>Hello! I'm an Independent Researcher passionate about <span class="highlight">equitable, socially-aware language technologies</span> that prioritize <strong>language equity</strong> for low-resource languages, uphold the <strong>socio-cultural nuances</strong> of diverse linguistic communities, and ensure robust <strong>human-AI dynamics</strong>.</p>
+  <p>More concretely, I'm particularly interested in how we can:</p>
   <ul class="hero-list">
     <li>better evaluate/understand social subtleties across languages and cultures, both through and within language technologies;</li>
     <li>embed socio-ethical dynamics/intelligence within the creation of language technologies.</li>
