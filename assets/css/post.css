@@ -21,6 +21,15 @@
      ROUGE SHIM      — Issue 7 (map Rouge classes to .tok-* palette)
    ============================================================ */
 
+/* Reset Chrome's default body margin so the dark footer + page edges
+   sit flush against the viewport. Without this, the writing layouts
+   render with an 8px white border around the entire page — most
+   visible as a white gap below the dark footer. */
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
 :root {
   --color-text: #2a2722;
   --color-background: #ffffff;
