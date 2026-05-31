@@ -37,16 +37,19 @@
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}?v={{ site.time | date: '%s' }}">
   <link rel="stylesheet" href="{{ '/assets/css/research-page.css' | relative_url }}?v={{ site.time | date: '%s' }}">
 
+  {%- if site.google_analytics -%}
   <!-- Google Analytics (GA4). Research pages bypass _includes/head.html
        and use this inline <head>, so the tag has to live here too —
-       otherwise pageviews on /research/<id>/ would be invisible. -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NRXRQL1ZL3"></script>
+       otherwise pageviews on /research/<id>/ would be invisible. ID
+       centralized in _config.yml. -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-NRXRQL1ZL3');
+    gtag('config', '{{ site.google_analytics }}');
   </script>
+  {%- endif -%}
 </head>
 
 {%- assign accent = page.accent | default: pub.accent | default: 'blue' -%}
