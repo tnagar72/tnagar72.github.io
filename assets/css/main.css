@@ -296,40 +296,6 @@ section {
    (1024px) as the hero, publications, and /etc sections — keeping
    the section visually aligned with everything else on the page.
    ============================================================ */
-.updates-box {
-    /* Borderless: no border, no background. The internal scroll
-       container handles overflow without any visible container chrome.
-       Matches the plain-list aesthetic of academic researcher pages.
-       position: relative anchors the small ↓ arrow at the corner. */
-    padding: 0;
-    position: relative;
-}
-.updates-scroll {
-    /* Show ~4 items at default sizes (single-line items ≈ 33.5px each,
-       4 of them ≈ 134px; with some wrap to 2 lines ≈ 180px). Beyond
-       that, the box stays the same height and the list scrolls
-       internally. Fewer than 4 entries: the box shrinks to fit. */
-    max-height: 180px;
-    overflow-y: auto;
-    padding-right: 0.75rem;
-    /* No custom scrollbar styling — the OS handles it. On macOS this
-       means "auto-hide except when scrolling," which is the default
-       people are used to. */
-}
-/* Small downward arrow at the bottom-right corner: tiny affordance
-   signaling "there's more — scroll." pointer-events:none so it doesn't
-   intercept the scroll/click events on the list under it. */
-.updates-more-arrow {
-    position: absolute;
-    right: 0; bottom: 0;
-    font-family: var(--font-sans);
-    font-size: 0.85rem;
-    color: var(--muted-foreground);
-    pointer-events: none;
-    user-select: none;
-    opacity: 0.6;
-}
-
 .updates-list {
     list-style: none;
     padding: 0;
@@ -337,13 +303,25 @@ section {
 }
 .updates-list li {
     /* Two-column grid: date | body. Date column is fixed width so
-       all dates align vertically regardless of body length. */
+       all dates align vertically regardless of body length. The
+       horizontal padding + negative margin offset gives the hover
+       background a visible halo around the text without shifting
+       layout. Border radius rounds the hover wash. */
     display: grid;
     grid-template-columns: 80px 1fr;
     gap: 1rem;
-    padding: 0.35rem 0;
+    padding: 0.5rem 0.75rem;
+    margin: 0 -0.75rem;
+    border-radius: 0.5rem;
     font-size: 0.9rem;
     line-height: 1.55;
+    transition: box-shadow 0.2s ease-in-out;
+}
+.updates-list li:hover {
+    /* 2px inset accent-blue outline on hover. inset box-shadow (vs.
+       border) keeps the row from shifting layout when the rim appears,
+       since border would add 2px to the box and reflow neighbors. */
+    box-shadow: inset 0 0 0 2px #357edd;
 }
 .updates-when {
     font-family: var(--font-mono);
@@ -503,6 +481,35 @@ section {
     margin-top: 0.75rem;
 }
 
+/* Accent-colored link inside a section heading (e.g. the "Updates" word
+   in "Recent Updates" on the homepage). Matches the writing index link
+   color (#357edd) so the two accent surfaces feel like the same system —
+   this is the same Fred-Hohman/Tachyons blue (rgb 53,126,221). The
+   surrounding heading text stays in the uppercase/spaced .section-header
+   h2 treatment; only the link picks up the accent color. */
+.section-header-link {
+    color: #357edd;
+    text-decoration: none;
+    transition: text-decoration-color 0.15s, color 0.15s;
+}
+.section-header-link:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 3px;
+}
+
+/* /updates/ archive page. Same .updates-list styling as the homepage
+   include but lives inside its own page wrapper. The top margin pulls
+   the section away from the masthead since there's no hero stamp above. */
+.updates-page {
+    padding-top: 2.5rem;
+    padding-bottom: 3rem;
+}
+.updates-empty {
+    color: var(--muted-foreground);
+    font-style: italic;
+}
+
 
 .footer {
     margin-top: 1rem; /* pull horizontal rule away from badges */
@@ -580,7 +587,7 @@ section {
     color: var(--muted-foreground);
 }
 .writing-index__link {
-    color: #0066cc;
+    color: #357edd;
     text-decoration: none;
     transition: text-decoration-color 0.15s, color 0.15s;
 }

@@ -5,23 +5,17 @@ Source of truth: _data/news.yml. Each entry has:
   - date: YYYY-MM-DD (ISO; rendered as "Mon YYYY" — e.g. "May 2026")
   - body: free Markdown (links, bold, italic, emoji all supported)
 
-Sorted by date descending, so the file order in news.yml doesn't matter.
-The full ISO date is preserved in <time datetime="…"> for accessibility.
+Pattern (Fred-Hohman / al-folio hybrid):
+  - Homepage shows the most recent 3 entries (capped via | limit:3 below).
+  - Section heading reads "Recent Updates" where "Updates" is an accent
+    link to /updates/, the full archive page. Borrows Fred Hohman's
+    "Featured Research Publications" split-heading pattern.
+  - If news.yml is empty, the whole section is skipped — no orphan
+    heading, no link to a /updates/ page that would render an empty list.
 
-Width matches every other homepage section: wraps the content in
-<div class="hero-content"> which is the .hero-content max-width:1024px
-container, same as the hero, publications, and /etc sections.
-
-The list lives inside a scrollable box (.updates-box) with a fixed
-max-height; whatever fits is visible, the rest scrolls inside the box.
-A small ↓ arrow in the bottom-right corner signals that there's more
-content below — visible only when the list actually overflows.
-{%- endcomment -%}
-
-{%- comment -%}
-  If news.yml has zero entries, render nothing — no section heading,
-  no empty box, no orphan markup. The homepage flows hero → publications
-  directly when there's nothing to put in Updates.
+The full /updates/ page (updates.md at the project root) iterates the
+same dataset without the limit, so adding entries to news.yml updates
+both views automatically. No separate maintenance.
 {%- endcomment -%}
 {%- if site.data.news and site.data.news.size > 0 -%}
 {%- assign sorted = site.data.news | sort: "date" | reverse -%}
@@ -29,22 +23,17 @@ content below — visible only when the list actually overflows.
 <section id="updates" class="section-border">
     <div class="hero-content">
         <div class="section-header">
-            <h2>Updates</h2>
+            <h2>Recent <a href="{{ '/updates/' | relative_url }}" class="section-header-link">Updates</a></h2>
         </div>
 
-        <div class="updates-box">
-            <div class="updates-scroll">
-                <ul class="updates-list">
-                    {%- for entry in sorted -%}
-                    <li>
-                        <time class="updates-when" datetime="{{ entry.date | date_to_xmlschema }}">{{ entry.date | date: "%b %Y" }}</time>
-                        <div class="updates-body">{{ entry.body | markdownify | replace: '<p>', '' | replace: '</p>', '' }}</div>
-                    </li>
-                    {%- endfor -%}
-                </ul>
-            </div>
-            <span class="updates-more-arrow" aria-hidden="true">↓</span>
-        </div>
+        <ul class="updates-list">
+            {%- for entry in sorted limit:3 -%}
+            <li>
+                <time class="updates-when" datetime="{{ entry.date | date_to_xmlschema }}">{{ entry.date | date: "%b %Y" }}</time>
+                <div class="updates-body">{{ entry.body | markdownify | replace: '<p>', '' | replace: '</p>', '' }}</div>
+            </li>
+            {%- endfor -%}
+        </ul>
     </div>
 </section>
 {%- endif -%}
