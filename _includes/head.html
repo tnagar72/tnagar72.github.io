@@ -8,4 +8,16 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css">
     <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+
+    <!-- Google Analytics (GA4) — measurement ID G-NRXRQL1ZL3, the
+         tnagar72.github.io property. Loaded asynchronously after CSS
+         so it doesn't block render. Tracks all pages that include
+         this file (homepage, /writing/, /updates/, writing entries). -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NRXRQL1ZL3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-NRXRQL1ZL3');
+    </script>
 </head>
