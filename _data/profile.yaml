@@ -13,8 +13,8 @@ areas: ""
 
 # Consolidated bio HTML - single block for easier maintenance
 bio_html: |
-  <p>My work focuses on developing <span class="highlight">equitable, socially-aware language technologies</span> that prioritize <strong>language equity</strong> for low-resource languages, uphold the <strong>socio-cultural nuances</strong> of diverse linguistic communities, and ensure robust <strong>human-AI dynamics</strong>.</p>
-  <p>I'm particularly interested in how we can:</p>
+  <p>I'm interested in developing <span class="highlight">equitable, socially-aware language technologies</span> that prioritize <strong>language equity</strong> for low-resource languages, uphold the <strong>socio-cultural nuances</strong> of diverse linguistic communities, and ensure robust <strong>human-AI dynamics</strong>.</p>
+  <p>More concretely, I'm particularly interested in how we can:</p>
   <ul class="hero-list">
     <li>better evaluate/understand social subtleties across languages and cultures, both through and within language technologies;</li>
     <li>embed socio-ethical dynamics/intelligence within the creation of language technologies.</li>
