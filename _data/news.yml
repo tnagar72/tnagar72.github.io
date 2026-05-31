@@ -1,0 +1,35 @@
+# news.yml — homepage Updates feed
+#
+# Each entry has:
+#   date: YYYY-MM-DD (ISO; rendered as "Month YYYY" automatically)
+#   body: free Markdown — [text](url) for links, *italic*, **bold**, emoji
+#
+# The include sorts newest-first by `date`, so file order doesn't matter.
+# Add a new entry at the top, bottom, or anywhere — it'll land in the
+# right spot when the site builds.
+#
+# Examples of what you might put in `body`:
+#   - Published [the X essay](/writing/x/)
+#   - ✍️ Started writing about Y
+#   - Paper accepted at [NAACL 2025 SRW](#)
+#   - 🎉 Awarded the Hilldale Fellowship
+#
+# Delete this comment block once you're comfortable with the format.
+
+- date: 2026-05-31
+  body: 'Published [Maybe Explainable AI Is a Spectrum](/writing/maybe-explainable-ai-is-a-spectrum/), my first essay.'
+
+- date: 2026-04-15
+  body: 'Breaking Language Barriers accepted as a poster at NAACL 2025 SRW.'
+
+- date: 2026-03-01
+  body: 'Oral presentation at ACEPS 2025; extended abstract in PRS Global Open.'
+
+- date: 2026-02-15
+  body: 'Awarded the Hilldale Undergraduate/Faculty Research Fellowship and the Richard Ralph Phoenix Rising Humanitarian Scholarship.'
+
+- date: 2026-01-20
+  body: 'Defended my Senior Honors Thesis at the UW Honors Symposium.'
+
+- date: 2025-12-10
+  body: 'Posted arXiv preprint [2508.12662](https://arxiv.org/abs/2508.12662).'

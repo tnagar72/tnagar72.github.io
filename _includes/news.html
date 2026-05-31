@@ -1,0 +1,43 @@
+{%- comment -%}
+Updates section for the homepage.
+
+Source of truth: _data/news.yml. Each entry has:
+  - date: YYYY-MM-DD (ISO; rendered as "Mon YYYY" — e.g. "May 2026")
+  - body: free Markdown (links, bold, italic, emoji all supported)
+
+Sorted by date descending, so the file order in news.yml doesn't matter.
+The full ISO date is preserved in <time datetime="…"> for accessibility.
+
+Width matches every other homepage section: wraps the content in
+<div class="hero-content"> which is the .hero-content max-width:1024px
+container, same as the hero, publications, and /etc sections.
+
+The list lives inside a scrollable box (.updates-box) with a fixed
+max-height; whatever fits is visible, the rest scrolls inside the box.
+A small ↓ arrow in the bottom-right corner signals that there's more
+content below — visible only when the list actually overflows.
+{%- endcomment -%}
+
+{%- assign sorted = site.data.news | sort: "date" | reverse -%}
+
+<section id="updates" class="section-border">
+    <div class="hero-content">
+        <div class="section-header">
+            <h2>Updates</h2>
+        </div>
+
+        <div class="updates-box">
+            <div class="updates-scroll">
+                <ul class="updates-list">
+                    {%- for entry in sorted -%}
+                    <li>
+                        <time class="updates-when" datetime="{{ entry.date | date_to_xmlschema }}">{{ entry.date | date: "%b %Y" }}</time>
+                        <div class="updates-body">{{ entry.body | markdownify | replace: '<p>', '' | replace: '</p>', '' }}</div>
+                    </li>
+                    {%- endfor -%}
+                </ul>
+            </div>
+            <span class="updates-more-arrow" aria-hidden="true">↓</span>
+        </div>
+    </div>
+</section>
