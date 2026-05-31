@@ -41,12 +41,15 @@
 {%- assign accent = page.accent | default: pub.accent | default: 'blue' -%}
 <body data-accent="{{ accent }}">
 
-<!-- Top nav: back to homepage publications anchor. No "/ Publications"
-     trailing crumb because there is no Publications index page yet —
-     don't promise navigation that doesn't exist. -->
-<nav class="topnav">
-  <a href="{{ '/#publications' | relative_url }}"><span class="chev">‹</span> {{ site.title }}</a>
-</nav>
+{%- comment -%}
+  Site-wide header. Reuses the homepage's masthead so research pages
+  share the same chrome as the homepage and writing pages. The name
+  on the left links back to home (browser back works too); 6 social
+  icons sit on the right. Replaces the previous "‹ Tanay Nagar"
+  breadcrumb pattern, which was doing affordance work the browser
+  already covers and was inconsistent with the rest of the site.
+{%- endcomment -%}
+{% include header.html %}
 
 <!-- Hero — uses <div>, not <header>, because main.css applies sticky+blur
      to every <header> element on the page. -->

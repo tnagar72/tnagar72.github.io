@@ -1,7 +1,17 @@
+{%- comment -%}
+  Site-wide header. On the homepage, the name button scrolls to the
+  hero anchor (avoids a page reload). On every other page (research,
+  minimal, etc.), it's a link back to the homepage. We detect via
+  page.url — only "/" is the homepage.
+{%- endcomment -%}
 <header>
     <div class="header-container">
         <nav>
+            {%- if page.url == "/" -%}
             <button class="nav-name" onclick="scrollToSection('hero')">{{ site.data.profile.name }}</button>
+            {%- else -%}
+            <a class="nav-name" href="{{ '/' | relative_url }}">{{ site.data.profile.name }}</a>
+            {%- endif -%}
             <div class="nav-links">
                 <div class="social-links">
                     {%- for link in site.data.social -%}
