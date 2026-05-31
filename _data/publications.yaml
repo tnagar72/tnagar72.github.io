@@ -91,10 +91,13 @@
     - label: "arXiv"
       url: "https://arxiv.org/abs/2508.12662"
       icon: "fa-file-alt"
+    - label: "Code + Data"
+      url: "https://github.com/tnagar72/Breaking-Language-Barriers-Equitable-Performance-in-Multilingual-Language-Models"
+      icon: "fa-code"
     - label: "ND Symposium Poster"
       url: "/Bridging_Language_Gaps_CS/Tanay ND Summer Symposium.pdf"
       icon: "phosphor-presentation-chart"
-  summary: "We study code-switched fine-tuning strategies for multilingual language models, focusing on how mixing languages in realistic ways affects performance. The work explores how these techniques can narrow performance gaps for low-resource and multilingual communities."
+  summary: "We fine-tune a multilingual language model on synthetic code-switched text at controlled mixing ratios and study how those ratios affect performance on both low- and high-resource languages. We find that the ratio matters: a medium ratio optimally closes ~80% of the Hindi–English reasoning gap on CommonsenseQA without degrading English performance."
   # ────────── Research-page fields ──────────
   tldr: "Fine-tuning with synthetic code-switched data closes 80% of the Hindi–English reasoning performance gap on CommonsenseQA — without any English degradation."
   accent: blue
