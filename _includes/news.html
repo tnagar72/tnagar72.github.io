@@ -18,6 +18,12 @@ A small ↓ arrow in the bottom-right corner signals that there's more
 content below — visible only when the list actually overflows.
 {%- endcomment -%}
 
+{%- comment -%}
+  If news.yml has zero entries, render nothing — no section heading,
+  no empty box, no orphan markup. The homepage flows hero → publications
+  directly when there's nothing to put in Updates.
+{%- endcomment -%}
+{%- if site.data.news and site.data.news.size > 0 -%}
 {%- assign sorted = site.data.news | sort: "date" | reverse -%}
 
 <section id="updates" class="section-border">
@@ -41,3 +47,4 @@ content below — visible only when the list actually overflows.
         </div>
     </div>
 </section>
+{%- endif -%}
