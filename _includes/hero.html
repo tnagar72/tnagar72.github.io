@@ -1,7 +1,14 @@
 <section id="hero">
     <div class="hero-content">
-        <div class="hero-heading" style="margin-bottom: 1.5rem;">
-            <h1>{{ site.data.profile.name }} - {{ site.data.profile.name_hindi }}</h1>
+        <div class="hero-heading">
+            {%- comment -%}
+              H1 shows just the Latin name. The bilingual identity
+              (Tanay Nagar | तनय नगर) lives in the persistent masthead
+              at the top of every page, so the H1 doesn't need to
+              repeat it. Side effect: the H1 also gets shorter on
+              mobile without needing a separate breakpoint rule.
+            {%- endcomment -%}
+            <h1>{{ site.data.profile.name }}</h1>
             {%- comment -%}
               Tagline: just `role`. The `areas` field used to render after a
               pipe ("Independent researcher | NLP · Human-Centered AI · …")

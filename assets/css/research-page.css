@@ -52,18 +52,6 @@
   }
 
   /* ============================================================
-     Top nav — back to publications
-     ============================================================ */
-  .topnav { padding: 22px 6vw 0; max-width: 1200px; margin: 0 auto; }
-  .topnav a {
-    font-family: var(--system); font-size: 14px;
-    color: var(--muted-foreground);
-    display: inline-flex; align-items: center; gap: 6px;
-  }
-  .topnav a:hover { color: var(--foreground); text-decoration: none; }
-  .topnav .chev { font-size: 12px; }
-
-  /* ============================================================
      Hero
      ============================================================ */
   .hero { max-width: 1024px; margin: 56px auto 0; padding: 0 6vw; text-align: center; }

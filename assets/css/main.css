@@ -15,28 +15,54 @@
 }
 
 html {
-    font-size: 16px;
+    font-size: 17px;
     scroll-behavior: smooth;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    /* Roboto loaded via Google Fonts in _includes/head.html. Falls back
+       to the OS system stack if the webfont fails.
+       font-weight: 300 (Light) matches MDBootstrap's body weight — this
+       is the "airy" feel of al-folio sites. Body color stays foreground
+       (near-black) rather than MDBootstrap's #616161 gray so links and
+       headings still feel anchored. */
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 300;
     background-color: var(--background);
     color: var(--foreground);
     line-height: 1.5;
     min-height: 100vh;
 }
 
+/* Heading scale. h1/h2 stay close to the pre-Bootstrap-pass sizes
+   the user had visually calibrated to over the course of the design
+   session — the Bootstrap 2.5rem/2rem read too loud at this stage.
+   h3 keeps the larger Bootstrap value because nothing on the homepage
+   uses bare h3 yet (all h3s are classed). */
 h1 {
     font-size: 2rem;
     font-weight: 500;
+    line-height: 1.2;
     margin-bottom: 0.25rem;
 }
-
 h2 {
     font-size: 1.25rem;
     font-weight: 500;
+    line-height: 1.2;
     margin-bottom: 0.5rem;
+}
+h3 {
+    font-size: 1.75rem;
+    font-weight: 500;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+}
+
+/* Bootstrap-style paragraph rhythm. Tighter than what we had; this is
+   the "dense" feeling that lets more content fit per visible page. */
+p {
+    margin-top: 0;
+    margin-bottom: 1rem;
 }
 
 a {
@@ -78,6 +104,49 @@ nav {
     border: none;
     cursor: pointer;
     font-size: 1.25rem;
+    /* Prevent the pipe + Devanagari from wrapping mid-name on narrow
+       viewports. The whole "Tanay Nagar | तनय नगर" stays together. */
+    white-space: nowrap;
+}
+/* Pipe separator between Latin + Devanagari name. Sits muted so it
+   reads as a quiet divider, not a styled character. */
+.nav-name-sep {
+    color: var(--muted-foreground);
+    font-weight: 300;
+    margin: 0 0.15em;
+    user-select: none;
+}
+/* Devanagari portion uses Mukta — a humanist Devanagari sans-serif
+   from Indian foundry Ek Type, designed to pair with Latin sans-serif
+   in bilingual contexts. Noto Sans Devanagari is the fallback.
+
+   IMPORTANT optical-size note: Devanagari glyphs are fundamentally
+   shorter than Latin caps at the same font-size — most of the
+   letterform hangs below the headline (शिरोरेखा), not above.
+   Without compensation, "Tanay Nagar" reads visibly bigger than
+   "तनय नगर" at the same CSS size. Bumping the Devanagari to 1.12x
+   restores visual parity. */
+/* Devanagari typography: applies to anything marked lang="hi".
+   Latin text around it stays in Roboto. The font-size: 1.04em
+   compensates optically — Devanagari glyphs are shorter than Latin
+   caps at the same CSS size. */
+:lang(hi) {
+    font-family: 'Mukta', 'Noto Sans Devanagari', 'Devanagari MT', sans-serif;
+    font-size: 1.04em;
+}
+/* Masthead Devanagari name only needs the weight tweak; everything
+   else is inherited from :lang(hi) above. */
+.nav-name-hindi {
+    font-weight: 500;
+}
+/* On very narrow viewports (under 480px), the full bilingual name can
+   crowd the masthead alongside the social icons. Hide the Devanagari
+   half there; the H1 below still carries the bilingual identity. */
+@media (max-width: 480px) {
+    .nav-name-sep,
+    .nav-name-hindi {
+        display: none;
+    }
 }
 
 .nav-links {
@@ -148,8 +217,16 @@ section {
     margin: 0 auto;
 }
 
+.hero-heading {
+    margin-bottom: 1.5rem;
+}
+
 .hero-bio {
-    color: var(--muted-foreground);
+    /* Match the al-folio about-section convention: a single text color
+       for the whole bio, not muted secondary gray. Inherits --foreground
+       (near-black) so the bio prose reads with the same weight as the
+       rest of the page rather than sitting back as "supporting text." */
+    color: var(--foreground);
     max-width: calc(72ch + 320px);
 }
 
@@ -166,15 +243,20 @@ section {
     display: block;
 }
 
-/* Only float the top-level portrait image, not inline logos */
+/* Portrait floats right of the bio prose, matching the al-folio
+   convention: image takes ~30% of the bio column, text wraps left.
+   Width is responsive (30% of container) instead of fixed pixels so
+   it scales with the page. Border removed; subtle rounded corners
+   instead, matching al-folio's `.img-fluid.rounded` treatment. */
 .hero-bio > img {
     float: right;
-    margin-left: 1.25rem;
+    margin-left: 1.5rem;
     margin-bottom: 1rem;
-    width: 256px;
-    height: 256px;
+    width: 30%;
+    max-width: 270px;
+    height: auto;
     object-fit: cover;
-    border: 1px solid var(--border);
+    border-radius: 0.25rem;
 }
 
 .hero-bio p {
@@ -193,15 +275,6 @@ section {
     text-decoration-color: rgba(0, 0, 0, 0.5);
 }
 
-.badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    padding-top: 0.5rem;
-    clear: both;
-    margin-bottom: 1rem; /* space before horizontal rule */
-}
-
 /* Subtle list for key interests */
 .hero-list {
     margin: 0.25rem 0 0.75rem 0.75rem;
@@ -215,14 +288,6 @@ section {
     color: var(--muted-foreground);
 }
 
-.badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    background-color: var(--secondary);
-    color: var(--secondary-foreground);
-    border-radius: 0.375rem;
-    font-size: 0.875rem;
-}
 
 /* ============================================================
    Updates (homepage news/log section)
@@ -438,23 +503,6 @@ section {
     margin-top: 0.75rem;
 }
 
-.section-description {
-    color: var(--muted-foreground);
-    font-size: 0.875rem;
-}
-
-.contact-content {
-    color: var(--muted-foreground);
-    margin-bottom: 0.75rem;
-}
-
-.contact-content a {
-    color: var(--foreground);
-}
-
-.contact-content a:hover {
-    text-decoration: underline;
-}
 
 .footer {
     margin-top: 1rem; /* pull horizontal rule away from badges */
