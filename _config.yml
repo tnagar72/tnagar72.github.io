@@ -3,6 +3,11 @@ url: "https://tnagar72.github.io"
 baseurl: ""
 markdown: kramdown
 
+# Plugins. The github-pages gem bundles a curated allow-list of plugins
+# (including jekyll-sitemap); they only activate when listed here.
+plugins:
+  - jekyll-sitemap
+
 kramdown:
   parse_block_html: true
   math_engine: katex
