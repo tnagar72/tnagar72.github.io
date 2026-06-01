@@ -10,12 +10,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ page.title | default: site.title | escape }}{% if page.title %} · {{ site.title | escape }}{% endif %}</title>
-
-  {%- assign desc = page.description | default: page.subtitle | default: page.tldr -%}
-  {%- if desc -%}
-    <meta name="description" content="{{ desc | strip_html | strip_newlines | truncate: 160 | escape }}">
-  {%- endif -%}
+  {% include seo.html %}
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

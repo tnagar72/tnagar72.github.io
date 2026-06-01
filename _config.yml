@@ -9,6 +9,28 @@ markdown: kramdown
 # here so a rotation / property change is a one-line edit.
 google_analytics: "G-NRXRQL1ZL3"
 
+# SEO defaults — read by _includes/seo.html (which all three head
+# structures include). Page-specific values (page.tldr, page.title)
+# override seo_description on a per-page basis; this is the homepage
+# default and the fallback for pages without their own description.
+seo_description: "Hello, I'm a researcher working on equitable, socially-aware language technologies."
+twitter_handle: "tnagar72"
+
+# Author + Schema.org Person fields (used only on the homepage's
+# Person JSON-LD block). Centralized so the social link list stays
+# in one place (also surfaced as icons via _data/social.yaml).
+author:
+  name: "Tanay Nagar"
+  alternate_name: "तनय नगर"
+  job_title: "Independent researcher"
+  email: "tanaynagar7@gmail.com"
+  same_as:
+    - "https://www.linkedin.com/in/tanaynagar/"
+    - "https://github.com/tnagar72"
+    - "https://scholar.google.com/citations?user=MEVH8HQAAAAJ&hl=en"
+    - "https://x.com/tnagar72"
+    - "https://bsky.app/profile/tnagar.bsky.social"
+
 # Plugins. The github-pages gem bundles a curated allow-list of plugins
 # (including jekyll-sitemap); they only activate when listed here.
 plugins:
