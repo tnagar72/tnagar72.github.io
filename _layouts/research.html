@@ -17,11 +17,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>{{ pub.title | escape }} · {{ site.title | escape }}</title>
-  {%- assign desc = pub.tldr | default: pub.summary -%}
-  {%- if desc -%}
-  <meta name="description" content="{{ desc | strip_html | strip_newlines | truncate: 160 | escape }}">
-  {%- endif -%}
+  {%- assign pub_desc = pub.tldr | default: pub.summary -%}
+  {% include seo.html title_override=pub.title description_override=pub_desc %}
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
