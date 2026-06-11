@@ -15,7 +15,7 @@
 }
 
 html {
-    font-size: 17px;
+    font-size: 16px;
     scroll-behavior: smooth;
 }
 
@@ -247,13 +247,17 @@ section {
    convention: image takes ~30% of the bio column, text wraps left.
    Width is responsive (30% of container) instead of fixed pixels so
    it scales with the page. Border removed; subtle rounded corners
-   instead, matching al-folio's `.img-fluid.rounded` treatment. */
+   instead, matching al-folio's `.img-fluid.rounded` treatment.
+   At 16px root, width: 25% gives the photo a comfortable presence
+   beside the bio prose — wide enough to anchor the right side, narrow
+   enough that the bio paragraph wraps around it for ~5-6 lines before
+   the text reclaims the full width below. */
 .hero-bio > img {
     float: right;
     margin-left: 1.5rem;
     margin-bottom: 1rem;
-    width: 30%;
-    max-width: 270px;
+    width: 25%;
+    max-width: 250px;
     height: auto;
     object-fit: cover;
     border-radius: 0.25rem;
