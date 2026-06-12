@@ -1,0 +1,199 @@
+/* ============================================================
+   toast.css — site-wide toast notification styling.
+   Loaded ONLY on pages that need toasts (research with bibtex,
+   writing entries, /404.html). Custom replacement for vanilla-sonner.
+
+   Aesthetic borrowed from .toc-card in post.css: off-white tint,
+   1px dark thin border, 0.5rem radius. Stacks Sonner-style.
+
+   Mobile (≤768px): toasts center-anchor at bottom.
+   ============================================================ */
+
+/* Toaster container: anchors the stack to a corner of the viewport.
+   Height 0 so it doesn't take layout space; toasts overflow visually. */
+.tn-toaster {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  width: 340px;
+  height: 0;
+  z-index: 9999;
+}
+
+@media (max-width: 768px) {
+  .tn-toaster {
+    right: auto;
+    left: 50%;
+    bottom: 1rem;
+    width: calc(100vw - 2rem);
+    max-width: 360px;
+    transform: translateX(-50%);
+  }
+}
+
+/* Individual toast — anchored to bottom of toaster, stacks upward. */
+.tn-toast {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  background: #fafafa;
+  border: 1px solid rgba(42, 39, 34, 0.5);
+  border-radius: 0.5rem;
+  padding: 0.875rem 2.25rem 0.75rem 1.125rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  opacity: 1;
+  /* Stacking transforms — set by JS via --offset-index */
+  --offset-index: 0;
+  --offset-y: calc(var(--offset-index) * -14px);
+  --offset-scale: calc(1 - var(--offset-index) * 0.06);
+  transform: translateY(var(--offset-y)) scale(var(--offset-scale));
+  transform-origin: bottom center;
+  transition: transform 400ms cubic-bezier(0.32, 0.72, 0, 1),
+              opacity 250ms ease-out,
+              box-shadow 200ms;
+}
+
+/* Entry animation: slides up from below */
+.tn-toast--enter {
+  opacity: 0;
+  --offset-y: 24px;
+}
+
+/* Exit animation: slides back down */
+.tn-toast--leave {
+  opacity: 0;
+  --offset-y: 24px;
+  --offset-scale: 0.95;
+}
+
+/* Front toast (index 0) — slightly stronger shadow */
+.tn-toast[data-front="true"] {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+/* Non-front toasts: title + desc fade to read as "background" */
+.tn-toast[data-front="false"] > .tn-toast__title,
+.tn-toast[data-front="false"] > .tn-toast__desc {
+  opacity: 0.6;
+}
+.tn-toast[data-front="false"] > .tn-toast__close {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Expanded mode — when user hovers the toaster, all toasts fan out */
+.tn-toaster:hover .tn-toast,
+.tn-toaster:focus-within .tn-toast {
+  --offset-y: calc(var(--offset-index) * -90px);
+  --offset-scale: 1;
+}
+.tn-toaster:hover .tn-toast > *,
+.tn-toaster:focus-within .tn-toast > * {
+  opacity: 1 !important;
+}
+
+/* Title + description */
+.tn-toast__title {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #2a2722;
+  line-height: 1.3;
+}
+.tn-toast__desc {
+  font-size: 0.78rem;
+  color: rgba(42, 39, 34, 0.65);
+  margin-top: 0.2rem;
+  line-height: 1.4;
+}
+
+/* Close × — hidden at rest, fades in on toast hover */
+.tn-toast__close {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.7rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: rgba(42, 39, 34, 0.5);
+  opacity: 0;
+  transition: opacity 0.15s ease-out, color 0.12s, transform 0.12s;
+}
+.tn-toast:hover .tn-toast__close,
+.tn-toaster:hover .tn-toast[data-front="true"] .tn-toast__close,
+.tn-toast__close:focus { opacity: 1; }
+
+.tn-toast__close::before,
+.tn-toast__close::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.7rem;
+  height: 1px;
+  background: currentColor;
+  transform-origin: center;
+}
+.tn-toast__close::before { transform: translate(-50%, -50%) rotate(45deg); }
+.tn-toast__close::after  { transform: translate(-50%, -50%) rotate(-45deg); }
+.tn-toast__close:hover {
+  color: #2a2722;
+  transform: scale(1.15);
+}
+
+/* ============== Color variants ============== */
+
+/* Site-blue v2 — info / link-copied */
+.tn-toast--site-blue {
+  background: #e8f0fe;
+  border-color: #357edd;
+}
+.tn-toast--site-blue .tn-toast__title { color: #1e40af; }
+.tn-toast--site-blue .tn-toast__desc  { color: rgba(30, 64, 175, 0.75); }
+.tn-toast--site-blue .tn-toast__close { color: rgba(30, 64, 175, 0.5); }
+.tn-toast--site-blue .tn-toast__close:hover { color: #1e40af; }
+
+/* Forest — success / saved (deeper) */
+.tn-toast--forest {
+  background: #f0fdf4;
+  border-color: #065f46;
+}
+.tn-toast--forest .tn-toast__title { color: #022c22; }
+.tn-toast--forest .tn-toast__desc  { color: rgba(2, 44, 34, 0.75); }
+.tn-toast--forest .tn-toast__close { color: rgba(2, 44, 34, 0.5); }
+.tn-toast--forest .tn-toast__close:hover { color: #022c22; }
+
+/* Mint — success / saved (lighter, middle-saturation between Sage v2 and Forest) */
+.tn-toast--mint {
+  background: #dcfce7;
+  border-color: #15803d;
+}
+.tn-toast--mint .tn-toast__title { color: #14532d; }
+.tn-toast--mint .tn-toast__desc  { color: rgba(20, 83, 45, 0.75); }
+.tn-toast--mint .tn-toast__close { color: rgba(20, 83, 45, 0.5); }
+.tn-toast--mint .tn-toast__close:hover { color: #14532d; }
+
+/* Violet — welcome / personality */
+.tn-toast--violet {
+  background: #ede9fe;
+  border-color: #6d28d9;
+}
+.tn-toast--violet .tn-toast__title { color: #4c1d95; }
+.tn-toast--violet .tn-toast__desc  { color: rgba(76, 29, 149, 0.75); }
+.tn-toast--violet .tn-toast__close { color: rgba(76, 29, 149, 0.5); }
+.tn-toast--violet .tn-toast__close:hover { color: #4c1d95; }
+
+/* Rose — 404 / broken / dead-end */
+.tn-toast--rose {
+  background: #ffe4e6;
+  border-color: #be123c;
+}
+.tn-toast--rose .tn-toast__title { color: #9f1239; }
+.tn-toast--rose .tn-toast__desc  { color: rgba(159, 18, 57, 0.75); }
+.tn-toast--rose .tn-toast__close { color: rgba(159, 18, 57, 0.5); }
+.tn-toast--rose .tn-toast__close:hover { color: #9f1239; }
