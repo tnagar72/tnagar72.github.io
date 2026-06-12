@@ -21,6 +21,15 @@
      ROUGE SHIM      — Issue 7 (map Rouge classes to .tok-* palette)
    ============================================================ */
 
+/* Copy-section-link on H2/H3 in article content.
+   The .copyable-heading class is added by JS in _layouts/article.html.
+   Heading click → URL with #anchor copies, "Section link copied" toast
+   appears. No visual change on the heading itself — cursor:pointer
+   (set in JS) signals interactivity, and the toast is the confirmation. */
+.post-root .copyable-heading {
+  position: relative;
+}
+
 /* Reset Chrome's default body margin so the dark footer + page edges
    sit flush against the viewport. Without this, the writing layouts
    render with an 8px white border around the entire page — most
