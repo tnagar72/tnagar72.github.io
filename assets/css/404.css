@@ -1,0 +1,220 @@
+/* ============================================================
+   /404.html — page styles.
+
+   Extracted from the 404.html inline style block so the page
+   matches the project convention (split per-page CSS files alongside
+   research-page.css, post.css, field-notes.css).
+
+   Motion design per Emil Kowalski's framework (emil-design-eng
+   skill): rare/first-time pages can add delight, but motion must
+   have a clear purpose. The entry stagger here paces the reading
+   like a chapter opening — ornament → photo → title → sub →
+   buttons. The blur-bridge on photo reload masks the crossfade
+   between two images so it reads as one smooth transformation
+   instead of two objects swapping.
+   ============================================================ */
+
+/* Shared tokens. --ease-strong is the same curve used in the
+   elsewhere panel rebuild and matches the rest of the site's
+   motion language. Scoped to :root so the CSS variables cascade. */
+:root {
+  --err-radius: 0.625rem;
+  --ease-strong: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-button: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.err-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem 6rem;
+  text-align: center;
+}
+
+/* ============================================================
+   Top ornament: ※ glyph + "404" stacked vertically as a chapter
+   opening. ※ bumped to 2.25rem so it carries presence next to
+   the photo's heavier border weight.
+   ============================================================ */
+.err-eyebrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 auto 2rem;
+}
+.err-eyebrow__mark {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 2.25rem;
+  line-height: 1;
+  color: var(--foreground);
+}
+.err-eyebrow__code {
+  font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  color: var(--muted-foreground);
+}
+
+/* ============================================================
+   Photo. 1.5px black border matches the elsewhere panel's
+   letterpress register. Blur-bridge transition for reload: when
+   the photo swaps, it fades to blur(6px), src changes, fades back.
+   Emil's trick: the blur masks the crossfade so two images read
+   as one transformation rather than two objects swapping.
+   ============================================================ */
+.err-photo {
+  /* Fixed height, variable width: every photo gets the same vertical
+     footprint but keeps its native aspect ratio (no cropping).
+     object-fit: contain so a landscape photo doesn't get stretched.
+     max-width caps it so a very wide landscape photo doesn't
+     overflow the page on mobile. */
+  height: 360px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  border: 1.5px solid var(--foreground);
+  border-radius: var(--err-radius);
+  margin: 0 auto 2rem;
+  display: block;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  /* Force SDR rendering. iPhone JPEGs ship with HDR gain-map
+     metadata; Chrome 121+ / Safari 17+ display them brighter than
+     the surrounding white, which makes the page itself look dimmer
+     by contrast. Subtle brightness clamp softens remaining
+     differences between iPhone/non-iPhone photos. */
+  dynamic-range: standard;
+  /* The brightness filter is in the same property as the blur-bridge
+     filter — they need to compose. Use a single combined filter to
+     avoid the brightness being clobbered when the blur kicks in. */
+  filter: brightness(0.97) blur(0);
+  transition: filter 250ms var(--ease-strong),
+              opacity 250ms var(--ease-strong);
+}
+.err-photo.is-swapping {
+  filter: brightness(0.97) blur(6px);
+  opacity: 0.7;
+}
+@media (max-width: 600px) {
+  .err-photo { height: 280px; }
+}
+
+.err-title {
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+.err-sub {
+  color: var(--muted-foreground);
+  font-size: 1rem;
+  line-height: 1.55;
+  margin-bottom: 2rem;
+}
+
+.err-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   Buttons. Custom ease-out for hover transitions (Emil rule:
+   built-in easings are too weak). scale(0.97) on :active so the
+   press feels heard. Hover state gated to fine-pointer devices
+   so touch doesn't false-fire it.
+   ============================================================ */
+.err-btn {
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 0.6rem 1.2rem;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: #fff;
+  color: var(--foreground);
+  border-radius: var(--err-radius);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 160ms var(--ease-button),
+              border-color 160ms var(--ease-button),
+              transform 160ms var(--ease-button);
+}
+@media (hover: hover) and (pointer: fine) {
+  .err-btn:hover {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.25);
+    text-decoration: none;
+  }
+  .err-btn--primary:hover {
+    background: #000;
+    color: #fff;
+  }
+}
+.err-btn:active {
+  transform: scale(0.97);
+}
+.err-btn--primary {
+  background: #1a1a1a;
+  color: #fff;
+  border-color: #1a1a1a;
+}
+
+.err-credit {
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 1.5rem;
+}
+.err-credit a { color: inherit; }
+.err-credit__reload {
+  border-bottom: 1px dashed currentColor;
+  transition: color 150ms ease, border-color 150ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .err-credit__reload:hover {
+    color: var(--foreground);
+    border-color: var(--foreground);
+  }
+}
+
+/* ============================================================
+   Entry stagger. The 404 page is rare/first-time so animation
+   is allowed (Emil framework). Used here to *pace the reading*
+   like a chapter opening: ornament → photo → title → sub →
+   buttons. 60-80ms between siblings; total ~520ms from first to
+   last element.
+   ============================================================ */
+.err-page > * {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: errReveal 380ms var(--ease-strong) forwards;
+}
+.err-page > *:nth-child(1) { animation-delay: 0ms; }
+.err-page > *:nth-child(2) { animation-delay: 80ms; }
+.err-page > *:nth-child(3) { animation-delay: 160ms; }
+.err-page > *:nth-child(4) { animation-delay: 220ms; }
+.err-page > *:nth-child(5) { animation-delay: 280ms; }
+.err-page > *:nth-child(6) { animation-delay: 340ms; }
+@keyframes errReveal {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   Reduced motion. Per Emil's framework: keep opacity (aids
+   comprehension), drop transforms and blur-bridge.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .err-page > * {
+    animation: errRevealReduced 200ms ease forwards;
+    transform: none;
+  }
+  @keyframes errRevealReduced {
+    to { opacity: 1; }
+  }
+  .err-photo,
+  .err-photo.is-swapping {
+    transition: opacity 200ms ease;
+    filter: brightness(0.97);
+  }
+  .err-photo.is-swapping { opacity: 0.5; }
+  .err-btn:active { transform: none; }
+}

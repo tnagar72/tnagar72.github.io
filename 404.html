@@ -16,95 +16,7 @@ layout: null
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Mukta:wght@200;300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@100..900&display=swap">
 
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}?v={{ site.time | date: '%s' }}">
-  <link rel="stylesheet" href="{{ '/assets/css/toast.css' | relative_url }}?v={{ site.time | date: '%s' }}">
-
-  <style>
-    /* Page-specific layout */
-    .err-page {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 4rem 1.5rem 6rem;
-      text-align: center;
-    }
-    .err-photo {
-      /* Fixed height, variable width: every photo gets the same vertical
-         footprint but keeps its native aspect ratio (no cropping).
-         object-fit: contain so a landscape photo doesn't get stretched.
-         max-width caps it so a very wide landscape photo doesn't
-         overflow the page on mobile. */
-      height: 360px;
-      width: auto;
-      max-width: 100%;
-      object-fit: contain;
-      border-radius: 0.5rem;
-      margin: 0 auto 2rem;
-      display: block;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-      /* Force SDR rendering. iPhone JPEGs ship with HDR gain-map
-         metadata; Chrome 121+ / Safari 17+ display them brighter than
-         the surrounding white, which makes the page itself look dimmer
-         by contrast. Subtle brightness clamp softens remaining
-         differences between iPhone/non-iPhone photos. */
-      dynamic-range: standard;
-      filter: brightness(0.97);
-    }
-    @media (max-width: 600px) {
-      /* Smaller fixed height on mobile so a portrait photo doesn't
-         dominate the viewport. */
-      .err-photo { height: 280px; }
-    }
-    .err-title {
-      font-size: 2rem;
-      font-weight: 500;
-      margin-bottom: 0.5rem;
-      letter-spacing: -0.01em;
-    }
-    .err-sub {
-      color: var(--muted-foreground);
-      font-size: 1rem;
-      line-height: 1.55;
-      margin-bottom: 2rem;
-    }
-    .err-actions {
-      display: flex;
-      gap: 0.75rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .err-btn {
-      font: inherit;
-      font-size: 0.9rem;
-      padding: 0.55rem 1.15rem;
-      border: 1px solid rgba(0, 0, 0, 0.15);
-      background: #fff;
-      color: var(--foreground);
-      border-radius: 0.5rem;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .err-btn:hover {
-      background: rgba(0, 0, 0, 0.03);
-      border-color: rgba(0, 0, 0, 0.25);
-      text-decoration: none;
-    }
-    .err-btn--primary {
-      background: #1a1a1a;
-      color: #fff;
-      border-color: #1a1a1a;
-    }
-    .err-btn--primary:hover {
-      background: #000;
-      color: #fff;
-    }
-    .err-credit {
-      color: var(--muted-foreground);
-      font-size: 0.75rem;
-      font-family: 'JetBrains Mono', monospace;
-      margin-top: 1.5rem;
-    }
-    .err-credit a { color: inherit; }
-  </style>
+  <link rel="stylesheet" href="{{ '/assets/css/404.css' | relative_url }}?v={{ site.time | date: '%s' }}">
 </head>
 <body>
 
@@ -124,26 +36,29 @@ layout: null
 </script>
 
 <section class="err-page">
+  <div class="err-eyebrow">
+    <span class="err-eyebrow__mark" aria-hidden="true">※</span>
+    <span class="err-eyebrow__code">404</span>
+  </div>
   <img class="err-photo"
        id="err-photo"
        alt=""
        loading="eager"
        decoding="sync"
        fetchpriority="high">
-  <h1 class="err-title">This page does not exist</h1>
+  <h1 class="err-title">Nothing here</h1>
   <p class="err-sub">
-    But here is an animal I met along the way. The page you were looking for
+    But here is someone I met along the way. The page you were looking for
     either moved, never existed, or got typo'd in the URL bar.
   </p>
   <div class="err-actions">
     <a class="err-btn err-btn--primary" href="{{ '/' | relative_url }}">← Go home</a>
     <a class="err-btn" href="{{ '/field-notes.html' | relative_url }}">See more animals</a>
-    <a class="err-btn" href="{{ '/writing/' | relative_url }}">/writing/</a>
   </div>
   <p class="err-credit">
     Photo: <a href="{{ '/field-notes.html' | relative_url }}">/field-notes/</a> ·
     File: <span id="err-credit-filename"></span> ·
-    <a href="#" id="err-reload-photo" style="border-bottom: 1px dashed currentColor;">reload for a new animal</a>
+    <a href="#" id="err-reload-photo" class="err-credit__reload">reload for a new animal</a>
   </p>
 </section>
 
@@ -171,9 +86,21 @@ layout: null
           next = errImages[Math.floor(Math.random() * errImages.length)];
           tries++;
         }
-        photo.src = next.src;
-        photo.alt = next.alt;
-        credit.textContent = next.filename;
+        // Blur-bridge swap: fade-to-blur, change src, fade-back. Emil's
+        // trick that makes a crossfade between two images read as one
+        // smooth transformation instead of two objects swapping.
+        photo.classList.add('is-swapping');
+        // Wait for the blur to settle before swapping src.
+        setTimeout(() => {
+          photo.src = next.src;
+          photo.alt = next.alt;
+          credit.textContent = next.filename;
+          // Wait until the new image is decoded before unblurring so
+          // we don't show a blurry old-image-with-new-src state.
+          photo.decode ? photo.decode().catch(() => {}).finally(() => {
+            requestAnimationFrame(() => photo.classList.remove('is-swapping'));
+          }) : requestAnimationFrame(() => photo.classList.remove('is-swapping'));
+        }, 200);
         // Update the "current" choice so subsequent clicks don't bounce
         errChosen.src = next.src;
         errChosen.alt = next.alt;
@@ -181,21 +108,6 @@ layout: null
       });
     }
   })();
-</script>
-
-<!-- Toast system + on-load 404 toast (rose, 3s auto-dismiss).
-     The page itself is the 404 context, so the toast just gives a brief
-     eye-catch on arrival and then gets out of the way. -->
-<script src="{{ '/assets/js/toast.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    window.tnToast({
-      title: 'Page not found',
-      desc: 'The URL you tried does not match any page on this site.',
-      color: 'rose',
-      duration: 3000,
-    });
-  });
 </script>
 
 </body>
