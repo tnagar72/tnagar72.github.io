@@ -2,6 +2,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% include seo.html %}
+
+    {%- comment -%}
+      Favicon: ※ (reference mark, U+203B). Editorial / academic-register
+      glyph used in Japanese typography (kome-jirushi) as a note marker
+      and in Western scholarly footnotes alongside *, †, ‡, §, ¶.
+      SVG is the primary; respects prefers-color-scheme so the glyph
+      inverts on dark-themed tabs. PNG 32 is the legacy fallback.
+      apple-touch-icon is the iOS home-screen icon (white background +
+      inset glyph so iOS's rounded-corner crop doesn't clip it).
+    {%- endcomment -%}
+    <link rel="icon" type="image/svg+xml" href="{{ '/assets/images/favicon.svg' | relative_url }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/images/favicon-32.png' | relative_url }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/images/apple-touch-icon.png' | relative_url }}">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Mukta:wght@200;300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@100..900&display=swap">

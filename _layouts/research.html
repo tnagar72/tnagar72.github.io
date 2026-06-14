@@ -20,6 +20,15 @@
   {%- assign pub_desc = pub.tldr | default: pub.summary -%}
   {% include seo.html title_override=pub.title description_override=pub_desc %}
 
+  {%- comment -%}
+    Favicon — research pages bypass _includes/head.html (they have their
+    own inline <head>), so the tags have to live here too. See
+    _includes/head.html for the full comment on glyph choice.
+  {%- endcomment -%}
+  <link rel="icon" type="image/svg+xml" href="{{ '/assets/images/favicon.svg' | relative_url }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/images/favicon-32.png' | relative_url }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/images/apple-touch-icon.png' | relative_url }}">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital@0;1&family=JetBrains+Mono:wght@300;400;500&family=Roboto:wght@300;400;500;700&family=Mukta:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
