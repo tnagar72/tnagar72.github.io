@@ -41,7 +41,15 @@
 
 body.layout-writing-index {
   /* Page-scoped tokens. Kept off :root so the global palette stays
-     small; opting in via the body class is explicit and reversible. */
+     small; opting in via the body class is explicit and reversible.
+
+     --font-display-condensed and --font-mono-display also live in
+     main.css :root, but main.css is NOT loaded by post-head.html
+     (which the writing-index layout uses). Redeclaring them here
+     keeps the writing-index layout self-contained, so future
+     post-head.html consumers don't have to learn about main.css. */
+  --font-display-condensed: 'Oswald', 'Manuka', 'Impact', sans-serif;
+  --font-mono-display: 'Spline Sans Mono', 'JetBrains Mono', ui-monospace, monospace;
   --ease-strong: cubic-bezier(0.77, 0, 0.175, 1);
   --t-fast: 140ms;
   --t-mid: 220ms;
