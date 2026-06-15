@@ -97,7 +97,7 @@ body.layout-writing-index .writing-index__header-row {
 
 body.layout-writing-index .writing-index__title {
   font-family: var(--font-display-condensed);
-  font-weight: 400;                            /* Anton ships as a single 400 weight */
+  font-weight: 700;                            /* Oswald 700 — heaviest available */
   font-size: clamp(5rem, 16vw, 13rem);
   line-height: 0.9;                            /* leaves room for the G descender */
   letter-spacing: -0.01em;

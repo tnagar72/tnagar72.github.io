@@ -26,8 +26,20 @@
     </a>
   {%- endif -%}
 
+  {%- comment -%}
+    On /writing/ the brand mark is the favicon glyph (※, reference
+    mark / kome-jirushi) rather than the version string — the page
+    is a landing surface, not a sub-page, so the version chip would
+    read as out of register with the WRITING hero below it. The flag
+    text and link target stay the same.
+  {%- endcomment -%}
+  {%- if page.url == "/writing/" -%}
+    {%- assign brand_text = "※" -%}
+  {%- else -%}
+    {%- assign brand_text = site.data.site.version -%}
+  {%- endif -%}
   <a class="page-nav__brand" href="/" aria-label="Go home">
-    <span class="page-nav__brand-text">{{ site.data.site.version }}</span><span class="page-nav__brand-flag">&mdash; Go Home</span>
+    <span class="page-nav__brand-text">{{ brand_text }}</span><span class="page-nav__brand-flag">&mdash; Go Home</span>
   </a>
 
   <span class="page-nav__tagline">{{ page.nav_tagline }}</span>
