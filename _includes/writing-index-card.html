@@ -41,8 +41,10 @@
 
 {%- assign post = include.post -%}
 {%- assign kind_label = "Note" -%}
+{%- assign kind_modifier = "kind--note" -%}
 {%- if post.layout == "article" -%}
   {%- assign kind_label = "Article" -%}
+  {%- assign kind_modifier = "kind--article" -%}
 {%- endif -%}
 
 {%- assign tag_primary   = post.topics[0] -%}
@@ -59,7 +61,7 @@
    itemscope itemtype="https://schema.org/Article">
 
   <div class="field-meta-top">
-    <span class="kind" itemprop="genre">{{ kind_label }}</span>
+    <span class="kind {{ kind_modifier }}" itemprop="genre">{{ kind_label }}</span>
     <span class="tags">{{ tag_primary }} &middot; {{ tag_secondary }}</span>
   </div>
 

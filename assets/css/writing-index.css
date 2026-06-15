@@ -107,11 +107,10 @@ body.layout-writing-index .writing-index__title {
   font-family: var(--font-display-condensed);
   font-weight: 700;                            /* Oswald 700 — heaviest available */
   font-size: clamp(5rem, 16vw, 13rem);
-  line-height: 0.9;                            /* leaves room for the G descender */
+  line-height: 1;                              /* default — accept slight bar misalignment for honest typography */
   letter-spacing: -0.045em;                    /* tight tracking — letters nearly touch, mirrors the playground Manuka render */
   text-transform: uppercase;
   margin: 0;
-  padding-top: 0.08em;                         /* reserve room above cap height */
   color: var(--color-text);
   flex-shrink: 0;
   overflow: visible;                           /* chars can render beyond box */
@@ -241,6 +240,24 @@ body.layout-writing-index .field-meta-top {
 }
 body.layout-writing-index .field-meta-top .kind { white-space: nowrap; }
 body.layout-writing-index .field-meta-top .tags { text-align: right; }
+
+/* Article = solid ink, weight bump for visual gravity.
+   Note    = filled pill in a muted accent so a Note card reads
+             instantly differently from an Article card. The pill
+             height matches the surrounding mono line-height so the
+             top row stays on one optical baseline. */
+body.layout-writing-index .field-meta-top .kind--article {
+  color: var(--color-text);
+  font-weight: 500;
+}
+body.layout-writing-index .field-meta-top .kind--note {
+  color: #fafafa;
+  background: #6b8e8a;                        /* sage — muted teal-gray, distinct from accent blue used for links */
+  padding: 0.15rem 0.5rem 0.18rem;
+  border-radius: 999px;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+}
 
 body.layout-writing-index .field-title {
   font-family: var(--font-serif);
