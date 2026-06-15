@@ -12,6 +12,20 @@
     --secondary: oklch(0.95 0.0058 264.53);
     --secondary-foreground: #030213;
     --card: #ffffff;
+
+    /* Display-condensed face for big editorial titles (e.g. /writing/'s
+       "WRITING" hero). Oswald 700 is the closest free Google Font to
+       Henry Coats's licensed Manuka Black — ultra-condensed and heavy,
+       designed for big display sizes. Manuka stays in the stack so
+       the playground and any local-installed copies still pick it up;
+       falls back to Impact (system black-condensed) for defense-in-depth. */
+    --font-display-condensed: 'Oswald', 'Manuka', 'Impact', sans-serif;
+
+    /* Softer mono for footer colophon rows and similar low-key
+       typographic surfaces. Spline Sans Mono reads slightly warmer
+       than JetBrains Mono, fits the "signed-by-hand" register at the
+       bottom of a page without competing with body type. */
+    --font-mono-display: 'Spline Sans Mono', 'JetBrains Mono', ui-monospace, monospace;
 }
 
 html {

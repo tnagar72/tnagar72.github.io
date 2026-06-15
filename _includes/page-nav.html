@@ -1,6 +1,6 @@
 {%- comment -%}
   Three-zone top nav for writing pages.
-    LEFT:   back arrow → /writing
+    LEFT:   back arrow → /writing (suppressed when already on /writing/)
     CENTER: [v0.x] brand → / with hover-reveal "— Go Home"
     RIGHT:  tagline slot (empty by default; pass via page.nav_tagline)
 
@@ -10,16 +10,36 @@
 
   Version pulled from _data/site.yml so changing version once updates
   every page.
+
+  The back-arrow is rendered as an empty span on `/writing/` itself so
+  the three-zone grid keeps its center alignment; the visible link
+  would self-reference.
 {%- endcomment -%}
 
 <nav class="page-nav">
-  <a class="page-nav__back-arrow" href="/writing">
-    <span class="page-nav__back-arrow-symbol">&larr;</span>
-    <span class="page-nav__back-arrow-text">All Writing</span>
-  </a>
+  {%- if page.url == "/writing/" -%}
+    <span class="page-nav__back-arrow" aria-hidden="true"></span>
+  {%- else -%}
+    <a class="page-nav__back-arrow" href="/writing">
+      <span class="page-nav__back-arrow-symbol">&larr;</span>
+      <span class="page-nav__back-arrow-text">All Writing</span>
+    </a>
+  {%- endif -%}
 
+  {%- comment -%}
+    On /writing/ the brand mark is the favicon glyph (※, reference
+    mark / kome-jirushi) rather than the version string — the page
+    is a landing surface, not a sub-page, so the version chip would
+    read as out of register with the WRITING hero below it. The flag
+    text and link target stay the same.
+  {%- endcomment -%}
+  {%- if page.url == "/writing/" -%}
+    {%- assign brand_text = "※" -%}
+  {%- else -%}
+    {%- assign brand_text = site.data.site.version -%}
+  {%- endif -%}
   <a class="page-nav__brand" href="/" aria-label="Go home">
-    <span class="page-nav__brand-text">{{ site.data.site.version }}</span><span class="page-nav__brand-flag">&mdash; Go Home</span>
+    <span class="page-nav__brand-text">{{ brand_text }}</span><span class="page-nav__brand-flag">&mdash; Go Home</span>
   </a>
 
   <span class="page-nav__tagline">{{ page.nav_tagline }}</span>

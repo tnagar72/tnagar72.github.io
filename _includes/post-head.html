@@ -14,7 +14,16 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+  {%- comment -%}
+    Google Fonts: Inter (body sans) + JetBrains Mono (mono utility) +
+    Oswald 700 (display-condensed for big editorial titles like
+    /writing/'s "WRITING" hero — closest free substitute for
+    Manuka Black: ultra-condensed, heavy weight, designed for big
+    display sizes) + Spline Sans Mono (softer mono for footer
+    colophon rows). All four fold into the existing single
+    stylesheet request — no extra round trip.
+  {%- endcomment -%}
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Oswald:wght@700&family=Spline+Sans+Mono:wght@300;400;500&display=swap">
 
   <link rel="stylesheet" href="{{ '/assets/css/post.css' | relative_url }}?v={{ site.time | date: '%s' }}">
 

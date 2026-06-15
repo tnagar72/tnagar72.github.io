@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+{%- comment -%}
+  Layout for /writing/ — the writing collection index.
+
+  Selected by writing.html via `layout: writing-index` in its
+  frontmatter. Wraps page-nav, the WRITING hero, the cards grid,
+  and the post-footer inside `.post-root` so the chrome inherits
+  the article-page treatment (footer dark theme, page-nav brand).
+
+  Data flow:
+    - Posts come from `site.writing` (the `writing` collection).
+    - Filtered to `published != false` so a draft post with
+      `published: false` is hidden without removing the file.
+    - Sorted reverse-chrono on `date`.
+    - Each post is rendered by writing-index-card.html.
+
+  Required frontmatter on writing.html:
+    layout: writing-index
+    title: "Writing"
+    permalink: /writing/
+
+  Accessibility:
+    - Skip link is first focusable element on the page.
+    - <main> wraps the entries; <header> wraps the WRITING title.
+    - <h1> for the page title, <h3> for each card (the card include
+      owns those — see writing-index-card.html).
+    - The horizontal bar is aria-hidden (pure decoration).
+    - The title char-reveal degrades gracefully when JS is off:
+      writing-index-title.js does the per-char split, and if it
+      never runs, the unsplit <h1> still renders the full text.
+{%- endcomment -%}
+{% include post-head.html %}
+<link rel="stylesheet" href="{{ '/assets/css/writing-index.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+<body class="layout-writing-index">
+
+{%- comment -%}
+  Skip link — first focusable element, jumps past the nav.
+  Inline styles are limited to position + visual-hide because no
+  other class on the page handles "skip link" treatment yet.
+{%- endcomment -%}
+<a href="#writing-index-main"
+   style="position:absolute;left:-9999px;top:0;background:#fff;color:#000;padding:.5rem 1rem;z-index:9999"
+   onfocus="this.style.left='1rem'" onblur="this.style.left='-9999px'">Skip to writing</a>
+
+<div class="post-root">
+
+  {% include page-nav.html %}
+
+  <main class="writing-index" id="writing-index-main">
+
+    <header class="writing-index__header">
+      <div class="writing-index__header-row">
+        <h1 class="writing-index__title" id="page-title" data-text="Writing">Writing</h1>
+        <div class="writing-index__rule" aria-hidden="true"></div>
+      </div>
+    </header>
+
+    {%- comment -%}
+      Filter + sort the collection. `published` defaults to true for
+      Jekyll collection items, so the `!= false` form catches both
+      "not set" and "set to true" without misfiring.
+    {%- endcomment -%}
+    {%- assign all_writing = site.writing | where_exp: "post", "post.published != false" -%}
+    {%- assign sorted_writing = all_writing | sort: "date" | reverse -%}
+
+    <ul class="writing-index__entries">
+      {%- for post in sorted_writing -%}
+        <li>{% include writing-index-card.html post=post %}</li>
+      {%- endfor -%}
+    </ul>
+
+  </main>
+
+  {% include post-footer.html %}
+
+</div>
+
+<script src="{{ '/assets/js/writing-index-title.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+
+</body>
+</html>
