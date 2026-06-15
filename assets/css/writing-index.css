@@ -1,0 +1,412 @@
+/* ============================================================
+   writing-index.css
+
+   Page-scoped styles for /writing/ — the WRITING hero (title +
+   horizontal bar reveal) and the entries grid (.field cards).
+
+   Tokens consumed (no redeclarations):
+     From main.css :root
+       --font-display-condensed   Anton, for the WRITING hero
+       --font-mono-display        Spline Sans Mono, for the footer
+                                  colophon override
+     From post.css :root
+       --color-text               #2a2722
+       --color-background         #ffffff
+       --color-text-mid           #6a6760
+       --color-text-faint         #85827c
+       --color-border-light       #ebe9e3
+       --color-border-mid         #dadada
+       --color-rule-strong        #2a2722 (== --color-text)
+       --color-text-on-dark       #fafafa
+       --color-bg-on-dark         #2a2722
+       --font-sans                Inter stack
+       --font-mono                JetBrains Mono stack
+       --ease-out                 cubic-bezier(0.645, 0.045, 0.355, 1)
+
+   Page-scoped tokens (declared on body.layout-writing-index):
+     --ease-strong  power4.inOut, for the title char-reveal +
+                    horizontal-bar reveal
+     --t-fast,      page-local timing — kept out of :root to avoid
+     --t-mid,       polluting the global token palette with names
+     --t-slow       that other pages would have to opt into
+     --font-serif   Fraunces — card title face, page-local only
+
+   BEM-ish naming, mirrors the playground prototype verbatim
+   (.field, .field-meta-top, .field-title, .field-summary,
+   .field-meta-bot, .field-link, .field-authors--solo,
+   .field-authors--marquee).
+
+   File size budget: <350 lines.
+   ============================================================ */
+
+body.layout-writing-index {
+  /* Page-scoped tokens. Kept off :root so the global palette stays
+     small; opting in via the body class is explicit and reversible. */
+  --ease-strong: cubic-bezier(0.77, 0, 0.175, 1);
+  --t-fast: 140ms;
+  --t-mid: 220ms;
+  --t-slow: 360ms;
+  --font-serif: 'Fraunces', 'Iowan Old Style', 'Georgia', serif;
+}
+
+/* Screen-reader-only utility (used by the author marquee for the
+   canonical author list). Standard a11y pattern. */
+body.layout-writing-index .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============================================================
+   PAGE WRAPPER — sits between page-nav and post-footer inside
+   .post-root, which already supplies the article frame.
+   ============================================================ */
+body.layout-writing-index .writing-index {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem 4rem;
+}
+
+/* ============================================================
+   WRITING title — Anton (Manuka substitute), char-reveal owned
+   by JS (writing-index-title.js does the DOM split + per-char
+   animation-delay; the keyframe lives here).
+
+   Title sits in a row with a solid horizontal bar to its right.
+   Both start at t=0 and complete at t=1s with the same easing,
+   so the eye reads them as one motion.
+   ============================================================ */
+body.layout-writing-index .writing-index__header {
+  padding: 5rem 0 3rem;
+  margin-bottom: 3rem;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+body.layout-writing-index .writing-index__header-row {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+}
+
+body.layout-writing-index .writing-index__title {
+  font-family: var(--font-display-condensed);
+  font-weight: 400;                            /* Anton ships as a single 400 weight */
+  font-size: clamp(5rem, 16vw, 13rem);
+  line-height: 0.9;                            /* leaves room for the G descender */
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  margin: 0;
+  padding-top: 0.08em;                         /* reserve room above cap height */
+  color: var(--color-text);
+  flex-shrink: 0;
+  overflow: visible;                           /* chars can render beyond box */
+}
+
+body.layout-writing-index .writing-index__title .char {
+  display: inline-block;
+  transform: translateY(100%);
+  clip-path: polygon(0% 0%, 140% 0%, 140% 0%, 0% 0%);
+  opacity: 0;
+  animation: writingIndexCharReveal 1s var(--ease-strong) both;
+}
+
+@keyframes writingIndexCharReveal {
+  0% {
+    transform: translateY(100%);
+    clip-path: polygon(0% 0%, 140% 0%, 140% 0%, 0% 0%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    clip-path: polygon(0% 0%, 140% 0%, 140% 100%, 0% 100%);
+    opacity: 1;
+  }
+}
+
+/* Horizontal bar next to WRITING. Square corners, solid black fill
+   (matches the title ink). Reveals from right to left using the
+   same clip-path technique as the title chars — collapsed at the
+   right edge, expands leftward — so it visually "draws in" from
+   the right, mirroring the title's bottom-up reveal. */
+body.layout-writing-index .writing-index__rule {
+  flex: 1;
+  height: 1.6rem;
+  border: 0;
+  border-radius: 0;
+  background: var(--color-text);
+  transform: translateX(40px);
+  opacity: 0;
+  clip-path: polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%);
+  animation: writingIndexRuleReveal 1s var(--ease-strong) 0s both;
+}
+
+@keyframes writingIndexRuleReveal {
+  0% {
+    transform: translateX(40px);
+    opacity: 0;
+    clip-path: polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%);
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.layout-writing-index .writing-index__title .char {
+    transform: none;
+    clip-path: none;
+    opacity: 1;
+    animation: none;
+  }
+  body.layout-writing-index .writing-index__rule {
+    transform: none;
+    opacity: 1;
+    animation: none;
+  }
+}
+
+/* ============================================================
+   ENTRIES GRID — 4-up → 3-up → 2-up → 1-up by viewport.
+   <ul><li> for real list semantics; CSS strips bullets.
+   ============================================================ */
+body.layout-writing-index .writing-index__entries {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+@media (max-width: 1280px) {
+  body.layout-writing-index .writing-index__entries { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 1024px) {
+  body.layout-writing-index .writing-index__entries { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  body.layout-writing-index .writing-index__entries { grid-template-columns: 1fr; }
+}
+
+body.layout-writing-index .writing-index__entries > li { display: flex; }
+
+/* ============================================================
+   .field — single-card chrome. Verbatim from playground.
+   contain: content scopes paint/layout to the card itself.
+   ============================================================ */
+body.layout-writing-index .field {
+  background: var(--color-background);
+  border: 2px solid var(--color-border-light);
+  border-radius: 10px;
+  padding: 1.1rem 1.1rem 1rem;
+  display: grid;
+  grid-template-rows: auto auto auto 1fr auto auto;
+  /* meta-top / title / summary / spacer / meta-bot / link */
+  gap: 0.7rem;
+  transition: border-color var(--t-slow) var(--ease-out);
+  position: relative;
+  text-decoration: none;
+  color: var(--color-text);
+  width: 100%;
+  contain: content;
+}
+
+body.layout-writing-index .field-meta-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-mid);
+  line-height: 1.2;
+}
+body.layout-writing-index .field-meta-top .kind { white-space: nowrap; }
+body.layout-writing-index .field-meta-top .tags { text-align: right; }
+
+body.layout-writing-index .field-title {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.005em;
+  color: var(--color-text);
+  text-wrap: balance;
+  margin: 0;
+}
+
+body.layout-writing-index .field-summary {
+  font-size: 0.82rem;
+  color: var(--color-text-mid);
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-clamp: 3;
+  overflow: hidden;
+}
+
+body.layout-writing-index .field-meta-bot {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-mid);
+  line-height: 1.2;
+}
+body.layout-writing-index .field-meta-bot .left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+}
+body.layout-writing-index .field-meta-bot .right {
+  text-align: right;
+  white-space: nowrap;
+}
+body.layout-writing-index .field-meta-bot .right time {
+  font: inherit;
+  color: inherit;
+}
+
+/* "Read on →" — bottom-right, always visible. Underline grows
+   from 0% → 100% on hover. */
+body.layout-writing-index .field-link {
+  justify-self: end;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text);
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  transition: background-size var(--t-mid) var(--ease-out);
+  padding-bottom: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body.layout-writing-index .field:hover {
+    border-color: var(--color-rule-strong);
+    text-decoration: none;
+  }
+  body.layout-writing-index .field:hover .field-link { background-size: 100% 1px; }
+}
+body.layout-writing-index .field:active { transition-duration: var(--t-fast); }
+
+/* Focus ring for keyboard users — uses the WCAG-audited accent so
+   contrast on white passes AA. */
+body.layout-writing-index .field:focus-visible {
+  outline: 2px solid var(--color-link);
+  outline-offset: 3px;
+  border-color: var(--color-rule-strong);
+}
+
+/* Author slot — bottom-left, REVEALED ON HOVER. Stretches to the
+   full left-column width so the marquee's fade masks align with
+   the read-time line above. */
+body.layout-writing-index .field-authors {
+  height: 0.8rem;
+  overflow: hidden;
+  width: 100%;
+  opacity: 0;
+  transform: translateY(2px);
+  transition:
+    opacity var(--t-mid) var(--ease-out),
+    transform var(--t-mid) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  body.layout-writing-index .field:hover .field-authors,
+  body.layout-writing-index .field:focus-visible .field-authors {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.08s;
+  }
+}
+body.layout-writing-index .field-authors--solo {
+  color: var(--color-text);
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+}
+body.layout-writing-index .field-authors--marquee { position: relative; }
+body.layout-writing-index .field-authors--marquee .track {
+  display: inline-flex;
+  gap: 1.4rem;
+  color: var(--color-text);
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  animation: writingIndexAuthorScroll 14s linear infinite;
+  animation-play-state: paused;
+}
+@media (hover: hover) and (pointer: fine) {
+  body.layout-writing-index .field:hover .field-authors--marquee .track {
+    animation-play-state: running;
+  }
+}
+@keyframes writingIndexAuthorScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.layout-writing-index .field-authors--marquee .track {
+    animation: none;
+  }
+  body.layout-writing-index .field-authors {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+body.layout-writing-index .field-authors--marquee::before,
+body.layout-writing-index .field-authors--marquee::after {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 0.9rem;
+  pointer-events: none;
+  z-index: 1;
+}
+body.layout-writing-index .field-authors--marquee::before {
+  left: 0;
+  background: linear-gradient(to right, var(--color-background), transparent);
+}
+body.layout-writing-index .field-authors--marquee::after {
+  right: 0;
+  background: linear-gradient(to left, var(--color-background), transparent);
+}
+
+/* ============================================================
+   Footer colophon override — swap JetBrains Mono for Spline Sans
+   Mono on this page's colophon row only. Scoped to this layout's
+   body class so other pages keep the default mono.
+   ============================================================ */
+body.layout-writing-index .post-root .footer__colophon {
+  font-family: var(--font-mono-display);
+}
