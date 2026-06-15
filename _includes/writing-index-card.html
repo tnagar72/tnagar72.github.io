@@ -1,0 +1,102 @@
+{%- comment -%}
+  Renders one card on the /writing/ index page.
+
+  Called from _layouts/writing-index.html as:
+      {% include writing-index-card.html post=post %}
+
+  Reads only from `include.post` frontmatter — no calculation, no
+  defaults, no fallbacks. If a field is missing, fix the frontmatter,
+  not this include.
+
+  Required frontmatter on each `_writing/*.md` post:
+    layout         "article" or "note"
+    title          string (card title)
+    date           ISO date (Jekyll's standard date field)
+    topics         array (first 2 entries → top-right tags slot)
+    tldr           string (3-line clamp via CSS)
+    reading_time   string, e.g. "10 min"
+    authors        array of strings (1 → solo; 2+ → marquee)
+    published      true|false (false skips the post upstream in the
+                   layout's filter; this include trusts the loop)
+
+  Field → slot map:
+    .kind          → "Article" if layout=="article", else "Note"
+    .tags          → topics[0] · topics[1]
+    .field-title   → title
+    .field-summary → tldr (3-line clamp from writing-index.css)
+    .field-meta-bot left → reading_time + authors
+    .field-meta-bot right → date as "%b %Y" uppercased
+    href           → post.url (Jekyll-generated permalink)
+
+  Accessibility:
+    - The whole card is one wrapping <a>, single focusable element.
+    - aria-label combines kind + title + month/year for screen readers.
+    - <time datetime="..."> provides a machine-readable date.
+    - itemscope/itemprop adds schema.org/Article microdata for
+      search-engine and AI extraction.
+    - The marquee is aria-hidden when present; the canonical author
+      list is rendered separately in a .sr-only span for assistive
+      tech (see writing-index.css for .sr-only).
+{%- endcomment -%}
+
+{%- assign post = include.post -%}
+{%- assign kind_label = "Note" -%}
+{%- if post.layout == "article" -%}
+  {%- assign kind_label = "Article" -%}
+{%- endif -%}
+
+{%- assign tag_primary   = post.topics[0] -%}
+{%- assign tag_secondary = post.topics[1] -%}
+
+{%- assign date_short = post.date | date: "%b %Y" | upcase -%}
+{%- assign date_iso   = post.date | date: "%Y-%m-%d" -%}
+
+{%- assign authors_count = post.authors | size -%}
+
+<a class="field"
+   href="{{ post.url | relative_url }}"
+   aria-label="{{ kind_label }}. {{ post.title | escape }}. Published {{ post.date | date: '%B %Y' }}."
+   itemscope itemtype="https://schema.org/Article">
+
+  <div class="field-meta-top">
+    <span class="kind" itemprop="genre">{{ kind_label }}</span>
+    <span class="tags">{{ tag_primary }} &middot; {{ tag_secondary }}</span>
+  </div>
+
+  <h3 class="field-title" itemprop="headline">{{ post.title }}</h3>
+  <p class="field-summary" itemprop="abstract">{{ post.tldr }}</p>
+
+  <div></div>
+
+  <div class="field-meta-bot">
+    <div class="left">
+      <span>{{ post.reading_time }} read</span>
+
+      {%- if authors_count == 1 -%}
+        <div class="field-authors field-authors--solo" itemprop="author">{{ post.authors[0] }}</div>
+      {%- else -%}
+        {%- comment -%}
+          Marquee track is duplicated so the keyframe can translate by
+          -50% for a seamless loop. Visually decorative — the canonical
+          author list lives in the .sr-only span below for AT.
+        {%- endcomment -%}
+        <div class="field-authors field-authors--marquee" aria-hidden="true">
+          <div class="track">
+            {%- for author in post.authors -%}<span>{{ author }}</span>{%- endfor -%}
+            {%- for author in post.authors -%}<span>{{ author }}</span>{%- endfor -%}
+          </div>
+        </div>
+        <span class="sr-only" itemprop="author">
+          {%- for author in post.authors -%}
+            {{ author }}{%- unless forloop.last -%}, {% endunless -%}
+          {%- endfor -%}
+        </span>
+      {%- endif -%}
+    </div>
+    <div class="right">
+      <time datetime="{{ date_iso }}" itemprop="datePublished">{{ date_short }}</time>
+    </div>
+  </div>
+
+  <span class="field-link">Read on &rarr;</span>
+</a>
