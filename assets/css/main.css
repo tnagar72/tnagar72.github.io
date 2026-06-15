@@ -12,6 +12,19 @@
     --secondary: oklch(0.95 0.0058 264.53);
     --secondary-foreground: #030213;
     --card: #ffffff;
+
+    /* Display-condensed face for big editorial titles (e.g. /writing/'s
+       "WRITING" hero). Anton is the closest free Google Font to Henry
+       Coats's licensed Manuka Black — ultra-condensed black single-weight,
+       designed for big display sizes. Falls back to system sans for
+       defense-in-depth. */
+    --font-display-condensed: 'Anton', 'Manuka', sans-serif;
+
+    /* Softer mono for footer colophon rows and similar low-key
+       typographic surfaces. Spline Sans Mono reads slightly warmer
+       than JetBrains Mono, fits the "signed-by-hand" register at the
+       bottom of a page without competing with body type. */
+    --font-mono-display: 'Spline Sans Mono', 'JetBrains Mono', ui-monospace, monospace;
 }
 
 html {
