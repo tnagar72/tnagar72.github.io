@@ -13,7 +13,7 @@ google_analytics: "G-NRXRQL1ZL3"
 # structures include). Page-specific values (page.tldr, page.title)
 # override seo_description on a per-page basis; this is the homepage
 # default and the fallback for pages without their own description.
-seo_description: "Student researcher working on pluralistic, socially-aware language technologies"
+seo_description: "Hello! I'm a student researcher working on pluralistic, socially-aware language technologies"
 twitter_handle: "tnagar72"
 
 # Author + Schema.org Person fields (used only on the homepage's
