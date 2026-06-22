@@ -207,31 +207,30 @@
   # awards:
   #   - text: "TODO award name"
   links:
-    - label: "Paper"
-      url: ""                   # TODO — paste arXiv/published URL when available; empty = "coming soon" pill
+    # When you eventually have the URL, change label back to "Paper" and
+    # set the URL. Until then the "(coming soon)" suffix communicates state
+    # explicitly — visitors don't get a broken link.
+    - label: "Paper (coming soon)"
+      url: ""
       icon: "fa-file-alt"
-    - label: "FAccT Session"
-      url: "https://programs.sigchi.org/facct/2026/program/content/254265"
-      icon: "phosphor-presentation-chart"
+    # TRAIL Lab — the `logo:` prefix tells Step 3's template extension to
+    # render the SVG inline instead of as a font icon. Until that template
+    # change ships, this pill renders without an icon. The link still works.
     - label: "TRAIL Lab"
       url: "https://trail.wcer.wisc.edu/"
-      icon: "logo:/Images/trail-logo.svg"   # logo: prefix → inline SVG; needs Step 3 template extension
+      icon: "logo:/Images/trail-logo.svg"
     - label: "Slides"
-      url: ""                   # TODO — paste after the talk; empty = "coming soon"
+      url: ""                   # TODO — paste once the talk PDF is ready
       icon: "phosphor-lectern"
-    - label: "Code"
-      url: ""                   # TODO — paste GitHub URL if/when public
-      icon: "fa-code"
     # POST-CONFERENCE TODO (uncomment ~1 month after FAccT, once ACM's
-    # Digital Library record exists at this DOI):
+    # Digital Library record actually exists at this DOI):
     # - label: "DOI"
-    #   url: "https://doi.org/10.1145/3805689.3806471"   # value pre-assigned by ACM; not resolvable yet
+    #   url: "https://doi.org/10.1145/3805689.3806471"
     #   icon: "fa-anchor"
     #
     # Linking now would mean tapping "DOI" hits a 404 — worse than no
     # link at all, since visitors can't distinguish broken site from
-    # paper-not-yet-published. Coming soon (paper pill above) tells
-    # the honest story until ACM flips the switch.
+    # paper-not-yet-published.
   summary: "TODO — 2-3 sentence summary that appears as the body description on the homepage block (if surfaced) and on the project page. Should explain the audit, the dataset, and the key finding in everyday language. Compare to the bridging-language-gaps summary above for tone and length."
   # ────────── Research-page fields ──────────
   tldr: "TODO — one punchy sentence describing the work. Compare to: 'Fine-tuning with synthetic code-switched data closes 80% of the Hindi–English reasoning performance gap on CommonsenseQA — without any English degradation.'"
