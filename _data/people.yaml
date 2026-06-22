@@ -56,6 +56,17 @@ Nitesh V. Chawla:
   url: https://niteshchawla.nd.edu/
   on-homepage: false
 
+# No-prefix variants — used when a person appears as an author (not advisor)
+# in a publication YAML. The corresponding "Dr." entries above stay in place
+# so existing advisor lookups (e.g., honors-thesis) keep working.
+Shamya Karumbaiah:
+  url: https://shamya.github.io/
+  on-homepage: false
+
+Pragati Maheshwary:
+  url: https://www.linkedin.com/in/pragati-maheshwary-957026204/
+  on-homepage: false
+
 # Thesis advisors (not on homepage, but linked in publications)
 Dr. Fred Sala:
   url: https://pages.cs.wisc.edu/~fredsala/
