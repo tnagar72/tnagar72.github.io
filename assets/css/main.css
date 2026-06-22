@@ -322,9 +322,9 @@ section {
 .updates-list li {
     /* Two-column grid: date | body. Date column is fixed width so
        all dates align vertically regardless of body length. The
-       horizontal padding + negative margin offset gives the hover
-       background a visible halo around the text without shifting
-       layout. Border radius rounds the hover wash. */
+       horizontal padding + negative margin offset keep the body and
+       date column tracking the same horizontal rhythm as surrounding
+       content. */
     display: grid;
     grid-template-columns: 80px 1fr;
     gap: 1rem;
@@ -333,13 +333,6 @@ section {
     border-radius: 0.5rem;
     font-size: 0.9rem;
     line-height: 1.55;
-    transition: box-shadow 0.2s ease-in-out;
-}
-.updates-list li:hover {
-    /* 2px inset accent-blue outline on hover. inset box-shadow (vs.
-       border) keeps the row from shifting layout when the rim appears,
-       since border would add 2px to the box and reflow neighbors. */
-    box-shadow: inset 0 0 0 2px #357edd;
 }
 .updates-when {
     font-family: var(--font-mono);
@@ -352,14 +345,15 @@ section {
     color: var(--foreground);
 }
 .updates-body a {
-    color: var(--foreground);
+    /* Standard blue link — same accent used elsewhere on the site for
+       inline links. Underline stays on at rest so links are obvious. */
+    color: #357edd;
     text-decoration: underline;
-    text-decoration-color: var(--border);
-    text-underline-offset: 3px;
     text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
 }
 .updates-body a:hover {
-    text-decoration-color: var(--foreground);
+    text-decoration-thickness: 2px;
 }
 
 /* Publications */

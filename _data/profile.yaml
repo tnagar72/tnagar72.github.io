@@ -1,6 +1,6 @@
 name: Tanay Nagar
 name_hindi: तनय नगर
-role: Independent researcher
+role: Incoming Master's Student at CMU LTI
 portrait: /Images/tanay-nd.jpeg
 portrait_alt: Portrait of Tanay Nagar
 
@@ -13,14 +13,14 @@ areas: ""
 
 # Consolidated bio HTML - single block for easier maintenance
 bio_html: |
-  <p>Hello! I'm an Independent Researcher passionate about <span class="highlight">equitable, socially-aware language technologies</span> that prioritize <strong>language equity</strong> for low-resource languages, uphold the <strong>socio-cultural nuances</strong> of diverse linguistic communities, and ensure robust <strong>human-AI dynamics</strong>.</p>
+  <p>Hello! I'm a student and researcher passionate about <span class="highlight">equitable, socially-aware language technologies</span> that prioritize <strong>language equity</strong> for low-resource languages, uphold the <strong>socio-cultural nuances</strong> of diverse linguistic communities, and ensure robust <strong>human-AI dynamics</strong>.</p>
   <p>More concretely, I'm particularly interested in how we can:</p>
   <ul class="hero-list">
     <li>better evaluate/understand social subtleties across languages and cultures, both through and within language technologies;</li>
     <li>embed socio-ethical dynamics/intelligence within the creation of language technologies.</li>
   </ul>
 
-education_html: Previously, I earned a B.S. in Computer Science (Honors), a B.S. in Philosophy, and a certificate in leadership from the University of Wisconsin-Madison, and I am currently preparing for graduate study.
+education_html: Previously, I earned a B.S. in Computer Science (Honors), a B.S. in Philosophy, and a certificate in leadership from the University of Wisconsin-Madison.
 
 connect_html: I love to chat and trade notes. Reach out via email or the links at the top of the page.
 
