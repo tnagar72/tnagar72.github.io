@@ -1,7 +1,21 @@
+{%- comment -%}
+  Featured publications + presentations on the homepage.
+
+  Section heading mirrors the Updates pattern: "Featured" stays in the
+  surrounding heading treatment, "publications and presentations" picks
+  up the accent color (--color-link) as a single inline link to the
+  Scholar profile. Visitor reads the loud-blue phrase and gets a clean
+  affordance: "click here for the full list."
+
+  Scholar URL is looked up from _data/social.yaml so there's one source
+  of truth — if the Scholar handle ever changes, social.yaml is the
+  only file to edit.
+{%- endcomment -%}
+{%- assign scholar_entry = site.data.social | where: "name", "scholar" | first -%}
 <section id="publications" class="section-border">
     <div class="hero-content">
         <div class="section-header">
-            <h2>Featured publications and presentations</h2>
+            <h2>Featured <a href="{{ scholar_entry.url }}" target="_blank" rel="noopener noreferrer" class="section-header-link">publications and presentations</a></h2>
         </div>
 
         <div class="pub-list">
