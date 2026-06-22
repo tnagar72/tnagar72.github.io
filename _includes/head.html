@@ -18,7 +18,14 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Mukta:wght@200;300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@100..900&display=swap">
+    {%- comment -%}
+      Roboto loaded as a variable font (continuous weight axis 100..900)
+      so the CSS can use intermediate weights like 350 (between Light and
+      Regular). The previous static load was Roboto:wght@300;400;500;700;
+      350 would snap to the nearest loaded weight (300), defeating the
+      purpose.
+    {%- endcomment -%}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100..900&family=Mukta:wght@200;300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@100..900&display=swap">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css">
     <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}?v={{ site.time | date: '%s' }}">
