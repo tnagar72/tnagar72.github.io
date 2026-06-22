@@ -227,6 +227,52 @@
      regardless of which library they come from. */
   .btn-ghost i { font-size: 12px; opacity: .85; }
 
+  /* Inline wordmark / lab-logo SVG inside a pill (rendered when YAML
+     uses the `logo:/path/to.svg` icon prefix in publications.yaml).
+     Sized to ~12px height to match the font-icon glyphs above; auto
+     width preserves aspect ratio. opacity matches font-icon treatment. */
+  .btn-ghost .pill-logo {
+    height: 12px;
+    width: auto;
+    opacity: .85;
+    vertical-align: middle;
+  }
+  /* On hover the pill inverts (dark bg, light text). The SVG is
+     filled with currentColor via a filter inversion so the wordmark
+     stays legible against the dark fill. */
+  .btn-ghost:hover .pill-logo { filter: invert(1); opacity: 1; }
+
+  /* "Coming soon" state — pending pills (empty url:) render with this
+     class instead of an href, so they're visually distinct from live
+     pills. Muted text + border, no hover treatment, no cursor pointer.
+     A trailing → arrow is appended in the layout to signal "headed
+     somewhere later." */
+  .btn-ghost.coming-soon {
+    color: var(--text-muted, #94897a);
+    border-color: var(--rule, #e5e5e5);
+    cursor: default;
+    opacity: 0.7;
+  }
+  .btn-ghost.coming-soon:hover {
+    background: transparent;
+    color: var(--text-muted, #94897a);
+    border-color: var(--rule, #e5e5e5);
+  }
+  .btn-ghost.coming-soon i,
+  .btn-ghost.coming-soon .pill-logo {
+    opacity: 0.6;
+  }
+  .btn-ghost.coming-soon:hover i,
+  .btn-ghost.coming-soon:hover .pill-logo {
+    opacity: 0.6;
+    filter: none;
+  }
+  .btn-ghost .coming-soon-arrow {
+    margin-left: 0.15em;
+    opacity: 0.65;
+    font-weight: 400;
+  }
+
   /* ============================================================
      Body — abstract, sections, BibTeX
      ============================================================ */

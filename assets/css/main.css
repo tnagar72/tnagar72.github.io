@@ -521,6 +521,18 @@ section {
    no per-icon CSS is needed because both libraries treat their <i>
    elements as text-sized characters. */
 
+/* Inline wordmark / lab-logo SVG inside a homepage pub-misc pill
+   (rendered when YAML uses the `logo:/path/to.svg` icon prefix in
+   publications.yaml). Sized to match the surrounding 0.75rem icon
+   glyphs so the wordmark visually aligns with FA / Phosphor pills. */
+.pub-misc .pill-logo {
+    height: 0.75rem;
+    width: auto;
+    opacity: .85;
+    vertical-align: middle;
+}
+.pub-misc a:hover .pill-logo { opacity: 1; }
+
 /* Contact */
 .section-header {
     margin-bottom: 1.5rem;

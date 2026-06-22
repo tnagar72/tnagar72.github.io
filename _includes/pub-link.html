@@ -1,20 +1,32 @@
 {%- comment -%}
 Renders one icon-pill link.
 
-`include.link.icon` can be:
-  - A Font Awesome class like "fa-file-pdf" → renders <i class="fas fa-…">
-  - A Phosphor token: "phosphor-lectern" (talk) or "phosphor-presentation-chart"
-    (poster) → renders <i class="ph-fill ph-…"> from the Phosphor icon font.
-    Both font systems inherit font-size from the parent pill, so they render
-    at consistent sizes without per-icon CSS.
+`include.link.icon` can be one of:
+  - A Phosphor token: "phosphor-lectern", "phosphor-presentation-chart",
+    "phosphor-youtube-logo" → renders <i class="ph-fill ph-…"> from the
+    Phosphor icon font.
+  - An inline-SVG path with the "logo:" prefix:
+    "logo:/Images/trail-logo.svg" → renders <img class="pill-logo" src="…">.
+    Use this when the wordmark IS the visual signal (lab logos, journal
+    marks). The SVG is expected to be monochrome (single fill) so it
+    blends into the pill chrome.
+  - A Font Awesome class like "fa-file-pdf" → renders <i class="fas fa-…">.
+    This is the fallback; anything not matched above is assumed to be
+    an FA Solid token.
 
-Add new Phosphor tokens here as needed.
+Add new Phosphor tokens to the explicit list. New `logo:` SVG paths
+just need to live somewhere under /Images/ (or any absolute URL).
 {%- endcomment -%}
 <a href="{{ include.link.url }}"{% if include.link.url contains 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}>
     {%- if include.link.icon == "phosphor-lectern" -%}
         <i class="ph-fill ph-lectern" aria-hidden="true"></i>
     {%- elsif include.link.icon == "phosphor-presentation-chart" -%}
         <i class="ph-fill ph-presentation-chart" aria-hidden="true"></i>
+    {%- elsif include.link.icon == "phosphor-youtube-logo" -%}
+        <i class="ph-fill ph-youtube-logo" aria-hidden="true"></i>
+    {%- elsif include.link.icon contains "logo:" -%}
+        {%- assign logo_path = include.link.icon | remove_first: "logo:" -%}
+        <img class="pill-logo" src="{{ logo_path | relative_url }}" alt="" aria-hidden="true">
     {%- else -%}
         <i class="fas {{ include.link.icon }}" aria-hidden="true"></i>
     {%- endif -%}
