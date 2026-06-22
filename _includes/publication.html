@@ -76,7 +76,16 @@ person.html still handles it.
         {%- endfor -%}
     </div>
 
+    {%- comment -%}
+      Fail-quiet on empty/missing summary. If a publication entry doesn't
+      have a summary yet (e.g., placeholder while a paper is in submission),
+      we just skip the paragraph entirely instead of rendering an empty
+      <p> on the homepage. Matches the same convention used for tldr,
+      acknowledgements, awards, and legend on the research page.
+    {%- endcomment -%}
+    {%- if include.pub.summary and include.pub.summary != "" -%}
     <p class="pub-summary">
         {{ include.pub.summary }}
     </p>
+    {%- endif -%}
 </article>

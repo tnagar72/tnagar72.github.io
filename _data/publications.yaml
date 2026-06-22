@@ -1,10 +1,10 @@
 - id: bias-lor
   title: "Exploring Bias in Letters of Recommendation using NLP Techniques"
   authors:
-    - { name: "Tanay Nagar",          role: "author", marks: "1" }
-    - { name: "Sarah Jung",           role: "author", marks: "2" }
-    - { name: "Peter Wirth",          role: "author", marks: "2" }
-    - { name: "Alyssa Schappe",       role: "author", marks: "2" }
+    - { name: "Tanay Nagar", role: "author", marks: "1" }
+    - { name: "Sarah Jung", role: "author", marks: "2" }
+    - { name: "Peter Wirth", role: "author", marks: "2" }
+    - { name: "Alyssa Schappe", role: "author", marks: "2" }
     - { name: "Amorn N. Salyapongse", role: "author", marks: "3" }
   venue: "Oral presentation: ACEPS 2025 · Extended abstract published in PRS Global Open 2025."
   venue-shorthand: ACEPS
@@ -33,7 +33,14 @@
   tldr: "We investigate implicit biases in 5,679 plastic surgery residency letters of recommendation through traditional NLP methods, examining how gender and race/ethnicity affect language use and other trends."
   accent: blue
   subjects: [Fairness, NLP, Bias]
-  keywords: [LIWC, letter-of-recommendation, residency-selection, gender-bias, racial-bias]
+  keywords:
+    [
+      LIWC,
+      letter-of-recommendation,
+      residency-selection,
+      gender-bias,
+      racial-bias,
+    ]
   venue_name: "ACEPS 2025"
   venue_meta:
     - "Oral Presentation"
@@ -41,9 +48,21 @@
     - "Vol 13, S4"
     - "pp 4–5"
   affiliations:
-    - { mark: "1", name: "University of Wisconsin-Madison, United States", url: "https://www.wisc.edu/" }
-    - { mark: "2", name: "Department of Surgery, UW SMPH", url: "https://www.surgery.wisc.edu/" }
-    - { mark: "3", name: "Department of Orthopedics and Rehabilitation, University of Wisconsin School of Medicine and Public Health", url: "" }
+    - {
+        mark: "1",
+        name: "University of Wisconsin-Madison, United States",
+        url: "https://www.wisc.edu/",
+      }
+    - {
+        mark: "2",
+        name: "Department of Surgery, UW SMPH",
+        url: "https://www.surgery.wisc.edu/",
+      }
+    - {
+        mark: "3",
+        name: "Department of Orthopedics and Rehabilitation, University of Wisconsin School of Medicine and Public Health",
+        url: "",
+      }
   acknowledgements: ""
   bibtex: |-
     @article{nagar_lor_bias,
@@ -67,10 +86,10 @@
   # the page is searchable under the name other researchers will use.
   title: "Breaking Language Barriers: Equitable Performance in Multilingual Language Models"
   authors:
-    - { name: "Tanay Nagar",        role: "author", marks: "1, 3, †" }
+    - { name: "Tanay Nagar", role: "author", marks: "1, 3, †" }
     - { name: "Grigorii Khvatskii", role: "author", marks: "2, 4" }
-    - { name: "Anna Sokol",         role: "author", marks: "2, 4" }
-    - { name: "Nitesh V. Chawla",   role: "author", marks: "2, 4" }
+    - { name: "Anna Sokol", role: "author", marks: "2, 4" }
+    - { name: "Nitesh V. Chawla", role: "author", marks: "2, 4" }
   venue_html: 'Poster: NAACL 2025 Student Research Workshop (SRW); ND Summer Research Symposium 2024 · Full paper on <a href="https://arxiv.org/abs/2508.12662" target="_blank" rel="noopener noreferrer">arXiv</a> 2025.'
   venue-shorthand: NAACL
   year: 2025
@@ -102,18 +121,46 @@
   tldr: "Fine-tuning with synthetic code-switched data closes 80% of the Hindi–English reasoning performance gap on CommonsenseQA — without any English degradation."
   accent: blue
   subjects: [NLP, Multilingual, Language Equity]
-  keywords: [code-switching, low-resource-languages, hindi, code-mixing-index, fine-tuning, CommonsenseQA, LLaMA-3]
+  keywords:
+    [
+      code-switching,
+      low-resource-languages,
+      hindi,
+      code-mixing-index,
+      fine-tuning,
+      CommonsenseQA,
+      LLaMA-3,
+    ]
   venue_name: "NAACL 2025"
   venue_meta:
     - "Student Research Workshop"
     - "Poster"
   affiliations:
-    - { mark: "1", name: "University of Wisconsin–Madison", url: "https://www.wisc.edu/" }
-    - { mark: "2", name: "University of Notre Dame", url: "https://www.nd.edu/" }
-    - { mark: "3", name: "NSF Center for Computer Assisted Synthesis (CCAS), University of Notre Dame", url: "https://ccas.nd.edu/" }
-    - { mark: "4", name: "Lucy Family Institute for Data & Society, University of Notre Dame", url: "https://lucyinstitute.nd.edu/" }
+    - {
+        mark: "1",
+        name: "University of Wisconsin–Madison",
+        url: "https://www.wisc.edu/",
+      }
+    - {
+        mark: "2",
+        name: "University of Notre Dame",
+        url: "https://www.nd.edu/",
+      }
+    - {
+        mark: "3",
+        name: "NSF Center for Computer Assisted Synthesis (CCAS), University of Notre Dame",
+        url: "https://ccas.nd.edu/",
+      }
+    - {
+        mark: "4",
+        name: "Lucy Family Institute for Data & Society, University of Notre Dame",
+        url: "https://lucyinstitute.nd.edu/",
+      }
   legend:
-    - { glyph: "†", text: "Work done as a CCAS Intern at the University of Notre Dame" }
+    - {
+        glyph: "†",
+        text: "Work done as a CCAS Intern at the University of Notre Dame",
+      }
   acknowledgements: "This work was supported by the NSF Center for Computer Assisted Synthesis (CCAS) at the University of Notre Dame. Travel support was provided by the Bromley Conference Travel Award and the CDIS Student Travel Award. Special thanks to Mr. Peter and Mrs. April Spiro, whose generosity made it possible for me to attend and present this work at NAACL."
   bibtex: |-
     @article{nagar2025breakinglanguagebarriersequitable,
@@ -129,9 +176,9 @@
 - id: honors-thesis
   title: "Decoding Bias in Letters of Recommendation: A Word Embeddings Approach"
   authors:
-    - { name: "Tanay Nagar",           role: "author",  marks: "1" }
-    - { name: "Dr. Fred Sala",         role: "advisor", marks: "4, ‡" }
-    - { name: "Dr. Sarah Jung",        role: "advisor", marks: "2, ‡" }
+    - { name: "Tanay Nagar", role: "author", marks: "1" }
+    - { name: "Dr. Fred Sala", role: "advisor", marks: "4, ‡" }
+    - { name: "Dr. Sarah Jung", role: "advisor", marks: "2, ‡" }
     - { name: "Dr. Shamya Karumbaiah", role: "advisor", marks: "3, ‡" }
   venue: "Senior Honors Thesis, University of Wisconsin-Madison, 2025 · Oral presentation: UW Honors Research Symposium 2025."
   venue-shorthand: "UW Honors"
@@ -157,15 +204,39 @@
   tldr: "We use word embeddings (word2Vec + transformer-based) on an 11-year corpus of UW Plastic Surgery residency letters of recommendation to quantify, interpret, and visualize implicit gender and ethnic biases/trends."
   accent: grey
   subjects: [Fairness, NLP, Bias]
-  keywords: [word-embeddings, word2Vec, letter-of-recommendation, SC-WEAT, t-SNE, senior-thesis]
+  keywords:
+    [
+      word-embeddings,
+      word2Vec,
+      letter-of-recommendation,
+      SC-WEAT,
+      t-SNE,
+      senior-thesis,
+    ]
   venue_name: "Senior Honors Thesis"
   venue_meta:
     - "Oral Presentation at UW Honors Symposium"
   affiliations:
-    - { mark: "1", name: "University of Wisconsin–Madison", url: "https://www.wisc.edu/" }
-    - { mark: "2", name: "Department of Surgery, UW SMPH", url: "https://www.surgery.wisc.edu/" }
-    - { mark: "3", name: "Department of Educational Psychology, UW-Madison", url: "https://edpsych.education.wisc.edu/" }
-    - { mark: "4", name: "Department of Computer Sciences, UW-Madison", url: "https://www.cs.wisc.edu/" }
+    - {
+        mark: "1",
+        name: "University of Wisconsin–Madison",
+        url: "https://www.wisc.edu/",
+      }
+    - {
+        mark: "2",
+        name: "Department of Surgery, UW SMPH",
+        url: "https://www.surgery.wisc.edu/",
+      }
+    - {
+        mark: "3",
+        name: "Department of Educational Psychology, UW-Madison",
+        url: "https://edpsych.education.wisc.edu/",
+      }
+    - {
+        mark: "4",
+        name: "Department of Computer Sciences, UW-Madison",
+        url: "https://www.cs.wisc.edu/",
+      }
   legend:
     - { glyph: "‡", text: "Thesis advisor" }
   acknowledgements: "This research was supported by the Hilldale Undergraduate/Faculty Research Fellowship and the Richard Ralph Phoenix Rising Humanitarian Scholarship."
@@ -191,7 +262,9 @@
     #   name:   string; matches _data/people.yaml if applicable
     #   role:   "author" or "advisor"
     #   marks:  string of affiliation marks ("1", "2", "1, 3", etc.) — matches the affiliations: array below
-    - { name: "Tanay Nagar", role: "author", marks: "TODO" }
+    - { name: "Tanay Nagar", role: "author", marks: "1" }
+    - { name: "Pragati Maheshwary", role: "author", marks: "2, 3" }
+    - { name: "Shamya Karumbaiah", role: "author", marks: "2, 3" }
     # - { name: "TODO co-author 1", role: "author",  marks: "TODO" }
     # - { name: "TODO co-author 2", role: "author",  marks: "TODO" }
     # - { name: "TODO advisor",     role: "advisor", marks: "TODO" }
@@ -199,60 +272,79 @@
   venue-shorthand: FAccT
   year: 2026
   type: conference
-  featured: true                # IS one of Tanay's main publications
-  feature-order: 0              # 0 = highest priority; when surfaced, sits above the existing 3
-  homepage_hide: true           # but suppress from the homepage block for now (pre-conference)
+  featured: true # IS one of Tanay's main publications
+  feature-order: 0 # 0 = highest priority; when surfaced, sits above the existing 3
+  homepage_hide: true # but suppress from the homepage block for now (pre-conference)
   selected: true
   # TODO — awards: if any. Delete this whole block if none.
   # awards:
   #   - text: "TODO award name"
   links:
+    # Paper PDF — local copy hosted at /FAccT_2026/. Convention mirrors
+    # /Bridging_Language_Gaps_CS/ and /PRS_Global/ — each paper gets a
+    # top-level directory holding its PDFs/posters/visualizations.
     - label: "Paper"
-      url: ""                   # TODO — paste arXiv/published URL when available; empty = "coming soon" pill
-      icon: "fa-file-alt"
-    - label: "FAccT Session"
-      url: "https://programs.sigchi.org/facct/2026/program/content/254265"
-      icon: "phosphor-presentation-chart"
+      url: "/FAccT_2026/FAccT_2026_Paper.pdf"
+      icon: "fa-file-pdf"
+    # TRAIL Lab — the `logo:` prefix tells Step 3's template extension to
+    # render the SVG inline instead of as a font icon. Until that template
+    # change ships, this pill renders without an icon. The link still works.
     - label: "TRAIL Lab"
       url: "https://trail.wcer.wisc.edu/"
-      icon: "logo:/Images/trail-logo.svg"   # logo: prefix → inline SVG; needs Step 3 template extension
-    - label: "Slides"
-      url: ""                   # TODO — paste after the talk; empty = "coming soon"
+      icon: "logo:/Images/trail-logo.svg"
+    - label: "Slides (coming soon)"
+      url: "" # TODO — paste once the talk PDF is ready
       icon: "phosphor-lectern"
-    - label: "Code"
-      url: ""                   # TODO — paste GitHub URL if/when public
-      icon: "fa-code"
+    - label: "Talk (coming soon)"
+      url: "" # TODO — paste YouTube link if/when the recording is posted
+      icon: "phosphor-youtube-logo"
     # POST-CONFERENCE TODO (uncomment ~1 month after FAccT, once ACM's
-    # Digital Library record exists at this DOI):
+    # Digital Library record actually exists at this DOI):
     # - label: "DOI"
-    #   url: "https://doi.org/10.1145/3805689.3806471"   # value pre-assigned by ACM; not resolvable yet
+    #   url: "https://doi.org/10.1145/3805689.3806471"
     #   icon: "fa-anchor"
     #
     # Linking now would mean tapping "DOI" hits a 404 — worse than no
     # link at all, since visitors can't distinguish broken site from
-    # paper-not-yet-published. Coming soon (paper pill above) tells
-    # the honest story until ACM flips the switch.
-  summary: "TODO — 2-3 sentence summary that appears as the body description on the homepage block (if surfaced) and on the project page. Should explain the audit, the dataset, and the key finding in everyday language. Compare to the bridging-language-gaps summary above for tone and length."
+    # paper-not-yet-published.
+  summary:
   # ────────── Research-page fields ──────────
-  tldr: "TODO — one punchy sentence describing the work. Compare to: 'Fine-tuning with synthetic code-switched data closes 80% of the Hindi–English reasoning performance gap on CommonsenseQA — without any English degradation.'"
-  accent: blue                  # TODO — color used by the project page; existing values seen: blue, grey
-  subjects: [Fairness, NLP]     # TODO — append/replace with the actual topic tags
-  keywords: [TODO]              # TODO — replace with real keywords list, e.g. [bilingual-literature, character-representation, audit]
+  tldr:
+  accent: blue # TODO — color used by the project page; existing values seen: blue, grey
+  # Subjects + keywords lifted verbatim from the paper's own header:
+  #   "Additional Key Words and Phrases: Bias auditing, Multilingual NLP,
+  #    Sociotechnical evaluation, Code-mixed language, Contextual
+  #    embeddings, Literary corpora"
+  subjects: [Bias Auditing, Multilingual NLP, Sociotechnical Evaluation]
+  keywords:
+    [
+      Bias auditing,
+      Multilingual NLP,
+      Sociotechnical evaluation,
+      Code-mixed language,
+      Contextual embeddings,
+      Literary corpora,
+    ]
   venue_name: "FAccT 2026"
   venue_meta:
-    - "Oral Presentation"
-    - "Sat 27 June, 11:45–11:57 AM, Montréal"
+    - "Montréal, Canada"
   affiliations:
     # TODO — one entry per affiliation mark used above. Each:
     #   mark: matches the `marks:` field on authors
     #   name: institution full name
     #   url:  institution homepage
-    - { mark: "1", name: "TODO — your primary affiliation at time of writing", url: "TODO" }
+    - { mark: "1", name: "Independent", url: "https://tnagar72.github.io/" }
+    - { mark: "2", name: "TRAIL Lab", url: "https://trail.wcer.wisc.edu/" }
+    - {
+        mark: "3",
+        name: "University of Wisconsin–Madison",
+        url: "https://www.wisc.edu/",
+      }
     # - { mark: "2", name: "TODO", url: "TODO" }
   # TODO — legend: only needed if you used special glyphs (†, ‡, *) in author marks. Delete this block if none.
   # legend:
   #   - { glyph: "†", text: "TODO" }
-  acknowledgements: "TODO — funding sources, travel awards, and personal thanks (e.g., advisors, mentors). See bridging-language-gaps for tone."
+  acknowledgements: "With thanks to Lauren Ciha, Nathan Han, Madison Lin, and Swarit Pakala for their early exploratory work, and to Alina Guha, Kaycie Barron, Priyal Jain, and Shanthi Kuppa for their IRR validation. A special thank-you to ACM FAccT, whose travel award made it possible to present this work in person."
   # No bibtex yet — the paper hasn't been published in proceedings, so
   # there's no DOI / canonical citation. Page should render a "coming soon"
   # block here instead of a fake citation. Step 3 (links-coming-soon-state)

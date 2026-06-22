@@ -148,15 +148,37 @@
   {%- if pub.links and pub.links.size > 0 -%}
   <div class="actions">
     {%- for link in pub.links -%}
-      <a class="btn-ghost" href="{{ link.url | relative_url }}"{% if link.url contains 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}>
+      {%- comment -%}
+        Empty url → "coming soon" state. The pill is visually muted via
+        the `coming-soon` modifier class (greyed text + border) and is
+        rendered without an href so it's not focusable/clickable.
+      {%- endcomment -%}
+      {%- assign pending = false -%}
+      {%- if link.url == nil or link.url == "" -%}
+        {%- assign pending = true -%}
+      {%- endif -%}
+      <a class="btn-ghost{% if pending %} coming-soon{% endif %}"{% unless pending %} href="{{ link.url | relative_url }}"{% if link.url contains 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}{% endunless %}>
+        {%- comment -%}
+          Icon resolution mirrors _includes/pub-link.html. If you add a
+          new Phosphor token there, add the matching branch here too.
+          Order:
+            1. Explicit Phosphor tokens (icon font)
+            2. "logo:" prefix → inline SVG wordmark
+            3. Fallback: assume Font Awesome Solid
+        {%- endcomment -%}
         {%- if link.icon == "phosphor-lectern" -%}
           <i class="ph-fill ph-lectern"></i>
         {%- elsif link.icon == "phosphor-presentation-chart" -%}
           <i class="ph-fill ph-presentation-chart"></i>
+        {%- elsif link.icon == "phosphor-youtube-logo" -%}
+          <i class="ph-fill ph-youtube-logo"></i>
+        {%- elsif link.icon contains "logo:" -%}
+          {%- assign logo_path = link.icon | remove_first: "logo:" -%}
+          <img class="pill-logo" src="{{ logo_path | relative_url }}" alt="" aria-hidden="true">
         {%- elsif link.icon -%}
           <i class="fas {{ link.icon }}"></i>
         {%- endif -%}
-        {{ link.label }}
+        {{ link.label }}{%- if pending -%}&nbsp;<span class="coming-soon-arrow" aria-hidden="true">&rarr;</span>{%- endif -%}
       </a>
     {%- endfor -%}
     {%- if pub.bibtex and pub.bibtex != "" -%}
