@@ -35,6 +35,13 @@ author:
 # (including jekyll-sitemap); they only activate when listed here.
 plugins:
   - jekyll-sitemap
+  # jekyll-redirect-from generates HTTP redirect pages from frontmatter.
+  # Used for short URLs at the site root (e.g. /facct/ → the FAccT 2026
+  # project page, /trail/ → the TRAIL lab homepage) so QR codes and
+  # talk slides can use compact, branded URLs while still resolving to
+  # the real content. Plugin is on GitHub Pages' allow-list, so no
+  # additional config is needed for deploy.
+  - jekyll-redirect-from
 
 kramdown:
   parse_block_html: true
