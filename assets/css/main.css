@@ -310,14 +310,21 @@ section {
 
 
 .hero-bio a {
-    color: var(--color-link);
-    text-decoration: none;
+    /* Bio-paragraph links use the older ink-color + faint underline
+       pattern instead of the cyan accent shared by every other body
+       link on the site. The bio reads as prose, not as a link list,
+       so loud cyan was pulling the eye too hard. Underline color is
+       25% black so the link visually sits inside the sentence rhythm;
+       hover darkens to 50%. */
+    color: var(--foreground);
+    text-decoration: underline;
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.18em;
+    text-decoration-color: rgba(0, 0, 0, 0.25);
 }
 
 .hero-bio a:hover {
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 3px;
+    text-decoration-color: rgba(0, 0, 0, 0.5);
 }
 
 /* Subtle list for key interests */
