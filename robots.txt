@@ -1,0 +1,17 @@
+---
+permalink: /robots.txt
+sitemap: false
+layout: null
+---
+# Discourage well-behaved crawlers from indexing the design-exploration
+# sandbox. These pages are not linked from the production homepage; they
+# are draft/experimental HTML used to iterate on layouts before they ship.
+# The site's real surfaces (homepage, /writing/, /research/, post pages)
+# remain crawlable and SEO-eligible.
+User-agent: *
+Disallow: /playground/
+Disallow: /playground.html
+Disallow: /PLAYGROUND-NOTES.md
+Disallow: /PLAYGROUND.md
+
+Sitemap: {{ site.url }}{{ site.baseurl }}/sitemap.xml

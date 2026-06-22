@@ -66,3 +66,12 @@ exclude:
   - Gemfile.lock
   - _original
   - NOTES.md
+  # Design-exploration sandbox. Files in here are draft HTML used to
+  # iterate on layouts before they ship to production surfaces (homepage,
+  # /writing/, /research/). Excluded from the build so they don't deploy
+  # and aren't reachable on the live site, even if someone guesses a URL.
+  - playground
+  - playground.html
+  - PLAYGROUND-NOTES.md
+  - PLAYGROUND.md
+  - REMOVE-PLAYGROUND.sh
