@@ -208,6 +208,14 @@ nav {
     line-height: 1;
 }
 
+/* Utility: keep a phrase together across a line break. Used in the
+   hero bio's education line so the institution name + inline crest
+   travel as one unit on narrow viewports (mobile) instead of
+   stranding the crest on its own line. */
+.nowrap {
+    white-space: nowrap;
+}
+
 /* Slightly smaller for wordmark-style logos so they don't overpower text */
 .intro-logo.wordmark {
     height: 0.9em;
