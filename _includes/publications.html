@@ -19,8 +19,21 @@
         </div>
 
         <div class="pub-list">
+            {%- comment -%}
+              Two-step filter:
+                1. featured == true     — entry is one of Tanay's main works.
+                2. homepage_hide != true — entry is allowed on the homepage.
+
+              `where_exp` with `!= true` treats a missing field as falsy,
+              so existing entries (no `homepage_hide` key) continue to
+              show without backfill. To hide a future featured entry,
+              just add `homepage_hide: true` to its publications.yaml
+              record. The entry still gets a /research/<slug>/ page;
+              only the homepage rendering is suppressed.
+            {%- endcomment -%}
             {%- assign featured_pubs = site.data.publications | where: "featured", true | sort: "feature-order" -%}
-            {%- for pub in featured_pubs -%}
+            {%- assign visible_pubs = featured_pubs | where_exp: "pub", "pub.homepage_hide != true" -%}
+            {%- for pub in visible_pubs -%}
                 {% include publication.html pub=pub %}
             {%- endfor -%}
         </div>
