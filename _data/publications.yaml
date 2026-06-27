@@ -256,7 +256,7 @@
 # and bridging-language-gaps in this file as a fully-populated reference.
 # ─────────────────────────────────────────────────────────────────────────────
 - id: audit-space-between-languages
-  title: "Auditing the Space between Languages: Character Representation in Bilingual Young Adult Literature"
+  title: "Auditing the Space Between Languages: Character Representation in Bilingual Young Adult Literature"
   authors:
     # TODO — list every author in publication order. Each entry needs:
     #   name:   string; matches _data/people.yaml if applicable
@@ -268,7 +268,7 @@
     # - { name: "TODO co-author 1", role: "author",  marks: "TODO" }
     # - { name: "TODO co-author 2", role: "author",  marks: "TODO" }
     # - { name: "TODO advisor",     role: "advisor", marks: "TODO" }
-  venue: "FAccT 2026 · Saturday June 27, 2026, Montréal, Canada."
+  venue: "FAccT '26: Proceedings of the 2026 ACM Conference on Fairness, Accountability, and Transparency · June 25–28, 2026, Montréal, QC, Canada."
   venue-shorthand: FAccT
   year: 2026
   type: conference
@@ -280,15 +280,18 @@
   # awards:
   #   - text: "TODO award name"
   links:
-    # Paper PDF — local copy hosted at /FAccT_2026/. Convention mirrors
-    # /Bridging_Language_Gaps_CS/ and /PRS_Global/ — each paper gets a
-    # top-level directory holding its PDFs/posters/visualizations.
+    # Paper + DOI both point at the ACM Digital Library record
+    # (10.1145/3805689.3806471). Open access, so anyone can download
+    # the PDF from there. Two pills, one destination — the redundancy
+    # gives visitors two clearly-labeled paths to the same place.
     - label: "Paper"
-      url: "/FAccT_2026/FAccT_2026_Paper.pdf"
+      url: "https://doi.org/10.1145/3805689.3806471"
       icon: "fa-file-pdf"
-    # TRAIL Lab — the `logo:` prefix tells Step 3's template extension to
-    # render the SVG inline instead of as a font icon. Until that template
-    # change ships, this pill renders without an icon. The link still works.
+    - label: "DOI"
+      url: "https://doi.org/10.1145/3805689.3806471"
+      icon: "fa-anchor"
+    # TRAIL Lab — `logo:` prefix renders the SVG inline (handled by the
+    # template extension shipped in #48).
     - label: "TRAIL Lab"
       url: "https://trail.wcer.wisc.edu/"
       icon: "logo:/Images/trail-logo.svg"
@@ -298,15 +301,6 @@
     - label: "Talk (coming soon)"
       url: "" # TODO — paste YouTube link if/when the recording is posted
       icon: "phosphor-youtube-logo"
-    # POST-CONFERENCE TODO (uncomment ~1 month after FAccT, once ACM's
-    # Digital Library record actually exists at this DOI):
-    # - label: "DOI"
-    #   url: "https://doi.org/10.1145/3805689.3806471"
-    #   icon: "fa-anchor"
-    #
-    # Linking now would mean tapping "DOI" hits a 404 — worse than no
-    # link at all, since visitors can't distinguish broken site from
-    # paper-not-yet-published.
   summary:
   # ────────── Research-page fields ──────────
   tldr:
@@ -345,9 +339,23 @@
   # legend:
   #   - { glyph: "†", text: "TODO" }
   acknowledgements: "With thanks to Lauren Ciha, Nathan Han, Madison Lin, and Swarit Pakala for their early exploratory work, and to Alina Guha, Kaycie Barron, Priyal Jain, and Shanthi Kuppa for their IRR validation. A special thank-you to ACM FAccT, whose travel award made it possible to present this work in person."
-  # No bibtex yet — the paper hasn't been published in proceedings, so
-  # there's no DOI / canonical citation. Page should render a "coming soon"
-  # block here instead of a fake citation. Step 3 (links-coming-soon-state)
-  # will extend the layout to handle empty/missing bibtex as a "coming soon"
-  # render, same pattern as the empty-url link pills.
-  bibtex: ""
+  # Canonical BibTeX from ACM Digital Library (downloaded 27 June 2026 via
+  # the Export Citations dialog on the DOI page). location: filled in with
+  # the conference address since ACM exported it empty.
+  bibtex: |-
+    @inproceedings{10.1145/3805689.3806471,
+      author    = {Nagar, Tanay and Maheshwary, Pragati and Karumbaiah, Shamya},
+      title     = {Auditing the Space Between Languages: Character Representation in Bilingual Young Adult Literature},
+      year      = {2026},
+      isbn      = {9798400725968},
+      publisher = {Association for Computing Machinery},
+      address   = {New York, NY, USA},
+      url       = {https://doi.org/10.1145/3805689.3806471},
+      doi       = {10.1145/3805689.3806471},
+      booktitle = {Proceedings of the 2026 ACM Conference on Fairness, Accountability, and Transparency},
+      pages     = {5804--5827},
+      numpages  = {24},
+      keywords  = {Bias auditing, Multilingual NLP, Sociotechnical evaluation, Code-mixed language, Contextual embeddings, Literary corpora},
+      location  = {Montr\'{e}al, QC, Canada},
+      series    = {FAccT '26}
+    }
