@@ -321,6 +321,7 @@
     ]
   venue_name: "FAccT 2026"
   venue_meta:
+    - "Proceedings of the 2026 ACM Conference on Fairness, Accountability, and Transparency"
     - "Montréal, Canada"
   affiliations:
     # TODO — one entry per affiliation mark used above. Each:
