@@ -99,12 +99,16 @@
     }
     .venue-strip__meta-pre { display: none; }
     .venue-strip__sep { color: rgba(0,0,0,.55); margin: 0 7px; font-weight: 600; }
-    /* Each meta item is an inline-block nowrap chunk so multi-word
-       elements (e.g. "Vol 13, S4", "pp 4–5") never break mid-element.
-       Line breaks land between chunks at the · separators. */
+    /* Items wrap freely. Earlier the rule was `white-space: nowrap`
+       so multi-word short items (e.g. "Vol 13, S4") couldn't split
+       mid-phrase — but that broke when an item was a long phrase
+       like the FAccT proceedings name ("Proceedings of the 2026 ACM
+       Conference on Fairness, Accountability, and Transparency"),
+       which forced horizontal scroll on phones. If you ever need a
+       multi-word short item to stay together, use a non-breaking
+       space (`&nbsp;`) in the YAML for that pair. */
     .venue-strip__item {
-      display: inline-block;
-      white-space: nowrap;
+      display: inline;
     }
   }
 
@@ -274,9 +278,77 @@
   }
 
   /* ============================================================
+     Teaser figure — optional lead image rendered between the pills
+     row and the body. Acts as the visual lead-in to the abstract,
+     paralleling how academic papers often use a Figure 1 at the
+     top of the body. Centered, max-width matches the body column,
+     subtle rounded corners + shadow to lift it off the page. The
+     caption (figcaption) renders as muted italic, centered under
+     the image. Gated by `pub.teaser` in the layout so entries
+     without a teaser render the page exactly as before.
+     ============================================================ */
+  .teaser {
+    /* Match the body column's max-width so the teaser and the
+       abstract beneath it form a single column on the page. */
+    max-width: calc(72ch + 320px);
+    margin: 56px auto 0;
+    padding: 0 6vw;
+  }
+  /* Hide the teaser on mobile. The figure is dense (tiny character
+     labels like "Maria_MIXED", legend text, axis labels) — at phone
+     width it scales below legibility and adds load time. The title,
+     pills, and abstract remain — the visual lead is desktop-only. */
+  @media (max-width: 719px) {
+    .teaser { display: none; }
+    /* When the teaser is hidden, the `.teaser + .body` rules don't
+       apply (no preceding teaser sibling), so the body's normal
+       `margin: 56px auto 0` rule takes over — no extra fix needed. */
+  }
+  .teaser img {
+    display: block;
+    width: 100%;
+    height: auto;
+    /* No border, no background, no shadow. A well-composed teaser
+       (axes, dots, labels, internal contrast) doesn't need chrome —
+       added borders compete with the figure's own internal edges.
+       The surrounding page whitespace IS the frame. Modest corner
+       radius softens the corners without making the image look like
+       a card. */
+    border-radius: 6px;
+  }
+  .teaser figcaption {
+    margin: 12px auto 0;
+    max-width: 70ch;
+    font-family: var(--system);
+    font-size: 14px;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--muted-foreground, #6a6760);
+    text-align: center;
+  }
+
+  /* ============================================================
      Body — abstract, sections, BibTeX
      ============================================================ */
   .body { max-width: calc(72ch + 320px); margin: 56px auto 0; padding: 0 6vw 0; }
+  /* Soft section break between the teaser and the body. Without the
+     caption, the figure butts close to the Abstract heading; a short
+     centered hairline acts as a visual handoff — "figure ends, new
+     section starts" — without introducing visible chrome around the
+     image itself. The hairline is on the teaser's ::after so the
+     markup stays clean: no extra <hr> in the layout. */
+  .teaser { position: relative; }
+  .teaser::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 1px;
+    margin: 48px auto 0;
+    background: rgba(42, 39, 34, 0.18);
+  }
+  /* Tighten the body's top margin slightly since the hairline + its
+     own 48px margin above provide the section-break breathing room. */
+  .teaser + .body { margin-top: 40px; }
   .body h2 {
     font-family: var(--system); font-weight: 600; font-size: 22px;
     line-height: 1.2; letter-spacing: -.012em;

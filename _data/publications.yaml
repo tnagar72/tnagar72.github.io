@@ -306,6 +306,15 @@
   summary: "We audit 70 English–Spanish YA novels, turning 619 extracted characters into contextual embeddings and projecting them onto 25 theory-grounded sociocultural axes (warmth, literacy, status, and more). Separating <em>casting</em> (who gets associated with each language) from <em>framing</em> (how that language shifts portrayal), we find that Spanish-associated characters occupy a contradictory semantic space, and code-mixed text behaves as its own distinct register, not a midpoint between its two languages."
   # ────────── Research-page fields ──────────
   tldr:
+  # Teaser image — optional lead visual rendered between the actions
+  # row and the abstract. teaser_alt: required for screen-reader access
+  # (must describe the figure's content). teaser_caption: short italic
+  # caption rendered beneath the image.
+  teaser: /FAccT_2026/teaser.png
+  teaser_alt: "Two semantic-axis diagrams illustrating the casting and framing research questions: in RQ1, English-associated characters cluster toward warm/literate while Spanish-associated characters span the cold/illiterate quadrant; in RQ2, the same character Maria occupies different positions in English-only, Spanish-only, and Mixed-language contexts."
+  # teaser_caption is optional — uncomment to surface a short italic
+  # description beneath the image.
+  # teaser_caption: "The two research questions visualized on the semantic axes — casting (RQ1) and framing (RQ2) for the character Maria."
   accent: blue
   # Subjects + keywords lifted verbatim from the paper's own header:
   #   "Additional Key Words and Phrases: Bias auditing, Multilingual NLP,
