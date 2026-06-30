@@ -99,12 +99,16 @@
     }
     .venue-strip__meta-pre { display: none; }
     .venue-strip__sep { color: rgba(0,0,0,.55); margin: 0 7px; font-weight: 600; }
-    /* Each meta item is an inline-block nowrap chunk so multi-word
-       elements (e.g. "Vol 13, S4", "pp 4–5") never break mid-element.
-       Line breaks land between chunks at the · separators. */
+    /* Items wrap freely. Earlier the rule was `white-space: nowrap`
+       so multi-word short items (e.g. "Vol 13, S4") couldn't split
+       mid-phrase — but that broke when an item was a long phrase
+       like the FAccT proceedings name ("Proceedings of the 2026 ACM
+       Conference on Fairness, Accountability, and Transparency"),
+       which forced horizontal scroll on phones. If you ever need a
+       multi-word short item to stay together, use a non-breaking
+       space (`&nbsp;`) in the YAML for that pair. */
     .venue-strip__item {
-      display: inline-block;
-      white-space: nowrap;
+      display: inline;
     }
   }
 
@@ -290,6 +294,16 @@
     margin: 56px auto 0;
     padding: 0 6vw;
   }
+  /* Hide the teaser on mobile. The figure is dense (tiny character
+     labels like "Maria_MIXED", legend text, axis labels) — at phone
+     width it scales below legibility and adds load time. The title,
+     pills, and abstract remain — the visual lead is desktop-only. */
+  @media (max-width: 719px) {
+    .teaser { display: none; }
+    /* When the teaser is hidden, the `.teaser + .body` rules don't
+       apply (no preceding teaser sibling), so the body's normal
+       `margin: 56px auto 0` rule takes over — no extra fix needed. */
+  }
   .teaser img {
     display: block;
     width: 100%;
@@ -317,10 +331,24 @@
      Body — abstract, sections, BibTeX
      ============================================================ */
   .body { max-width: calc(72ch + 320px); margin: 56px auto 0; padding: 0 6vw 0; }
-  /* When a teaser precedes the body, drop the body's top margin so
-     the teaser's bottom + body's top don't compound into a giant gap.
-     Adjacent-sibling selector — no JS, no template branch. */
-  .teaser + .body { margin-top: 32px; }
+  /* Soft section break between the teaser and the body. Without the
+     caption, the figure butts close to the Abstract heading; a short
+     centered hairline acts as a visual handoff — "figure ends, new
+     section starts" — without introducing visible chrome around the
+     image itself. The hairline is on the teaser's ::after so the
+     markup stays clean: no extra <hr> in the layout. */
+  .teaser { position: relative; }
+  .teaser::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 1px;
+    margin: 48px auto 0;
+    background: rgba(42, 39, 34, 0.18);
+  }
+  /* Tighten the body's top margin slightly since the hairline + its
+     own 48px margin above provide the section-break breathing room. */
+  .teaser + .body { margin-top: 40px; }
   .body h2 {
     font-family: var(--system); font-weight: 600; font-size: 22px;
     line-height: 1.2; letter-spacing: -.012em;
