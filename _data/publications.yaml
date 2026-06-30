@@ -298,9 +298,11 @@
     - label: "Slides (coming soon)"
       url: "" # TODO — paste once the talk PDF is ready
       icon: "phosphor-lectern"
+      coming_soon_message: "Slides go up shortly after the FAccT '26 talk on June 27, 2026. Check back in a few days."
     - label: "Talk (coming soon)"
       url: "" # TODO — paste YouTube link if/when the recording is posted
       icon: "phosphor-youtube-logo"
+      coming_soon_message: "Talk recording will be linked once the FAccT organizers publish it (typically 2–4 weeks post-conference)."
   summary: "We audit 70 English–Spanish YA novels, turning 619 extracted characters into contextual embeddings and projecting them onto 25 theory-grounded sociocultural axes (warmth, literacy, status, and more). We ask two questions: who gets associated with each language (<em>casting</em>), and what that language does to a character's portrayal (<em>framing</em>)? We find that Spanish-associated characters occupy a contradictory semantic space, and code-mixed text behaves as its own distinct register — not a midpoint between its two languages."
   # ────────── Research-page fields ──────────
   tldr:

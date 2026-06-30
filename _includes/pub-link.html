@@ -14,10 +14,20 @@ Renders one icon-pill link.
     This is the fallback; anything not matched above is assumed to be
     an FA Solid token.
 
+Coming-soon pills: when `include.link.url` is empty/missing, the pill
+renders with `coming-soon` class, no href, and (if a coming_soon_message
+is set) a data-attribute the site-wide click handler reads to fire a
+toast. role="button" + tabindex="0" so keyboard/screen-reader users
+get the same affordance as mouse users.
+
 Add new Phosphor tokens to the explicit list. New `logo:` SVG paths
 just need to live somewhere under /Images/ (or any absolute URL).
 {%- endcomment -%}
-<a href="{{ include.link.url }}"{% if include.link.url contains 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}>
+{%- assign pending = false -%}
+{%- if include.link.url == nil or include.link.url == "" -%}
+  {%- assign pending = true -%}
+{%- endif -%}
+<a class="{% if pending %}coming-soon {% endif %}"{% unless pending %} href="{{ include.link.url }}"{% if include.link.url contains 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}{% endunless %}{% if pending and include.link.coming_soon_message %} role="button" tabindex="0" data-coming-soon-message="{{ include.link.coming_soon_message | escape }}"{% endif %}>
     {%- if include.link.icon == "phosphor-lectern" -%}
         <i class="ph-fill ph-lectern" aria-hidden="true"></i>
     {%- elsif include.link.icon == "phosphor-presentation-chart" -%}
@@ -30,5 +40,5 @@ just need to live somewhere under /Images/ (or any absolute URL).
     {%- else -%}
         <i class="fas {{ include.link.icon }}" aria-hidden="true"></i>
     {%- endif -%}
-    {{ include.link.label }}
+    {{ include.link.label }}{%- if pending -%}&nbsp;<span class="coming-soon-arrow" aria-hidden="true">&rarr;</span>{%- endif -%}
 </a>

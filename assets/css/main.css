@@ -533,6 +533,28 @@ section {
 }
 .pub-misc a:hover .pill-logo { opacity: 1; }
 
+/* Coming-soon pill styling for homepage publication block. Mirrors the
+   .btn-ghost.coming-soon pattern on research pages: muted text + bg,
+   no hover lift, default cursor (since the pill is not navigational).
+   The trailing → arrow is rendered as a separate <span> by pub-link.html. */
+.pub-misc a.coming-soon {
+    color: var(--muted-foreground);
+    background-color: rgba(0, 0, 0, 0.02);
+    opacity: 0.7;
+    cursor: pointer;
+}
+.pub-misc a.coming-soon:hover {
+    color: var(--muted-foreground);
+    background-color: rgba(0, 0, 0, 0.04);
+}
+.pub-misc a.coming-soon i {
+    opacity: 0.6;
+}
+.pub-misc a.coming-soon .coming-soon-arrow {
+    margin-left: 0.15em;
+    opacity: 0.65;
+}
+
 /* Contact */
 .section-header {
     margin-bottom: 1.5rem;
