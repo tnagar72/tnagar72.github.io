@@ -312,7 +312,9 @@
   # caption rendered beneath the image.
   teaser: /FAccT_2026/teaser.png
   teaser_alt: "Two semantic-axis diagrams illustrating the casting and framing research questions: in RQ1, English-associated characters cluster toward warm/literate while Spanish-associated characters span the cold/illiterate quadrant; in RQ2, the same character Maria occupies different positions in English-only, Spanish-only, and Mixed-language contexts."
-  teaser_caption: "The two research questions visualized on the semantic axes — casting (RQ1) and framing (RQ2) for the character Maria."
+  # teaser_caption is optional — uncomment to surface a short italic
+  # description beneath the image.
+  # teaser_caption: "The two research questions visualized on the semantic axes — casting (RQ1) and framing (RQ2) for the character Maria."
   accent: blue
   # Subjects + keywords lifted verbatim from the paper's own header:
   #   "Additional Key Words and Phrases: Bias auditing, Multilingual NLP,
