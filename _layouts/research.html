@@ -190,6 +190,31 @@
   {%- endif -%}
 </div>
 
+{%- comment -%}
+  Teaser image. Sits between the pills row and the body so it acts as
+  the visual lead-in to the abstract — like a Figure 1 in an academic
+  paper. Optional + fail-quiet: an entry without a `teaser:` field
+  renders the page exactly as before.
+
+  YAML fields:
+    teaser:          absolute path to image (e.g. /FAccT_2026/teaser.png)
+    teaser_alt:      screen-reader text describing the figure. Strongly
+                     encouraged for every teaser — without it the figure
+                     is invisible to screen-reader users. Falls back to
+                     an empty alt="" if missing (valid HTML, but worse
+                     accessibility).
+    teaser_caption:  optional visible italic caption beneath the image.
+                     Hidden entirely when missing/empty.
+{%- endcomment -%}
+{%- if pub.teaser and pub.teaser != "" -%}
+<figure class="teaser">
+  <img src="{{ pub.teaser | relative_url }}" alt="{{ pub.teaser_alt | default: '' | escape }}">
+  {%- if pub.teaser_caption and pub.teaser_caption != "" -%}
+  <figcaption>{{ pub.teaser_caption }}</figcaption>
+  {%- endif -%}
+</figure>
+{%- endif -%}
+
 <!-- Body -->
 <article class="body">
 
