@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {% include head.html %}
+<link rel="stylesheet" href="{{ '/assets/css/toast.css' | relative_url }}?v={{ site.time | date: '%s' }}">
 <body>
     {% include header.html %}
 
@@ -9,5 +10,32 @@
     </main>
 
     <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
+
+    {%- comment -%}
+      Toast system (assets/css/toast.css + assets/js/toast.js). Loaded
+      on every default-layout page (homepage, /writing/ index, etc.)
+      so the site-wide click handler below can surface a toast when a
+      visitor clicks a coming-soon pill in a publication entry.
+    {%- endcomment -%}
+    <script src="{{ '/assets/js/toast.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+    <script>
+      (function comingSoonToasts() {
+        document.querySelectorAll('a.coming-soon[data-coming-soon-message]').forEach(el => {
+          const fire = (e) => {
+            e.preventDefault();
+            if (typeof window.tnToast !== 'function') return;
+            window.tnToast({
+              title: el.textContent.replace('→', '').trim(),
+              desc:  el.dataset.comingSoonMessage,
+              duration: 4500,
+            });
+          };
+          el.addEventListener('click', fire);
+          el.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') fire(e);
+          });
+        });
+      })();
+    </script>
 </body>
 </html>

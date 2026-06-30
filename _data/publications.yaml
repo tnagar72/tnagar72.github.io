@@ -274,7 +274,7 @@
   type: conference
   featured: true # IS one of Tanay's main publications
   feature-order: 0 # 0 = highest priority; when surfaced, sits above the existing 3
-  homepage_hide: true # but suppress from the homepage block for now (pre-conference)
+  homepage_hide: false # surfaced on the homepage block now that the paper is published + presented
   selected: true
   # TODO — awards: if any. Delete this whole block if none.
   # awards:
@@ -298,13 +298,15 @@
     - label: "Slides (coming soon)"
       url: "" # TODO — paste once the talk PDF is ready
       icon: "phosphor-lectern"
+      coming_soon_message: "Slides usually go up shortly after the talk. Check back soon!"
     - label: "Talk (coming soon)"
       url: "" # TODO — paste YouTube link if/when the recording is posted
       icon: "phosphor-youtube-logo"
-  summary:
+      coming_soon_message: "Talk recordings usually go up 2–4 weeks after the conference. Check back soon!"
+  summary: "We audit 70 English–Spanish YA novels, turning 619 extracted characters into contextual embeddings and projecting them onto 25 theory-grounded sociocultural axes (warmth, literacy, status, and more). Separating <em>casting</em> (who gets associated with each language) from <em>framing</em> (how that language shifts portrayal), we find that Spanish-associated characters occupy a contradictory semantic space, and code-mixed text behaves as its own distinct register, not a midpoint between its two languages."
   # ────────── Research-page fields ──────────
   tldr:
-  accent: blue # TODO — color used by the project page; existing values seen: blue, grey
+  accent: blue
   # Subjects + keywords lifted verbatim from the paper's own header:
   #   "Additional Key Words and Phrases: Bias auditing, Multilingual NLP,
   #    Sociotechnical evaluation, Code-mixed language, Contextual

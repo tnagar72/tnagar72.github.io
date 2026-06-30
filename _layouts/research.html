@@ -44,13 +44,12 @@
   <link rel="stylesheet" href="{{ '/assets/css/research-page.css' | relative_url }}?v={{ site.time | date: '%s' }}">
 
   {%- comment -%}
-    Custom toast styling. Loaded only when this research page has a
-    bibtex block (the only thing that triggers a toast on these pages).
+    Custom toast styling. Always loaded on research pages — used by
+    the BibTeX "copy" button (when present) AND by coming-soon pill
+    clicks (which fire a toast with a per-pill timeline message).
     Replaces the previous vanilla-sonner CDN dependency.
   {%- endcomment -%}
-  {%- if pub.bibtex and pub.bibtex != "" -%}
   <link rel="stylesheet" href="{{ '/assets/css/toast.css' | relative_url }}?v={{ site.time | date: '%s' }}">
-  {%- endif -%}
 
   {%- if site.google_analytics -%}
   <!-- Google Analytics (GA4). Research pages bypass _includes/head.html
@@ -157,7 +156,7 @@
       {%- if link.url == nil or link.url == "" -%}
         {%- assign pending = true -%}
       {%- endif -%}
-      <a class="btn-ghost{% if pending %} coming-soon{% endif %}"{% unless pending %} href="{{ link.url | relative_url }}"{% if link.url contains 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}{% endunless %}>
+      <a class="btn-ghost{% if pending %} coming-soon{% endif %}"{% unless pending %} href="{{ link.url | relative_url }}"{% if link.url contains 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}{% endunless %}{% if pending and link.coming_soon_message %} role="button" tabindex="0" data-coming-soon-message="{{ link.coming_soon_message | escape }}"{% endif %}>
         {%- comment -%}
           Icon resolution mirrors _includes/pub-link.html. If you add a
           new Phosphor token there, add the matching branch here too.
@@ -241,11 +240,38 @@
   <span><a href="{{ '/' | relative_url }}">tnagar72.github.io</a></span>
 </footer>
 
-{%- if pub.bibtex and pub.bibtex != "" -%}
 <!-- Custom toast system (assets/css/toast.css + assets/js/toast.js).
-     Replaces the previous vanilla-sonner dependency. Provides a global
-     window.tnToast() function. -->
+     Always loaded on research pages — used both by the BibTeX "copy"
+     button (when present) and by coming-soon pill clicks (to surface
+     per-pill timeline messages). Provides a global window.tnToast(). -->
 <script src="{{ '/assets/js/toast.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+
+<!-- Click handler for coming-soon pills. The pending pills have no
+     href, so a click would be silent without this. Surfaces a toast
+     with the per-pill `coming_soon_message` from publications.yaml. -->
+<script>
+  (function comingSoonToasts() {
+    document.querySelectorAll('a.btn-ghost.coming-soon[data-coming-soon-message]').forEach(el => {
+      const fire = (e) => {
+        e.preventDefault();
+        if (typeof window.tnToast !== 'function') return;
+        window.tnToast({
+          title: el.textContent.replace('→', '').trim(),
+          desc:  el.dataset.comingSoonMessage,
+          duration: 4500,
+        });
+      };
+      el.addEventListener('click', fire);
+      // Keyboard activation: role="button" + tabindex="0" on the <a>
+      // means screen-reader and keyboard users get the same affordance.
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') fire(e);
+      });
+    });
+  })();
+</script>
+
+{%- if pub.bibtex and pub.bibtex != "" -%}
 <script>
   function copyBibtex() {
     const text = document.getElementById('bib').innerText;
