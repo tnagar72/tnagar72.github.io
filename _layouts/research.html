@@ -156,7 +156,7 @@
       {%- if link.url == nil or link.url == "" -%}
         {%- assign pending = true -%}
       {%- endif -%}
-      <a class="btn-ghost{% if pending %} coming-soon{% endif %}"{% unless pending %} href="{{ link.url | relative_url }}"{% if link.url contains 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}{% endunless %}{% if pending and link.coming_soon_message %} role="button" tabindex="0" data-coming-soon-message="{{ link.coming_soon_message | escape }}"{% endif %}>
+      <a class="btn-ghost{% if pending %} coming-soon{% endif %}"{% unless pending %} href="{{ link.url | relative_url }}"{% if link.url contains 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}{% endunless %}{% if pending %} role="button" tabindex="0"{% if link.coming_soon_message %} data-coming-soon-message="{{ link.coming_soon_message | escape }}"{% endif %}{% endif %}>
         {%- comment -%}
           Icon resolution mirrors _includes/pub-link.html. If you add a
           new Phosphor token there, add the matching branch here too.
@@ -177,7 +177,17 @@
         {%- elsif link.icon -%}
           <i class="fas {{ link.icon }}"></i>
         {%- endif -%}
-        {{ link.label }}{%- if pending -%}&nbsp;<span class="coming-soon-arrow" aria-hidden="true">&rarr;</span>{%- endif -%}
+        {%- comment -%}
+          Label rendering — auto-appends "(coming soon)" + arrow when
+          `pending` (empty url:). Strips any pre-existing "(coming
+          soon)" suffix from the YAML label so entries carrying the
+          old shape (`label: "Slides (coming soon)"`) still render
+          correctly without duplication. This keeps the YAML minimal:
+          set `label: "Slides"`, leave `url: ""`, and the layout does
+          the rest — including the toast wiring below.
+        {%- endcomment -%}
+        {%- assign clean_label = link.label | replace: " (coming soon)", "" -%}
+        {{ clean_label }}{%- if pending -%}&nbsp;(coming soon)&nbsp;<span class="coming-soon-arrow" aria-hidden="true">&rarr;</span>{%- endif -%}
       </a>
     {%- endfor -%}
     {%- if pub.bibtex and pub.bibtex != "" -%}
@@ -275,14 +285,20 @@
      href, so a click would be silent without this. Surfaces a toast
      with the per-pill `coming_soon_message` from publications.yaml. -->
 <script>
+  // Coming-soon click handler for research project pages. Selector
+  // matches ALL coming-soon pills (not only those with a message) so
+  // every pending pill fires a toast. Custom messages come from
+  // data-coming-soon-message when set; otherwise a friendly default
+  // renders. Mirrors the site-wide handler in _layouts/default.html.
   (function comingSoonToasts() {
-    document.querySelectorAll('a.btn-ghost.coming-soon[data-coming-soon-message]').forEach(el => {
+    const DEFAULT_DESC = 'Not quite ready yet — check back soon.';
+    document.querySelectorAll('a.btn-ghost.coming-soon').forEach(el => {
       const fire = (e) => {
         e.preventDefault();
         if (typeof window.tnToast !== 'function') return;
         window.tnToast({
-          title: el.textContent.replace('→', '').trim(),
-          desc:  el.dataset.comingSoonMessage,
+          title: el.textContent.replace('(coming soon)', '').replace('→', '').trim(),
+          desc:  el.dataset.comingSoonMessage || DEFAULT_DESC,
           duration: 4500,
         });
       };
