@@ -19,14 +19,19 @@
     {%- endcomment -%}
     <script src="{{ '/assets/js/toast.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
     <script>
+      // Coming-soon click handler. Selector now matches ALL coming-soon
+      // pills (not only those with a message) so every pending pill
+      // fires a toast. Custom messages come from data-coming-soon-message
+      // when set; otherwise a friendly default renders.
       (function comingSoonToasts() {
-        document.querySelectorAll('a.coming-soon[data-coming-soon-message]').forEach(el => {
+        const DEFAULT_DESC = 'Not quite ready yet — check back soon.';
+        document.querySelectorAll('a.coming-soon').forEach(el => {
           const fire = (e) => {
             e.preventDefault();
             if (typeof window.tnToast !== 'function') return;
             window.tnToast({
-              title: el.textContent.replace('→', '').trim(),
-              desc:  el.dataset.comingSoonMessage,
+              title: el.textContent.replace('(coming soon)', '').replace('→', '').trim(),
+              desc:  el.dataset.comingSoonMessage || DEFAULT_DESC,
               duration: 4500,
             });
           };

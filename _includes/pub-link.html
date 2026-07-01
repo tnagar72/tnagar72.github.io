@@ -27,7 +27,7 @@ just need to live somewhere under /Images/ (or any absolute URL).
 {%- if include.link.url == nil or include.link.url == "" -%}
   {%- assign pending = true -%}
 {%- endif -%}
-<a class="{% if pending %}coming-soon {% endif %}"{% unless pending %} href="{{ include.link.url }}"{% if include.link.url contains 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}{% endunless %}{% if pending and include.link.coming_soon_message %} role="button" tabindex="0" data-coming-soon-message="{{ include.link.coming_soon_message | escape }}"{% endif %}>
+<a class="{% if pending %}coming-soon {% endif %}"{% unless pending %} href="{{ include.link.url }}"{% if include.link.url contains 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}{% endunless %}{% if pending %} role="button" tabindex="0"{% if include.link.coming_soon_message %} data-coming-soon-message="{{ include.link.coming_soon_message | escape }}"{% endif %}{% endif %}>
     {%- if include.link.icon == "phosphor-lectern" -%}
         <i class="ph-fill ph-lectern" aria-hidden="true"></i>
     {%- elsif include.link.icon == "phosphor-presentation-chart" -%}
@@ -40,5 +40,13 @@ just need to live somewhere under /Images/ (or any absolute URL).
     {%- else -%}
         <i class="fas {{ include.link.icon }}" aria-hidden="true"></i>
     {%- endif -%}
-    {{ include.link.label }}{%- if pending -%}&nbsp;<span class="coming-soon-arrow" aria-hidden="true">&rarr;</span>{%- endif -%}
+    {%- comment -%}
+      Auto-append "(coming soon)" when pending. Any pre-existing
+      "(coming soon)" suffix in the YAML label is stripped first
+      so entries carrying the old shape still render correctly
+      without duplication. Mirrors the same logic in
+      _layouts/research.html.
+    {%- endcomment -%}
+    {%- assign clean_label = include.link.label | replace: " (coming soon)", "" -%}
+    {{ clean_label }}{%- if pending -%}&nbsp;(coming soon)&nbsp;<span class="coming-soon-arrow" aria-hidden="true">&rarr;</span>{%- endif -%}
 </a>

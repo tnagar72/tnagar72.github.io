@@ -298,7 +298,7 @@
     - label: "Slides"
       url: "/FAccT_2026/FAccT_2026_Slides.pdf"
       icon: "phosphor-lectern"
-    - label: "Talk (coming soon)"
+    - label: "Talk"
       url: "" # TODO — paste YouTube link if/when the recording is posted
       icon: "phosphor-youtube-logo"
       coming_soon_message: "Talk recordings usually go up 2–4 weeks after the conference. Check back soon!"
