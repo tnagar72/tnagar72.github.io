@@ -295,10 +295,9 @@
     - label: "TRAIL Lab"
       url: "https://trail.wcer.wisc.edu/"
       icon: "logo:/Images/trail-logo.svg"
-    - label: "Slides (coming soon)"
-      url: "" # TODO — paste once the talk PDF is ready
+    - label: "Slides"
+      url: "/FAccT_2026/FAccT_2026_Slides.pdf"
       icon: "phosphor-lectern"
-      coming_soon_message: "Slides usually go up shortly after the talk. Check back soon!"
     - label: "Talk (coming soon)"
       url: "" # TODO — paste YouTube link if/when the recording is posted
       icon: "phosphor-youtube-logo"
