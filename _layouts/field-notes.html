@@ -102,6 +102,10 @@
             // you can undo an accidental tap). This turned out to be a
             // simple like/toggle in practice, not Medium-style accumulation.
             var MAX_PER_VISITOR = 1;
+            // Thumbnail starts heart-only. Once the image accumulates
+            // this many total claps, the count number also appears
+            // next to the heart (social-proof threshold).
+            var SHOW_COUNT_AT = 5;
             // Compass's petal pattern: [x, y, turn, size]. Burst renders
             // five hearts into these offsets, same every tap.
             var PETALS = [
@@ -131,15 +135,14 @@
                 return Math.round(n / 1000) + 'k';
             }
 
-            function lsKey(slug)        { return 'fn-clap:' + slug; }
-            function myClaps(slug) {
-                try { return parseInt(localStorage.getItem(lsKey(slug)) || '0', 10) || 0; }
-                catch (e) { return 0; }
-            }
-            function setMyClaps(slug, n) {
-                try { localStorage.setItem(lsKey(slug), String(n)); }
-                catch (e) {}
-            }
+            // "Already clapped" state is kept in a plain in-memory map,
+            // so each page reload is a fresh slate — the visitor can
+            // clap each image again. No persistence by design (per the
+            // user's spec). If we ever want spam protection add
+            // sessionStorage with an expiry.
+            var clapMemory = Object.create(null);
+            function myClaps(slug)      { return clapMemory[slug] || 0; }
+            function setMyClaps(slug, n) { clapMemory[slug] = n; }
 
             function burst(btn) {
                 // One burst = 5 hearts spawned at the button center,
@@ -163,11 +166,21 @@
             }
 
             function syncCountBadge(btn, count) {
-                // Only matters inside the lightbox clone. We update the
-                // badge if it exists; thumbnail state has no badge.
+                // Lightbox clone badge (always shown when present).
                 var badge = btn.querySelector('.clap__count');
-                if (!badge) return;
-                badge.textContent = fmtCount(count);
+                if (badge) badge.textContent = fmtCount(count);
+                // Thumbnail-side count: shown only once count crosses
+                // the social-proof threshold. Appears / disappears
+                // live if the count rises above or falls below.
+                var thumb = btn.querySelector('.clap__thumb-count');
+                if (thumb) {
+                    if (count != null && count >= SHOW_COUNT_AT) {
+                        thumb.textContent = fmtCount(count);
+                        thumb.classList.remove('is-hidden-thumb-count');
+                    } else {
+                        thumb.classList.add('is-hidden-thumb-count');
+                    }
+                }
             }
 
             function registerClap(card) {
@@ -226,6 +239,10 @@
                         sourceBtn.classList.add('is-liked');
                         sourceBtn.dataset.count = btn.dataset.count;
                         sourceBtn.dataset.hydrateMine = btn.dataset.hydrateMine;
+                        // Push the new count through to the source
+                        // thumbnail's own threshold check so it shows
+                        // the number if we just crossed SHOW_COUNT_AT.
+                        syncCountBadge(sourceBtn, displayed);
                     }
                 }
                 // Re-trigger the heart pop on every tap by removing +

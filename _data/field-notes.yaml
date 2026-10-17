@@ -4,9 +4,14 @@
 # Per-image fields:
 #   filename       (required)  file in Field_Notes_Images/
 #   alt            (required)  alt text for the <img>
-#   aspect_ratio   (optional)  override the default 4/5 portrait for
-#                              this card. Use "4/3" for landscape,
-#                              "1/1" for square, etc. Omit for default.
+#   aspect_ratio   (optional)  opt-in: show the FULL image inside the
+#                              standard 4:5 tile (no cropping), with
+#                              aged-white letterbox bars above/below.
+#                              Use for images whose composition would
+#                              be hurt by edge cropping. Any truthy
+#                              value triggers it (e.g. "landscape",
+#                              "4/3", true) — the value itself is a
+#                              hint for future readers, not applied.
 
 images:
   - filename: IMG_7171.jpg
@@ -53,14 +58,12 @@ images:
     alt: "Red-orange bearded dragon on torn blue jeans"
   - filename: white-cat-night.png
     alt: "White cat at night, Student Academy sign behind"
-    # Landscape shot — override the default 4/5 portrait so the
-    # cat and the "Student Academy" sign don't get cropped off.
-    aspect_ratio: "4/3"
+    # Landscape — keep the full frame (Student Academy sign on the right).
+    aspect_ratio: landscape
   - filename: pigeon-window-reflection.png
     alt: "Pigeon on a windowsill with its reflection in the pane"
-    # Landscape shot — the pigeon + its mirrored reflection need
-    # the full width or one side disappears.
-    aspect_ratio: "4/3"
+    # Landscape — keep the full frame (mirrored reflection on the right).
+    aspect_ratio: landscape
 
 metadata:
   title: "Field Notes"
