@@ -1,3 +1,39 @@
-<div class="postcard">
-    <img src="Field_Notes_Images/{{ include.image.filename }}" alt="{{ include.image.alt }}">
+{%- comment -%}
+  Per-image aspect-ratio override. Default is 4/5 (portrait) from
+  field-notes.css. An image entry with `aspect_ratio: "3/2"` (or
+  "1/1", "4/3", etc.) overrides just that card via inline style —
+  the only valid reason to use inline style here, since the value is
+  data-driven and the alternative would be a per-image CSS class per
+  image. object-fit: cover stays in effect either way.
+
+  data-slug: a stable, URL-safe key for this image, used by the clap
+  button to namespace its counter (CounterAPI) and its localStorage
+  "already clapd" flag. We derive it from the filename so adding a
+  new image to the gallery auto-provisions a counter with no manual
+  work. The slug strips the extension and collapses spaces/dots to
+  dashes — matches what CounterAPI's slug validator accepts.
+{%- endcomment -%}
+{%- assign slug = include.image.filename
+  | split: "."
+  | pop
+  | join: "."
+  | replace: " ", "-"
+  | replace: ".", "-"
+  | downcase -%}
+<div class="postcard" data-slug="{{ slug }}">
+    <img src="Field_Notes_Images/{{ include.image.filename }}" alt="{{ include.image.alt }}"{% if include.image.aspect_ratio %} style="aspect-ratio: {{ include.image.aspect_ratio }};"{% endif %}>
+    {%- comment -%}
+      Clap button (Medium-style: rapid-tap to accumulate claps).
+      Thumbnail state: minimal muted heart icon at the bottom-right
+      of the image. Lightbox state (styled by .postcard--lightbox
+      .clap in CSS): bigger, pulled out to a right-side sidebar of
+      the enlarged view, with a count badge. Each tap bumps count
+      locally + sends a +1 to CounterAPI. No un-clap.
+    {%- endcomment -%}
+    <button class="clap" type="button" aria-label="Clap for this photo (tap repeatedly)" data-count="0">
+        <svg class="clap__heart" viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
+            <path class="clap__heart-outline" d="M12 20.3l-7.5-7.1C2.3 10.9 2.3 7.4 4.5 5.2c2-2 5.2-2 7.2 0l.3.3.3-.3c2-2 5.2-2 7.2 0 2.2 2.2 2.2 5.7 0 7.9L12 20.3z" fill="none" stroke="currentColor" stroke-width="1.8"/>
+            <path class="clap__heart-fill" d="M12 20.3l-7.5-7.1C2.3 10.9 2.3 7.4 4.5 5.2c2-2 5.2-2 7.2 0l.3.3.3-.3c2-2 5.2-2 7.2 0 2.2 2.2 2.2 5.7 0 7.9L12 20.3z" fill="currentColor"/>
+        </svg>
+    </button>
 </div>
