@@ -134,7 +134,11 @@ h1 {
 .postcard {
     position: relative;
     background: var(--aged-white);
-    padding: 1rem;
+    /* Asymmetric padding: standard 1rem on top/sides, bigger 2rem on
+       bottom. The wider bottom gutter is where the clap heart lives
+       (so it sits ON the frame, not on the image) and visually echoes
+       the signature margin on real postcards. */
+    padding: 1rem 1rem 2rem;
     box-shadow:
         0 2px 8px var(--shadow-warm),
         0 8px 24px rgba(70, 50, 30, 0.08);
@@ -217,6 +221,8 @@ h1 {
     aspect-ratio: 4 / 5;
     border: 3px solid var(--aged-white);
     box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+    /* Thumbnails open a lightbox on click. */
+    cursor: zoom-in;
 }
 
 footer {
@@ -269,4 +275,335 @@ footer {
     .subtitle {
         font-size: 1rem;
     }
+}
+
+/* -------------------------------------------------------------------
+   Lightbox: click a postcard to enlarge it. Shows the clicked card
+   (not just the <img>) over a blurred, dimmed gallery — same frame
+   and washi-tape chrome as the grid, scaled up. The backdrop uses
+   backdrop-filter: blur() so the gallery stays visible-but-softened
+   underneath rather than disappearing behind pure black.
+
+   Dismiss handled by JS at the bottom of _layouts/field-notes.html:
+   close button, backdrop click, or Esc.
+   ------------------------------------------------------------------- */
+.lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(2rem, 6vh, 5rem) clamp(1rem, 4vw, 3rem);
+    /* Soft parchment tint, not full black. Blur applies to whatever
+       is behind this element (the gallery), so the vibe is "the page
+       is still there, you've just focused in on one card." */
+    background: rgba(241, 234, 220, 0.55);
+    backdrop-filter: blur(12px) saturate(0.9);
+    -webkit-backdrop-filter: blur(12px) saturate(0.9);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0s linear 0.25s;
+}
+.lightbox.is-open {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.25s ease, visibility 0s linear 0s;
+}
+
+/* The clone container — just a positioning context so flex can
+   center it. Sized to leave breathing room around the enlarged card. */
+.lightbox__stage {
+    max-width: min(900px, 90vw);
+    max-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* The cloned .postcard inside the lightbox. Overrides the grid-sized
+   defaults: no stagger animation (already animated once in grid),
+   no hover transform, bigger washi tape to match the bigger scale,
+   larger shadow for lift. The inline style="--rotation:0deg" set by
+   the JS zeros out the tilt. */
+.postcard--lightbox {
+    animation: none !important;
+    opacity: 1 !important;
+    padding: 1.5rem;
+    max-width: min(900px, 90vw);
+    max-height: 90vh;
+    /* Scale the shadow up so the hero-sized card feels seated,
+       not floating weightlessly. */
+    box-shadow:
+        0 12px 32px var(--shadow-warm),
+        0 32px 80px rgba(70, 50, 30, 0.25) !important;
+}
+.postcard--lightbox:hover {
+    /* Already at hero size — don't translate or scale further. */
+    transform: rotate(0deg) !important;
+    box-shadow:
+        0 12px 32px var(--shadow-warm),
+        0 32px 80px rgba(70, 50, 30, 0.25) !important;
+}
+/* Scale up the washi-tape corners so they still read at hero size. */
+.postcard--lightbox::before,
+.postcard--lightbox::after {
+    width: 80px;
+    height: 28px;
+}
+.postcard--lightbox::before { top: -12px; }
+.postcard--lightbox::after  { bottom: -12px; }
+
+/* The enlarged image. object-fit: contain so no cropping at hero size
+   — the whole frame is visible even for odd aspect ratios. Capped by
+   viewport math so the whole card (frame + image) stays on screen. */
+.postcard--lightbox img {
+    aspect-ratio: auto !important;
+    object-fit: contain;
+    max-width: 100%;
+    max-height: calc(90vh - 3rem); /* leaves room for the postcard padding */
+    width: auto;
+    height: auto;
+}
+
+/* Close button — aged terracotta tint picked up from the washi tape
+   so it reads as part of the system, not a stark modal × on black. */
+.lightbox__close {
+    position: fixed;
+    top: clamp(1rem, 3vh, 2rem);
+    right: clamp(1rem, 3vw, 2rem);
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    background: var(--aged-white);
+    color: #6b4a3a;
+    font-size: 1.75rem;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow:
+        0 2px 8px var(--shadow-warm),
+        0 8px 24px rgba(70, 50, 30, 0.15);
+    transition: transform 0.2s ease, background 0.2s ease;
+    z-index: 1001;
+    font-family: inherit;
+    /* Nudge the × up a hair — most fonts render it low in the box. */
+    padding: 0 0 2px 0;
+}
+.lightbox__close:hover {
+    transform: scale(1.08) rotate(90deg);
+    background: #fff;
+}
+.lightbox__close:focus-visible {
+    outline: 2px solid #6b4a3a;
+    outline-offset: 3px;
+}
+
+/* Honor reduced-motion preferences: no spin on the close button, no
+   fade transition — just show/hide. */
+@media (prefers-reduced-motion: reduce) {
+    .lightbox { transition: none; }
+    .lightbox__close:hover { transform: scale(1.05); }
+}
+
+/* -------------------------------------------------------------------
+   Clap button (Medium-style, modeled on Compass's Clap component).
+   - Thumbnail state: minimal muted heart icon in the bottom-right of
+     the image, no chip chrome. Rapid-tap to accumulate claps.
+   - Lightbox state: bigger button pulled out to the right side of the
+     enlarged postcard as a sidebar, with a count badge below.
+   - Burst: EACH tap flings 5 hearts outward in a fixed petal pattern
+     (Compass coordinates). Pop animation re-fires per tap via the
+     short-lived .is-popping class the JS toggles.
+   - Color: #3478F6 — iOS system blue (rgb 52/120/246).
+   - No un-clap: counts only go up.
+   ------------------------------------------------------------------- */
+.clap {
+    position: absolute;
+    /* The postcard has a 2rem (32px) bottom gutter — we center the
+       heart vertically inside it so there's a true strip of aged-white
+       both above and below the heart. Flush-right with a small inset
+       so it doesn't crowd the postcard edge. */
+    bottom: 0.25rem;
+    right: 0.5rem;
+    z-index: 15;
+    display: inline-grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    /* Default muted ink color — reads against the aged-white gutter
+       (not against the image), so no drop-shadow needed. */
+    color: rgba(61, 49, 40, 0.5); /* --ink at ~50% */
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+.clap__heart {
+    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.clap:hover               { color: #3478F6; }
+.clap:hover .clap__heart  { transform: scale(1.1); }
+.clap:focus-visible       { outline: 2px solid #3478F6; outline-offset: 2px; }
+
+.clap__heart-fill    { opacity: 0; transform-origin: center; transform: scale(0.7); transition: opacity 0.18s ease, transform 0.28s cubic-bezier(0.2, 0.8, 0.3, 1.3); }
+.clap__heart-outline { opacity: 1; transition: opacity 0.18s ease; }
+
+/* Liked state. */
+/* Empty-state polish: the thumbnail clap button is hidden until the
+   image has at least one clap. Lightbox clone always shows the button
+   so the first-clap entry point exists. */
+.gallery .postcard .clap.is-hidden-thumb { display: none; }
+
+/* Clapped-at-least-once state: filled heart. */
+.clap.is-liked                      { color: #3478F6; }
+.clap.is-liked .clap__heart-fill    { opacity: 1; transform: scale(1); }
+.clap.is-liked .clap__heart-outline { opacity: 0; }
+/* Per-tap pop: added for ~450ms on every tap by the JS, then removed
+   so the next tap can re-trigger it. */
+.clap.is-popping .clap__heart       { animation: heartPop 420ms cubic-bezier(0.2, 0.8, 0.3, 1.3); }
+
+@keyframes heartPop {
+    0%   { transform: scale(0.7); }
+    45%  { transform: scale(1.22); }
+    100% { transform: scale(1); }
+}
+
+/* Burst: appended by JS as .clap__burst with 5 hearts inside. Each
+   heart is absolutely-positioned at the button center and animates
+   out to (--heart-x, --heart-y). Coordinates lifted from Compass's
+   Like Burst (see pasted component): a five-petal spread. */
+.clap__burst {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    display: grid;
+    place-items: center;
+}
+.clap__burst svg {
+    position: absolute;
+    width: var(--heart-size, 11px);
+    height: var(--heart-size, 11px);
+    color: #3478F6;
+    opacity: 0;
+    animation: heartScatter 850ms var(--heart-delay, 0ms) cubic-bezier(0.16, 0.7, 0.3, 1) both;
+}
+/* Varied blues within the burst so it reads as particles, not a block. */
+/* Varied iOS-blue tones within the burst so it reads as particles,
+   not a block. Lighter + darker variants of the main #3478F6. */
+.clap__burst svg:nth-child(5n+2) { color: #6ba1fa; } /* lighter sky */
+.clap__burst svg:nth-child(5n+3) { color: #1a56c7; } /* deeper royal */
+
+@keyframes heartScatter {
+    0%   { opacity: 0; transform: translate(0, 0) scale(0.25); }
+    12%  { opacity: 1; }
+    65%  { opacity: 0.9; }
+    100% { opacity: 0; transform: translate(var(--heart-x), var(--heart-y)) rotate(var(--heart-turn)) scale(0.65); }
+}
+
+/* The lightbox clone keeps the .clap button, but we transform it
+   into a right-side sidebar: pulled OUT of the postcard frame to
+   the right, vertically centered, bigger, with a count badge. */
+.postcard--lightbox {
+    /* Allow children (the pulled-out like sidebar) to render outside
+       the postcard's bounds without being clipped. */
+    overflow: visible;
+}
+.postcard--lightbox .clap {
+    position: absolute;
+    top: 50%;
+    right: -4.5rem;             /* floats outside the frame */
+    bottom: auto;
+    transform: translateY(-50%);
+    width: 56px;
+    height: 56px;
+    /* No background chip — just the heart floating in the lightbox
+       backdrop. Drop-shadow on the heart svg keeps it readable
+       against whatever's behind. */
+    background: transparent;
+    color: rgba(30, 25, 20, 0.55);
+    /* The hover state should still land on blue, not re-apply the
+       translateY from the thumbnail hover. */
+}
+.postcard--lightbox .clap:hover               { color: #3478F6; transform: translateY(-50%); }
+.postcard--lightbox .clap:hover .clap__heart  { transform: scale(1.1); }
+.postcard--lightbox .clap.is-liked            { color: #3478F6; }
+.postcard--lightbox .clap__heart {
+    width: 28px;
+    height: 28px;
+    /* Floating against the blurred-gallery backdrop with no chip
+       behind, so bring the drop-shadow back for readability. */
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+}
+
+/* Count badge pinned below the sidebar clap button. Floating text,
+   no pill chrome — matches the chip-less sidebar heart. */
+.clap__count {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
+}
+
+/* On narrow viewports the sidebar can't float to the right (no room);
+   tuck it inside the frame at the bottom-right like the thumbnail. */
+@media (max-width: 640px) {
+    .postcard--lightbox .clap {
+        top: auto;
+        bottom: 1rem;
+        right: 1rem;
+        transform: none;
+    }
+    .postcard--lightbox .clap:hover { transform: none; }
+    .clap__count { display: none; } /* no room for it either */
+}
+
+/* -------------------------------------------------------------------
+   3D tilt on hover: subtle, follows pointer. Only applies at hover-
+   capable, fine pointer environments (desktop with mouse). The CSS
+   just sets up the perspective + transform surfaces; JS writes the
+   actual rotation into --tilt-x / --tilt-y variables on each move.
+   ------------------------------------------------------------------- */
+@media (hover: hover) and (pointer: fine) {
+    .gallery { perspective: 1200px; }
+    .postcard {
+        /* Replace the author-controlled rotation with a combined
+           transform that layers (a) the per-card tilt baseline the
+           --rotation var already encodes, (b) the pointer-driven 3D
+           tilt. Only engages when the card has .is-tilting. */
+        transform-style: preserve-3d;
+    }
+    .postcard.is-tilting {
+        /* While hovered, suppress the baseline rotation and defer to
+           the pointer-tracked tilt. The transition keeps motion
+           feeling springy on entry and settle on leave. */
+        transform:
+            perspective(1200px)
+            rotateX(var(--tilt-x, 0deg))
+            rotateY(var(--tilt-y, 0deg))
+            translateY(-6px)
+            scale(1.015);
+        transition: transform 0.15s ease-out;
+    }
+    .postcard.is-tilting img {
+        /* Subtle parallax: image sits a touch forward of the frame
+           at tilt, so you feel depth not just rotation. */
+        transform: translateZ(12px);
+        transition: transform 0.2s ease-out;
+    }
+}
+/* Reduced motion: disable tilt entirely. */
+@media (prefers-reduced-motion: reduce) {
+    .postcard.is-tilting { transform: none !important; }
+    .postcard.is-tilting img { transform: none !important; }
+    .clap__burst { display: none; }
 }

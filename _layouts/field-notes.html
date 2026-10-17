@@ -18,5 +18,351 @@
     <footer>
         <p>{{ site.data.field-notes.metadata.copyright }}</p>
     </footer>
+
+    {%- comment -%}
+      Lightbox: shows the clicked postcard enlarged — same frame, same
+      washi-tape corners — on top of a blurred, dimmed gallery behind.
+      We clone the clicked .postcard into .lightbox__stage so the
+      enlarged view carries all the chrome, not just the raw <img>.
+      Dismiss: close button, click on backdrop, or Esc.
+    {%- endcomment -%}
+    <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-label="Enlarged photograph">
+        <button class="lightbox__close" type="button" aria-label="Close">&times;</button>
+        <div class="lightbox__stage"></div>
+    </div>
+
+    <script>
+        /* ---------------------------------------------------------------
+           Lightbox: click a postcard → enlarge it. Clone the whole
+           .postcard so the enlarged view keeps the frame + washi tape.
+           --------------------------------------------------------------- */
+        (function () {
+            var lb      = document.getElementById('lightbox');
+            var lbStage = lb.querySelector('.lightbox__stage');
+            var lbClose = lb.querySelector('.lightbox__close');
+
+            function openCard(sourceCard) {
+                var clone = sourceCard.cloneNode(true);
+                clone.style.setProperty('--rotation', '0deg');
+                clone.classList.add('postcard--lightbox');
+                // Suppress the tilt class in the clone — the enlarged
+                // view should sit level, not keep whatever hover tilt
+                // was on the source card at click time.
+                clone.classList.remove('is-tilting');
+                clone.style.removeProperty('--tilt-x');
+                clone.style.removeProperty('--tilt-y');
+                lbStage.innerHTML = '';
+                lbStage.appendChild(clone);
+                lb.classList.add('is-open');
+                lb.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+            }
+            function close() {
+                lb.classList.remove('is-open');
+                lb.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+                setTimeout(function () { lbStage.innerHTML = ''; }, 250);
+            }
+
+            document.querySelector('.gallery').addEventListener('click', function (e) {
+                // Don't open the lightbox if the user clicked the clap
+                // button (or any descendant of it). Clap handler runs
+                // first (its own listener below).
+                if (e.target.closest('.clap')) return;
+                var card = e.target.closest('.postcard');
+                if (!card) return;
+                openCard(card);
+            });
+
+            lbClose.addEventListener('click', close);
+            lb.addEventListener('click', function (e) {
+                if (e.target === lb || e.target === lbStage) close();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && lb.classList.contains('is-open')) close();
+            });
+        })();
+
+        /* ---------------------------------------------------------------
+           Clap button (Medium-style, modeled on Compass's Clap component).
+           - Rapid-tap or click to accumulate claps. Each tap bumps count
+             locally and spawns a petal of 5 hearts flying outward.
+           - No un-clap: counts only go up (per the Medium model).
+           - Global count stored on CounterAPI; per-visitor cap stored in
+             localStorage so a refresh doesn't let you spam from zero.
+           - API failures silent-fail: UI still animates, count still
+             rises locally for the current visitor, nothing persisted.
+           - Lightbox-only count badge: when the enlarged view is open,
+             a small count chip is appended under the sidebar button.
+           --------------------------------------------------------------- */
+        (function () {
+            var API = 'https://api.counterapi.dev/v2';
+            var WORKSPACE = 'tnagar72-field-notes';
+            // One clap per visitor per image. Second tap un-claps (so
+            // you can undo an accidental tap). This turned out to be a
+            // simple like/toggle in practice, not Medium-style accumulation.
+            var MAX_PER_VISITOR = 1;
+            // Compass's petal pattern: [x, y, turn, size]. Burst renders
+            // five hearts into these offsets, same every tap.
+            var PETALS = [
+                [-28, -18, -20, 11],
+                [ -8, -36, -12, 13],
+                [ 25, -27,  18, 12],
+                [ 34,  10,  22, 11],
+                [-24,  26, -18, 10]
+            ];
+            var HEART_PATH = 'M12 20.3l-7.5-7.1C2.3 10.9 2.3 7.4 4.5 5.2c2-2 5.2-2 7.2 0l.3.3.3-.3c2-2 5.2-2 7.2 0 2.2 2.2 2.2 5.7 0 7.9L12 20.3z';
+
+            function url(slug, action) {
+                return API + '/' + WORKSPACE + '/' + encodeURIComponent(slug) + '/' + action;
+            }
+            function apiCall(slug, action) {
+                var ctl = new AbortController();
+                var t = setTimeout(function () { ctl.abort(); }, 3000);
+                return fetch(url(slug, action), { signal: ctl.signal })
+                    .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+                    .finally(function () { clearTimeout(t); });
+            }
+
+            function fmtCount(n) {
+                if (n == null) return '—';
+                if (n < 1000) return String(n);
+                if (n < 10000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+                return Math.round(n / 1000) + 'k';
+            }
+
+            function lsKey(slug)        { return 'fn-clap:' + slug; }
+            function myClaps(slug) {
+                try { return parseInt(localStorage.getItem(lsKey(slug)) || '0', 10) || 0; }
+                catch (e) { return 0; }
+            }
+            function setMyClaps(slug, n) {
+                try { localStorage.setItem(lsKey(slug), String(n)); }
+                catch (e) {}
+            }
+
+            function burst(btn) {
+                // One burst = 5 hearts spawned at the button center,
+                // flung to the PETALS coordinates. Element self-removes
+                // after the longest animation + delay has run.
+                var b = document.createElement('span');
+                b.className = 'clap__burst';
+                PETALS.forEach(function (p, i) {
+                    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                    svg.setAttribute('viewBox', '0 0 24 24');
+                    svg.style.setProperty('--heart-x', p[0] + 'px');
+                    svg.style.setProperty('--heart-y', p[1] + 'px');
+                    svg.style.setProperty('--heart-turn', p[2] + 'deg');
+                    svg.style.setProperty('--heart-size', p[3] + 'px');
+                    svg.style.setProperty('--heart-delay', ((i % 3) * 24) + 'ms');
+                    svg.innerHTML = '<path d="' + HEART_PATH + '" fill="currentColor"/>';
+                    b.appendChild(svg);
+                });
+                btn.appendChild(b);
+                setTimeout(function () { b.remove(); }, 1000);
+            }
+
+            function syncCountBadge(btn, count) {
+                // Only matters inside the lightbox clone. We update the
+                // badge if it exists; thumbnail state has no badge.
+                var badge = btn.querySelector('.clap__count');
+                if (!badge) return;
+                badge.textContent = fmtCount(count);
+            }
+
+            function registerClap(card) {
+                var slug = card.dataset.slug;
+                var btn = card.querySelector('.clap');
+                if (!btn) return;
+
+                var mine = myClaps(slug);
+                var serverBase = parseInt(btn.dataset.serverCount || '0', 10) || 0;
+                var hydrateMine = parseInt(btn.dataset.hydrateMine || '0', 10) || 0;
+
+                // Cap is 1 per visitor per image. Second tap un-claps.
+                var isUnclap = mine >= MAX_PER_VISITOR;
+                if (isUnclap) {
+                    mine = 0;
+                    setMyClaps(slug, 0);
+                    btn.classList.remove('is-liked');
+                    // Fire a "down" so the global number decrements too.
+                    apiCall(slug, 'down').catch(function () {});
+                } else {
+                    mine += 1;
+                    setMyClaps(slug, mine);
+                }
+
+                // Visible count: server base + this visitor's net.
+                var displayed = Math.max(0, serverBase + mine - hydrateMine);
+                btn.dataset.count = String(displayed);
+                syncCountBadge(btn, displayed);
+
+                // If we un-clapped and the image is back to zero, hide
+                // the thumbnail again to keep the empty-state polish.
+                if (isUnclap && displayed === 0) {
+                    btn.classList.add('is-hidden-thumb');
+                    if (btn.closest('.postcard--lightbox')) {
+                        var sb = document.querySelector('.gallery .postcard[data-slug="' + slug + '"] .clap');
+                        if (sb) {
+                            sb.classList.add('is-hidden-thumb');
+                            sb.classList.remove('is-liked');
+                            sb.dataset.count = '0';
+                        }
+                    }
+                    return;
+                }
+                if (isUnclap) return; // decremented but still > 0, no burst
+
+                burst(btn);
+                btn.classList.add('is-liked');
+                // If this was the first clap (empty state previously
+                // hid the thumbnail heart), reveal it now. Also mirror
+                // to the source thumbnail if we're in the lightbox.
+                btn.classList.remove('is-hidden-thumb');
+                if (btn.closest('.postcard--lightbox')) {
+                    var sourceBtn = document.querySelector('.gallery .postcard[data-slug="' + slug + '"] .clap');
+                    if (sourceBtn) {
+                        sourceBtn.classList.remove('is-hidden-thumb');
+                        sourceBtn.classList.add('is-liked');
+                        sourceBtn.dataset.count = btn.dataset.count;
+                        sourceBtn.dataset.hydrateMine = btn.dataset.hydrateMine;
+                    }
+                }
+                // Re-trigger the heart pop on every tap by removing +
+                // re-adding is-popping across a frame boundary.
+                btn.classList.remove('is-popping');
+                // eslint-disable-next-line no-unused-expressions
+                void btn.offsetWidth; // force reflow so the animation restarts
+                btn.classList.add('is-popping');
+                setTimeout(function () { btn.classList.remove('is-popping'); }, 450);
+
+                apiCall(slug, 'up').catch(function () {
+                    // Silent fail — nothing to tell the user, their burst
+                    // and local counter already fired.
+                });
+            }
+
+            function hydrate() {
+                document.querySelectorAll('.postcard[data-slug]').forEach(function (card) {
+                    var slug = card.dataset.slug;
+                    var btn = card.querySelector('.clap');
+                    if (!btn) return;
+
+                    var mine = myClaps(slug);
+                    btn.dataset.hydrateMine = String(mine);
+                    if (mine > 0) btn.classList.add('is-liked');
+                    // Start hidden by default on thumbnails until we
+                    // confirm this image has claps. Prevents a flash of
+                    // "all hearts visible" during hydration.
+                    btn.classList.add('is-hidden-thumb');
+
+                    apiCall(slug, 'stats')
+                        .then(function (data) {
+                            var n = (data && data.data && (data.data.up_count || data.data.value || 0)) || 0;
+                            btn.dataset.serverCount = String(n);
+                            btn.dataset.count = String(n);
+                            // Thumbnail only shows if the total count
+                            // (server + this visitor's local) > 0.
+                            if ((n + mine) > 0) btn.classList.remove('is-hidden-thumb');
+                            syncCountBadge(btn, n);
+                        })
+                        .catch(function () {
+                            // API failed — leave thumbnail hidden but
+                            // if the visitor has already clapped this
+                            // locally, show it based on their own count.
+                            btn.dataset.serverCount = '0';
+                            if (mine > 0) btn.classList.remove('is-hidden-thumb');
+                            syncCountBadge(btn, null);
+                        });
+                });
+            }
+
+            // Delegated listener on the gallery handles thumbnail claps.
+            document.querySelector('.gallery').addEventListener('click', function (e) {
+                var btn = e.target.closest('.clap');
+                if (!btn) return;
+                e.stopPropagation(); // don't open the lightbox
+                var card = btn.closest('.postcard');
+                registerClap(card);
+            });
+
+            // The lightbox clones a postcard; the clone's clap button
+            // needs its own handler. Delegated on the lightbox stage
+            // since the clone is replaced on every open.
+            document.querySelector('.lightbox__stage').addEventListener('click', function (e) {
+                var btn = e.target.closest('.clap');
+                if (!btn) return;
+                e.stopPropagation();
+                var card = btn.closest('.postcard');
+                registerClap(card);
+            });
+
+            // When the lightbox opens, add a count badge to the cloned
+            // clap button and keep it in sync with the source card's
+            // current count. Hook into the lightbox open path.
+            var lb = document.getElementById('lightbox');
+            var observer = new MutationObserver(function () {
+                var clone = lb.querySelector('.postcard--lightbox');
+                if (!clone) return;
+                var cloneBtn = clone.querySelector('.clap');
+                if (!cloneBtn || cloneBtn.querySelector('.clap__count')) return;
+                // Carry the count fields from the source card's button
+                // over to the clone (cloneNode(true) does copy them, but
+                // we're defensive).
+                var sourceSlug = clone.dataset.slug;
+                var source = document.querySelector('.gallery .postcard[data-slug="' + sourceSlug + '"] .clap');
+                if (source) {
+                    cloneBtn.dataset.serverCount = source.dataset.serverCount || '0';
+                    cloneBtn.dataset.count = source.dataset.count || '0';
+                    cloneBtn.dataset.hydrateMine = source.dataset.hydrateMine || '0';
+                }
+                var badge = document.createElement('span');
+                badge.className = 'clap__count';
+                badge.textContent = fmtCount(parseInt(cloneBtn.dataset.count || '0', 10));
+                cloneBtn.appendChild(badge);
+            });
+            observer.observe(lb, { childList: true, subtree: true });
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', hydrate);
+            } else {
+                hydrate();
+            }
+        })();
+
+        /* ---------------------------------------------------------------
+           3D tilt on hover (vanilla port of the Bencho Tilt Card idea).
+           Only runs on fine-pointer / hover-capable environments and
+           when the visitor hasn't asked for reduced motion.
+           --------------------------------------------------------------- */
+        (function () {
+            var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+            var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (!canHover || reduceMotion) return;
+
+            var MAX_TILT = 8; // degrees, each axis. Max 20 looks goofy at postcard sizes.
+
+            document.querySelectorAll('.postcard').forEach(function (card) {
+                card.addEventListener('pointerenter', function () {
+                    card.classList.add('is-tilting');
+                });
+                card.addEventListener('pointermove', function (e) {
+                    var rect = card.getBoundingClientRect();
+                    // Normalize cursor to [-1, 1] on each axis, centered.
+                    var nx = ((e.clientX - rect.left) / rect.width)  * 2 - 1;
+                    var ny = ((e.clientY - rect.top)  / rect.height) * 2 - 1;
+                    // Right of center → rotateY+ (right edge recedes).
+                    // Below center → rotateX- (bottom edge recedes).
+                    card.style.setProperty('--tilt-y', (nx *  MAX_TILT) + 'deg');
+                    card.style.setProperty('--tilt-x', (ny * -MAX_TILT) + 'deg');
+                });
+                card.addEventListener('pointerleave', function () {
+                    card.classList.remove('is-tilting');
+                    card.style.removeProperty('--tilt-x');
+                    card.style.removeProperty('--tilt-y');
+                });
+            });
+        })();
+    </script>
 </body>
 </html>
