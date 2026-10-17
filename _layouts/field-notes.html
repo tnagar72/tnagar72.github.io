@@ -29,6 +29,13 @@
     <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-label="Enlarged photograph">
         <button class="lightbox__close" type="button" aria-label="Close">&times;</button>
         <div class="lightbox__stage"></div>
+        {%- comment -%}
+          iOS 13+ requires an explicit user tap to grant access to
+          device orientation data. On Android this permission is
+          implicit, so the chip is hidden there and the tilt starts
+          automatically when the lightbox opens.
+        {%- endcomment -%}
+        <button class="lightbox__motion" type="button" hidden>Enable tilt</button>
     </div>
 
     <script>
@@ -37,22 +44,98 @@
            .postcard so the enlarged view keeps the frame + washi tape.
            --------------------------------------------------------------- */
         (function () {
-            var lb      = document.getElementById('lightbox');
-            var lbStage = lb.querySelector('.lightbox__stage');
-            var lbClose = lb.querySelector('.lightbox__close');
+            var lb       = document.getElementById('lightbox');
+            var lbStage  = lb.querySelector('.lightbox__stage');
+            var lbClose  = lb.querySelector('.lightbox__close');
+            var lbMotion = lb.querySelector('.lightbox__motion');
+
+            // Device orientation / accelerometer-driven tilt on touch
+            // devices. Current open card's controller + listener live
+            // here so close() can tear them down.
+            var activeCtrl = null;
+            var orientHandler = null;
+            // iOS 13+ gates orientation data behind an explicit
+            // permission call that must originate from a user gesture.
+            // Android (and desktop) do not need this.
+            var needsIosPermission = typeof DeviceOrientationEvent !== 'undefined' &&
+                typeof DeviceOrientationEvent.requestPermission === 'function';
+            // The "Enable tilt" chip is only meaningful on actual
+            // phones/tablets: devices with a touchscreen and no fine
+            // hover pointer. On desktop Safari/Chrome the
+            // DeviceOrientationEvent object exists but the sensor
+            // never fires, so showing the chip there is misleading.
+            var isTouchDevice = !window.matchMedia('(hover: hover) and (pointer: fine)').matches
+                && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+            var hasOrientation = typeof DeviceOrientationEvent !== 'undefined' && isTouchDevice;
+            var orientGranted = false; // sticky within the session
+
+            function startOrientation() {
+                if (!activeCtrl || orientHandler) return;
+                orientHandler = function (e) {
+                    if (e.beta == null || e.gamma == null) return;
+                    activeCtrl.pushOrientation(e.beta, e.gamma);
+                };
+                // Some iOS versions only dispatch 'deviceorientationabsolute'.
+                // Register both; the handler is idempotent on the spring target.
+                window.addEventListener('deviceorientation', orientHandler);
+                window.addEventListener('deviceorientationabsolute', orientHandler);
+                lbMotion.hidden = true;
+            }
+            function stopOrientation() {
+                if (orientHandler) {
+                    window.removeEventListener('deviceorientation', orientHandler);
+                    window.removeEventListener('deviceorientationabsolute', orientHandler);
+                    orientHandler = null;
+                }
+            }
+            lbMotion.addEventListener('click', function () {
+                DeviceOrientationEvent.requestPermission().then(function (state) {
+                    if (state === 'granted') {
+                        orientGranted = true;
+                        startOrientation();
+                    }
+                }).catch(function () { /* permission dialog dismissed */ });
+            });
 
             function openCard(sourceCard) {
                 var clone = sourceCard.cloneNode(true);
                 clone.style.setProperty('--rotation', '0deg');
                 clone.classList.add('postcard--lightbox');
-                // Suppress the tilt class in the clone — the enlarged
-                // view should sit level, not keep whatever hover tilt
-                // was on the source card at click time.
+                // Enlarged view sits level at open — strip any residual
+                // tilt state from the source card at click time.
                 clone.classList.remove('is-tilting');
                 clone.style.removeProperty('--tilt-x');
                 clone.style.removeProperty('--tilt-y');
+                clone.style.removeProperty('--tilt-z');
                 lbStage.innerHTML = '';
                 lbStage.appendChild(clone);
+                // Lift the clap OUT of the postcard clone and attach
+                // it to the lightbox root. A postcard with a 3D
+                // transform forms a containing block for its
+                // descendants, so a .clap inside the postcard would
+                // tilt with it even with position:fixed. Reparenting
+                // keeps the heart glued to the viewport's right edge
+                // regardless of how the postcard tilts.
+                var cloneClap = clone.querySelector('.clap');
+                if (cloneClap) {
+                    cloneClap.classList.add('clap--floating');
+                    cloneClap.dataset.slug = clone.dataset.slug;
+                    lb.appendChild(cloneClap);
+                }
+                // Hook up pointer-tracked spring tilt on the enlarged
+                // view only — grid thumbs stay flat with just a hover
+                // shadow lift. On touch devices the same controller
+                // receives phone-orientation deltas instead of pointer.
+                activeCtrl = window.__fnBindTilt ? window.__fnBindTilt(clone) : null;
+                if (activeCtrl && hasOrientation) {
+                    if (needsIosPermission && !orientGranted) {
+                        // Show the one-time "Enable tilt" chip. Hidden
+                        // again once permission is granted or on close.
+                        lbMotion.hidden = false;
+                    } else {
+                        startOrientation();
+                    }
+                }
                 lb.classList.add('is-open');
                 lb.setAttribute('aria-hidden', 'false');
                 document.body.style.overflow = 'hidden';
@@ -61,7 +144,15 @@
                 lb.classList.remove('is-open');
                 lb.setAttribute('aria-hidden', 'true');
                 document.body.style.overflow = '';
-                setTimeout(function () { lbStage.innerHTML = ''; }, 250);
+                stopOrientation();
+                lbMotion.hidden = true;
+                if (activeCtrl) { activeCtrl.park(); activeCtrl = null; }
+                setTimeout(function () {
+                    lbStage.innerHTML = '';
+                    // Clean up the reparented clap if it survived.
+                    var strayClap = lb.querySelector('.clap--floating');
+                    if (strayClap) strayClap.parentNode.removeChild(strayClap);
+                }, 250);
             }
 
             document.querySelector('.gallery').addEventListener('click', function (e) {
@@ -185,7 +276,10 @@
 
             function registerClap(card) {
                 var slug = card.dataset.slug;
-                var btn = card.querySelector('.clap');
+                // Lightbox clone has had its .clap lifted out onto
+                // the lightbox root, so fall back to the floating one.
+                var btn = card.querySelector('.clap') ||
+                    document.querySelector('.lightbox .clap--floating[data-slug="' + slug + '"]');
                 if (!btn) return;
 
                 var mine = myClaps(slug);
@@ -304,30 +398,38 @@
             });
 
             // The lightbox clones a postcard; the clone's clap button
-            // needs its own handler. Delegated on the lightbox stage
-            // since the clone is replaced on every open.
-            document.querySelector('.lightbox__stage').addEventListener('click', function (e) {
+            // is lifted out and reparented onto the lightbox root (so
+            // it stays viewport-fixed, independent of the postcard's
+            // 3D tilt). Delegate on the lightbox root so we catch both
+            // the floating button and anything inside the stage.
+            var lb = document.getElementById('lightbox');
+            lb.addEventListener('click', function (e) {
                 var btn = e.target.closest('.clap');
                 if (!btn) return;
                 e.stopPropagation();
-                var card = btn.closest('.postcard');
-                registerClap(card);
+                // The floating clap is detached from the postcard DOM;
+                // look up its paired postcard via data-slug which was
+                // copied when the clone was built.
+                var slug = btn.dataset.slug;
+                var card = btn.closest('.postcard') ||
+                    (slug && lb.querySelector('.postcard--lightbox[data-slug="' + slug + '"]'));
+                if (card) registerClap(card);
             });
 
-            // When the lightbox opens, add a count badge to the cloned
-            // clap button and keep it in sync with the source card's
-            // current count. Hook into the lightbox open path.
-            var lb = document.getElementById('lightbox');
+            // When the lightbox opens, add a count badge to the
+            // floating clap button and keep it in sync with the source
+            // card's current count. The clap button is now parented
+            // directly on the lightbox root (not under .postcard--lightbox),
+            // so look for .clap--floating.
             var observer = new MutationObserver(function () {
-                var clone = lb.querySelector('.postcard--lightbox');
-                if (!clone) return;
-                var cloneBtn = clone.querySelector('.clap');
+                var cloneBtn = lb.querySelector('.clap--floating');
                 if (!cloneBtn || cloneBtn.querySelector('.clap__count')) return;
-                // Carry the count fields from the source card's button
-                // over to the clone (cloneNode(true) does copy them, but
-                // we're defensive).
-                var sourceSlug = clone.dataset.slug;
-                var source = document.querySelector('.gallery .postcard[data-slug="' + sourceSlug + '"] .clap');
+                var clone = lb.querySelector('.postcard--lightbox');
+                var sourceSlug = clone && clone.dataset.slug;
+                // Mirror the slug onto the floating button for click lookup.
+                if (sourceSlug) cloneBtn.dataset.slug = sourceSlug;
+                var source = sourceSlug &&
+                    document.querySelector('.gallery .postcard[data-slug="' + sourceSlug + '"] .clap');
                 if (source) {
                     cloneBtn.dataset.serverCount = source.dataset.serverCount || '0';
                     cloneBtn.dataset.count = source.dataset.count || '0';
@@ -348,37 +450,147 @@
         })();
 
         /* ---------------------------------------------------------------
-           3D tilt on hover (vanilla port of the Bencho Tilt Card idea).
+           3D tilt on hover — vanilla port of Compass / Bencho spring tilt.
+           Per-card rAF spring integrates toward a cursor-driven target so
+           motion has weight: entry eases in, cursor exits bounce back.
+           The hovered edge SINKS AWAY (press, not lift). No overlay —
+           pure transform.
            Only runs on fine-pointer / hover-capable environments and
-           when the visitor hasn't asked for reduced motion.
+           when the visitor hasn't asked for reduced motion. Lightbox
+           clones (.postcard--lightbox) are excluded.
            --------------------------------------------------------------- */
         (function () {
-            var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
             var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            if (!canHover || reduceMotion) return;
+            if (reduceMotion) return;
+            var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-            var MAX_TILT = 8; // degrees, each axis. Max 20 looks goofy at postcard sizes.
+            var MAX_TILT = 7;    // degrees per axis (desktop, pointer)
+            var SINK = 6;        // px the card retreats at full tilt
+            // Spring tuned to match Compass's default (tune=50): k≈0.16, d≈0.72.
+            var K = 0.16, D = 0.72;
+            var SNAP = 0.02;     // snap threshold in 0..100 space
+            // Mobile is subtler: the phone itself is the pointer, so
+            // even small rotations register, and a strong tilt feels
+            // disorienting while you're trying to hold the device.
+            // GYRO_MAX_TILT keeps peak rotation lower than desktop,
+            // and GYRO_RANGE widens the phone-angle span mapped to it.
+            var GYRO_MAX_TILT = 8;
+            var GYRO_SINK = 6;
+            var GYRO_RANGE = 22;
 
-            document.querySelectorAll('.postcard').forEach(function (card) {
-                card.addEventListener('pointerenter', function () {
-                    card.classList.add('is-tilting');
-                });
-                card.addEventListener('pointermove', function (e) {
-                    var rect = card.getBoundingClientRect();
-                    // Normalize cursor to [-1, 1] on each axis, centered.
-                    var nx = ((e.clientX - rect.left) / rect.width)  * 2 - 1;
-                    var ny = ((e.clientY - rect.top)  / rect.height) * 2 - 1;
+            function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
+
+            function bindTilt(card) {
+                var tx = 0, ty = 0, tLit = 0;
+                var cx = 0, cy = 0, cLit = 0;
+                var vx = 0, vy = 0, vLit = 0;
+                var raf = 0;
+                var prevTime = 0;
+
+                function tick(now) {
+                    var dt = prevTime ? clamp((now - prevTime) / 16.67, 0, 2.5) : 1;
+                    prevTime = now;
+
+                    vx += (tx - cx) * K * dt;  vx *= Math.pow(D, dt);  cx += vx * dt;
+                    vy += (ty - cy) * K * dt;  vy *= Math.pow(D, dt);  cy += vy * dt;
+                    vLit += (tLit - cLit) * K * dt;  vLit *= Math.pow(D, dt);  cLit += vLit * dt;
+
+                    var sx = cx / 100, sy = cy / 100;
+                    var lit = clamp(cLit / 100, 0, 1);
+
+                    // Sink: edge under cursor goes away.
                     // Right of center → rotateY+ (right edge recedes).
                     // Below center → rotateX- (bottom edge recedes).
-                    card.style.setProperty('--tilt-y', (nx *  MAX_TILT) + 'deg');
-                    card.style.setProperty('--tilt-x', (ny * -MAX_TILT) + 'deg');
-                });
-                card.addEventListener('pointerleave', function () {
-                    card.classList.remove('is-tilting');
-                    card.style.removeProperty('--tilt-x');
-                    card.style.removeProperty('--tilt-y');
-                });
-            });
+                    var rx = -sy * MAX_TILT;
+                    var ry =  sx * MAX_TILT;
+
+                    card.style.setProperty('--tilt-x', rx + 'deg');
+                    card.style.setProperty('--tilt-y', ry + 'deg');
+                    card.style.setProperty('--tilt-z', (-SINK * lit) + 'px');
+
+                    var settled =
+                        Math.abs(tx - cx) < SNAP && Math.abs(vx) < SNAP &&
+                        Math.abs(ty - cy) < SNAP && Math.abs(vy) < SNAP &&
+                        Math.abs(tLit - cLit) < SNAP && Math.abs(vLit) < SNAP;
+                    if (settled) {
+                        cx = tx; cy = ty; cLit = tLit;
+                        vx = vy = vLit = 0;
+                        prevTime = 0;
+                        raf = 0;
+                        if (tLit === 0) {
+                            card.classList.remove('is-tilting');
+                            card.style.removeProperty('--tilt-x');
+                            card.style.removeProperty('--tilt-y');
+                            card.style.removeProperty('--tilt-z');
+                        }
+                        return;
+                    }
+                    raf = requestAnimationFrame(tick);
+                }
+
+                function kick() {
+                    if (!raf) { prevTime = 0; raf = requestAnimationFrame(tick); }
+                }
+
+                if (canHover) {
+                    card.addEventListener('pointerenter', function () {
+                        card.classList.add('is-tilting');
+                        tLit = 100;
+                        kick();
+                    });
+                    card.addEventListener('pointermove', function (e) {
+                        var rect = card.getBoundingClientRect();
+                        var nx = clamp(((e.clientX - rect.left) / rect.width)  * 2 - 1, -1, 1);
+                        var ny = clamp(((e.clientY - rect.top)  / rect.height) * 2 - 1, -1, 1);
+                        tx = nx * 100;
+                        ty = ny * 100;
+                        tLit = 100;
+                        kick();
+                    });
+                    card.addEventListener('pointerleave', function () {
+                        tx = 0; ty = 0; tLit = 0;
+                        kick();
+                    });
+                }
+
+                // Controller surface: lets the lightbox feed in device
+                // orientation deltas on touch devices, and park the
+                // spring when the lightbox closes.
+                var betaBase = null;
+                return {
+                    pushOrientation: function (beta, gamma) {
+                        // beta: front-back (−180..180). gamma: left-right (−90..90).
+                        // Phone held upright reading ≈ beta 60–75, gamma 0.
+                        // Subtract a resting beta so the "neutral" posture
+                        // reads as zero tilt. The first sample sets the base.
+                        if (betaBase == null) betaBase = beta;
+                        var nx = clamp(gamma / GYRO_RANGE, -1, 1);
+                        var ny = clamp((beta - betaBase) / GYRO_RANGE, -1, 1);
+                        // Mobile targets are scaled so that when the
+                        // spring resolves (sx = cx/100, lit = cLit/100)
+                        // the output angles land at GYRO_MAX_TILT (not
+                        // MAX_TILT) and the sink at GYRO_SINK. This
+                        // keeps mobile tuning independent of desktop
+                        // tuning — changing MAX_TILT doesn't affect
+                        // mobile.
+                        var tiltScale = GYRO_MAX_TILT / MAX_TILT;
+                        var litScale  = GYRO_SINK / SINK;
+                        tx = nx * 100 * tiltScale;
+                        ty = ny * 100 * tiltScale;
+                        tLit = 100 * litScale;
+                        card.classList.add('is-tilting');
+                        kick();
+                    },
+                    park: function () {
+                        tx = 0; ty = 0; tLit = 0;
+                        betaBase = null;
+                        kick();
+                    },
+                };
+            }
+
+            // Expose for the lightbox hydrator to attach once the clone mounts.
+            window.__fnBindTilt = bindTilt;
         })();
     </script>
 </body>

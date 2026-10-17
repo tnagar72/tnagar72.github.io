@@ -232,7 +232,7 @@ h1 {
     border: 3px solid var(--aged-white);
     box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
     /* Thumbnails open a lightbox on click. */
-    cursor: zoom-in;
+    cursor: pointer;
 }
 /* Opt-in: when an image has a per-image aspect_ratio set in yaml,
    the postcard template adds .postcard--contain. Those images fit
@@ -418,6 +418,34 @@ footer {
     outline-offset: 3px;
 }
 
+/* "Enable tilt" chip — only appears on iOS 13+ touch devices, where
+   DeviceOrientationEvent needs a user-tap-granted permission. One tap
+   grants for the rest of the session. */
+.lightbox__motion {
+    position: fixed;
+    bottom: clamp(1rem, 3vh, 2rem);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 0;
+    border-radius: 999px;
+    background: var(--aged-white);
+    color: #6b4a3a;
+    font-family: inherit;
+    font-size: 0.875rem;
+    letter-spacing: 0.02em;
+    padding: 0.55rem 1.1rem;
+    cursor: pointer;
+    box-shadow:
+        0 2px 8px var(--shadow-warm),
+        0 8px 24px rgba(70, 50, 30, 0.15);
+    z-index: 1001;
+}
+.lightbox__motion[hidden] { display: none; }
+.lightbox__motion:focus-visible {
+    outline: 2px solid #6b4a3a;
+    outline-offset: 3px;
+}
+
 /* Honor reduced-motion preferences: no spin on the close button, no
    fade transition — just show/hide. */
 @media (prefers-reduced-motion: reduce) {
@@ -437,6 +465,11 @@ footer {
    - Color: #3478F6 — iOS system blue (rgb 52/120/246).
    - No un-clap: counts only go up.
    ------------------------------------------------------------------- */
+/* Clap buttons hidden pending a backend counter wired up. All the
+   JS/HTML/CSS below is intact — just not visible. Delete this
+   display:none when the counter is in place. */
+.clap { display: none !important; }
+
 .clap {
     position: absolute;
     /* The postcard has a 2rem (32px) bottom gutter — we center the
@@ -537,39 +570,37 @@ footer {
     100% { opacity: 0; transform: translate(var(--heart-x), var(--heart-y)) rotate(var(--heart-turn)) scale(0.65); }
 }
 
-/* The lightbox clone keeps the .clap button, but we transform it
-   into a right-side sidebar: pulled OUT of the postcard frame to
-   the right, vertically centered, bigger, with a count badge. */
-.postcard--lightbox {
-    /* Allow children (the pulled-out like sidebar) to render outside
-       the postcard's bounds without being clipped. */
-    overflow: visible;
-}
-.postcard--lightbox .clap {
-    position: absolute;
+/* In the lightbox the clap is reparented from the postcard clone
+   onto the lightbox root (JS does the move) so it stays glued to the
+   viewport while the postcard underneath tilts in 3D. Fixed-position
+   on the right edge of the screen, vertically centered. */
+.postcard--lightbox { overflow: visible; }
+.clap--floating {
+    position: fixed;
     top: 50%;
-    right: -4.5rem;             /* floats outside the frame */
-    bottom: auto;
+    right: clamp(1rem, 3vw, 2rem);
     transform: translateY(-50%);
     width: 56px;
     height: 56px;
-    /* No background chip — just the heart floating in the lightbox
-       backdrop. Drop-shadow on the heart svg keeps it readable
-       against whatever's behind. */
     background: transparent;
     color: rgba(30, 25, 20, 0.55);
-    /* The hover state should still land on blue, not re-apply the
-       translateY from the thumbnail hover. */
+    z-index: 1001;
 }
-.postcard--lightbox .clap:hover               { color: #3478F6; transform: translateY(-50%); }
-.postcard--lightbox .clap:hover .clap__heart  { transform: scale(1.1); }
-.postcard--lightbox .clap.is-liked            { color: #3478F6; }
-.postcard--lightbox .clap__heart {
+.clap--floating:hover              { color: #3478F6; transform: translateY(-50%); }
+.clap--floating:hover .clap__heart { transform: scale(1.1); }
+.clap--floating.is-liked           { color: #3478F6; }
+.clap--floating .clap__heart {
     width: 28px;
     height: 28px;
-    /* Floating against the blurred-gallery backdrop with no chip
-       behind, so bring the drop-shadow back for readability. */
     filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+}
+.clap--floating .clap__count {
+    /* Count badge sits BELOW the heart (not to the right) since the
+       heart is pinned to the viewport edge. */
+    position: absolute;
+    top: calc(100% + 0.25rem);
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 /* Count badge pinned below the sidebar clap button. Floating text,
@@ -591,14 +622,16 @@ footer {
 /* On narrow viewports the sidebar can't float to the right (no room);
    tuck it inside the frame at the bottom-right like the thumbnail. */
 @media (max-width: 640px) {
-    .postcard--lightbox .clap {
+    .clap--floating {
+        /* Phone-sized lightbox: pin to the bottom-right corner where
+           the thumb falls, rather than mid-screen right-edge. */
         top: auto;
-        bottom: 1rem;
-        right: 1rem;
+        bottom: clamp(1rem, 3vh, 2rem);
+        right: clamp(1rem, 3vw, 2rem);
         transform: none;
     }
-    .postcard--lightbox .clap:hover { transform: none; }
-    .clap__count { display: none; } /* no room for it either */
+    .clap--floating:hover { transform: none; }
+    .clap--floating .clap__count { display: none; } /* no room on phones */
 }
 
 /* -------------------------------------------------------------------
@@ -607,33 +640,43 @@ footer {
    just sets up the perspective + transform surfaces; JS writes the
    actual rotation into --tilt-x / --tilt-y variables on each move.
    ------------------------------------------------------------------- */
-@media (hover: hover) and (pointer: fine) {
-    .gallery { perspective: 1200px; }
-    .postcard {
-        /* Replace the author-controlled rotation with a combined
-           transform that layers (a) the per-card tilt baseline the
-           --rotation var already encodes, (b) the pointer-driven 3D
-           tilt. Only engages when the card has .is-tilting. */
-        transform-style: preserve-3d;
-    }
-    .postcard.is-tilting {
-        /* While hovered, suppress the baseline rotation and defer to
-           the pointer-tracked tilt. The transition keeps motion
-           feeling springy on entry and settle on leave. */
-        transform:
-            perspective(1200px)
-            rotateX(var(--tilt-x, 0deg))
-            rotateY(var(--tilt-y, 0deg))
-            translateY(-6px)
-            scale(1.015);
-        transition: transform 0.15s ease-out;
-    }
-    .postcard.is-tilting img {
-        /* Subtle parallax: image sits a touch forward of the frame
-           at tilt, so you feel depth not just rotation. */
-        transform: translateZ(12px);
-        transition: transform 0.2s ease-out;
-    }
+/* Tilt styles apply on BOTH desktop (pointer-driven, grid thumbs
+   stay flat — only the lightbox clone gets the class on desktop too)
+   and mobile (phone-orientation-driven, lightbox only). The pointer
+   hover binding itself is still gated to hover-capable devices in JS;
+   this block just makes sure the transform rule renders when JS adds
+   .is-tilting, regardless of device. */
+.postcard {
+    /* Perspective on the card itself so each card's 3D space is
+       independent of ancestor flattening. preserve-3d lets the inner
+       <img> parallax forward. */
+    transform-style: preserve-3d;
+}
+.postcard.is-tilting,
+.postcard.is-tilting:hover {
+    /* Suppress the baseline rotation (floatIn's forwards-locked
+       rotate(--rotation)) and :hover lift, defer to the spring.
+       !important is needed because the floatIn animation keeps
+       running with 'forwards', and CSS animations beat static rules
+       on specificity. The rAF spring drives this frame-by-frame, so
+       no transition on transform — but keep the box-shadow transition
+       from .postcard:hover so the shadow still eases. --tilt-z makes
+       the hovered edge SINK away (press, not lift). */
+    transform:
+        perspective(900px)
+        translateZ(var(--tilt-z, 0px))
+        rotateX(var(--tilt-x, 0deg))
+        rotateY(var(--tilt-y, 0deg)) !important;
+    transition: box-shadow 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow:
+        0 8px 24px var(--shadow-deep),
+        0 16px 48px rgba(70, 50, 30, 0.15);
+    z-index: 20;
+}
+.postcard.is-tilting img {
+    /* Subtle parallax: image sits a touch forward of the frame
+       at tilt, so you feel depth not just rotation. */
+    transform: translateZ(14px);
 }
 /* Reduced motion: disable tilt entirely. */
 @media (prefers-reduced-motion: reduce) {
